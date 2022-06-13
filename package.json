@@ -99,5 +99,8 @@
   "packageManager": "yarn@3.2.0",
   "msw": {
     "workerDirectory": "public"
+  },
+  "engines": {
+    "node": "^14.17.0"
   }
 }
