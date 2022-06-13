@@ -1,0 +1,35 @@
+/* stylelint-disable at-rule-no-unknown */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+  .game-tile {
+    @apply border-2 border-absent w-16 h-16 flex justify-center items-center text-4xl uppercase;
+  }
+
+  .keyboard-row {
+    @apply flex justify-center items-center mb-2;
+  }
+
+  .key {
+    @apply flex flex-1 justify-center items-center bg-key h-14 rounded cursor-pointer mr-1.5 uppercase;
+  }
+}
+
+.correct {
+  @apply bg-correct;
+  border: none;
+}
+
+/** 정답 중에 있지만 위치는 다름 */
+.present {
+  @apply bg-present;
+  border: none;
+}
+
+/** 없는 철자 */
+.absent {
+  @apply bg-absent;
+  border: none;
+}
