@@ -1,6 +1,7 @@
 {
   "short_name": "TF Wallet",
   "name": "TF Wallet",
+  "manifest_version": 3,
   "icons": [
     {
       "src": "favicon.ico",
@@ -19,6 +20,12 @@
     }
   ],
   "permissions": [],
+  "background": { "scripts": ["background.js"], "persistent": true },
+  "browser_action": {
+    "default_icon": "logo128.png",
+    "default_popup": "popup.html"
+  },
+  "options_page": "index.html",
   "start_url": ".",
   "display": "standalone",
   "theme_color": "#000000",
