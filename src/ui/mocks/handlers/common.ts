@@ -1,5 +1,5 @@
 import { rest } from 'msw';
-import { API_URL } from 'constants/environment';
+import { API_URL } from 'ui/constants/environment';
 
 const commonHandlers = [
   rest.get(`${API_URL}`, (req, res, ctx) => {
