@@ -1449,6 +1449,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@babel/runtime@npm:^7.7.6":
+  version: 7.18.3
+  resolution: "@babel/runtime@npm:7.18.3"
+  dependencies:
+    regenerator-runtime: ^0.13.4
+  checksum: db8526226aa02cfa35a5a7ac1a34b5f303c62a1f000c7db48cb06c6290e616483e5036ab3c4e7a84d0f3be6d4e2148d5fe5cec9564bf955f505c3e764b83d7f1
+  languageName: node
+  linkType: hard
+
 "@babel/template@npm:^7.16.7, @babel/template@npm:^7.3.3":
   version: 7.16.7
   resolution: "@babel/template@npm:7.16.7"
@@ -5139,6 +5148,22 @@ __metadata:
   languageName: node
   linkType: hard
 
+"copy-webpack-plugin@npm:^11.0.0":
+  version: 11.0.0
+  resolution: "copy-webpack-plugin@npm:11.0.0"
+  dependencies:
+    fast-glob: ^3.2.11
+    glob-parent: ^6.0.1
+    globby: ^13.1.1
+    normalize-path: ^3.0.0
+    schema-utils: ^4.0.0
+    serialize-javascript: ^6.0.0
+  peerDependencies:
+    webpack: ^5.1.0
+  checksum: df4f8743f003a29ee7dd3d9b1789998a3a99051c92afb2ba2203d3dacfa696f4e757b275560fafb8f206e520a0aa78af34b990324a0e36c2326cefdeef3ca82e
+  languageName: node
+  linkType: hard
+
 "core-js-compat@npm:^3.20.2, core-js-compat@npm:^3.21.0":
   version: 3.21.1
   resolution: "core-js-compat@npm:3.21.1"
@@ -5552,6 +5577,22 @@ __metadata:
   version: 3.0.11
   resolution: "csstype@npm:3.0.11"
   checksum: 95e56abfe9ca219ae065acb4e43f61771a03170eed919127f558dfa168240867aba7629c8d98a201a0dd06d9a5ce82686f0570031c928516c61816adbc7c877f
+  languageName: node
+  linkType: hard
+
+"cuint@npm:^0.2.2":
+  version: 0.2.2
+  resolution: "cuint@npm:0.2.2"
+  checksum: b8127a93a7f16ce120ffcb22108014327c9808b258ee20e7dbb4c6740d7cb0f0c12d18a054eb716b0f2470090666abaae8a082d3cd5ef0e94fa447dd155842c4
+  languageName: node
+  linkType: hard
+
+"customize-cra@npm:^1.0.0":
+  version: 1.0.0
+  resolution: "customize-cra@npm:1.0.0"
+  dependencies:
+    lodash.flow: ^3.5.0
+  checksum: b38c48a607efc2321e6f2f12a3b53f3497b2f9b0008b48242524a92a1f26f8ae50bd73c97526e7d89c32b51f53711948e0da8f7e3618c9875087227a11a5feeb
   languageName: node
   linkType: hard
 
@@ -7429,6 +7470,19 @@ __metadata:
   languageName: node
   linkType: hard
 
+"globby@npm:^13.1.1":
+  version: 13.1.2
+  resolution: "globby@npm:13.1.2"
+  dependencies:
+    dir-glob: ^3.0.1
+    fast-glob: ^3.2.11
+    ignore: ^5.2.0
+    merge2: ^1.4.1
+    slash: ^4.0.0
+  checksum: c148fcda0c981f00fb434bb94ca258f0a9d23cedbde6fb3f37098e1abde5b065019e2c63fe2aa2fad4daf2b54bf360b4d0423d85fb3a63d09ed75a2837d4de0f
+  languageName: node
+  linkType: hard
+
 "globjoin@npm:^0.1.4":
   version: 0.1.4
   resolution: "globjoin@npm:0.1.4"
@@ -7574,6 +7628,15 @@ __metadata:
   version: 3.0.4
   resolution: "headers-polyfill@npm:3.0.4"
   checksum: cdfe5f40b033e89f31a1ce9018864a54ba3efc7ef05c9ad220851bbf65ac78bfc81f12f669994936c040a4404a885004f5d370acbf954f40147c9e4bb189cc43
+  languageName: node
+  linkType: hard
+
+"history@npm:^5.2.0":
+  version: 5.3.0
+  resolution: "history@npm:5.3.0"
+  dependencies:
+    "@babel/runtime": ^7.7.6
+  checksum: d73c35df49d19ac172f9547d30a21a26793e83f16a78386d99583b5bf1429cc980799fcf1827eb215d31816a6600684fba9686ce78104e23bd89ec239e7c726f
   languageName: node
   linkType: hard
 
@@ -9410,6 +9473,13 @@ __metadata:
   version: 4.0.8
   resolution: "lodash.debounce@npm:4.0.8"
   checksum: a3f527d22c548f43ae31c861ada88b2637eb48ac6aa3eb56e82d44917971b8aa96fbb37aa60efea674dc4ee8c42074f90f7b1f772e9db375435f6c83a19b3bc6
+  languageName: node
+  linkType: hard
+
+"lodash.flow@npm:^3.5.0":
+  version: 3.5.0
+  resolution: "lodash.flow@npm:3.5.0"
+  checksum: a9a62ad344e3c5a1f42bc121da20f64dd855aaafecee24b1db640f29b88bd165d81c37ff7e380a7191de6f70b26f5918abcebbee8396624f78f3618a0b18634c
   languageName: node
   linkType: hard
 
@@ -11898,6 +11968,28 @@ __metadata:
   languageName: node
   linkType: hard
 
+"react-app-rewire-multiple-entry@npm:^2.2.2":
+  version: 2.2.2
+  resolution: "react-app-rewire-multiple-entry@npm:2.2.2"
+  dependencies:
+    xxhashjs: ^0.2.2
+  checksum: 7e9cd3e4420db6ae2ed441fba894fc757f48735241dd69681e9221a92b96e77d219f6a2844e8d6c22c9d36db4de8f6c7fc3311f19ce7e96a74844f1ad5effc9f
+  languageName: node
+  linkType: hard
+
+"react-app-rewired@npm:^2.2.1":
+  version: 2.2.1
+  resolution: "react-app-rewired@npm:2.2.1"
+  dependencies:
+    semver: ^5.6.0
+  peerDependencies:
+    react-scripts: ">=2.1.3"
+  bin:
+    react-app-rewired: bin/index.js
+  checksum: 0b330c2b46413dc5fbb68e68c07704830397b1cfc8335f65d8f856bfbb6c4d8259fad049fc2a117c18794f321e726b844649266f42ff4c3fa044f00be48c1850
+  languageName: node
+  linkType: hard
+
 "react-dev-utils@npm:^12.0.0":
   version: 12.0.0
   resolution: "react-dev-utils@npm:12.0.0"
@@ -11985,6 +12077,30 @@ __metadata:
   version: 0.11.0
   resolution: "react-refresh@npm:0.11.0"
   checksum: 112178a05b1e0ffeaf5d9fb4e56b4410a34a73adeb04dbf13abdc50d9ac9df2ada83e81485156cca0b3fa296aa3612751b3d6cd13be4464642a43679b819cbc7
+  languageName: node
+  linkType: hard
+
+"react-router-dom@npm:^6.3.0":
+  version: 6.3.0
+  resolution: "react-router-dom@npm:6.3.0"
+  dependencies:
+    history: ^5.2.0
+    react-router: 6.3.0
+  peerDependencies:
+    react: ">=16.8"
+    react-dom: ">=16.8"
+  checksum: 77603a654f8a8dc7f65535a2e5917a65f8d9ffcb06546d28dd297e52adcc4b8a84377e0115f48dca330b080af2da3e78f29d590c89307094d36927d2b1751ec3
+  languageName: node
+  linkType: hard
+
+"react-router@npm:6.3.0":
+  version: 6.3.0
+  resolution: "react-router@npm:6.3.0"
+  dependencies:
+    history: ^5.2.0
+  peerDependencies:
+    react: ">=16.8"
+  checksum: 7be673f5e72104be01e6ab274516bdb932efd93305243170690f6560e3bd1035dd1df3d3c9ce1e0f452638a2529f43a1e77dcf0934fc8031c4783da657be13ca
   languageName: node
   linkType: hard
 
@@ -12676,7 +12792,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"semver@npm:2 || 3 || 4 || 5":
+"semver@npm:2 || 3 || 4 || 5, semver@npm:^5.6.0":
   version: 5.7.1
   resolution: "semver@npm:5.7.1"
   bin:
@@ -14732,8 +14848,10 @@ __metadata:
     axios: ^0.26.1
     buffer: ^6.0.3
     classnames: ^2.3.1
+    copy-webpack-plugin: ^11.0.0
     craco-swc: ^0.2.0
     cssnano: ^5.1.4
+    customize-cra: ^1.0.0
     eslint: ^8.11.0
     eslint-config-airbnb-typescript: ^16.1.3
     eslint-config-prettier: ^8.5.0
@@ -14751,8 +14869,11 @@ __metadata:
     postcss-scss: ^4.0.3
     prettier: ^2.6.0
     react: ^18.1.0
+    react-app-rewire-multiple-entry: ^2.2.2
+    react-app-rewired: ^2.2.1
     react-dom: ^18.1.0
     react-query: ^3.39.1
+    react-router-dom: ^6.3.0
     react-scripts: 5.0.0
     regenerator-runtime: ^0.13.9
     stylelint: ^14.6.0
@@ -15069,6 +15190,15 @@ __metadata:
   version: 4.0.2
   resolution: "xtend@npm:4.0.2"
   checksum: ac5dfa738b21f6e7f0dd6e65e1b3155036d68104e67e5d5d1bde74892e327d7e5636a076f625599dc394330a731861e87343ff184b0047fef1360a7ec0a5a36a
+  languageName: node
+  linkType: hard
+
+"xxhashjs@npm:^0.2.2":
+  version: 0.2.2
+  resolution: "xxhashjs@npm:0.2.2"
+  dependencies:
+    cuint: ^0.2.2
+  checksum: cf6baf05bafe5651dbf108008bafdb1ebe972f65228633f00b56c49d7a1e614a821fe3345c4eb27462994c7c954d982eae05871be6a48146f30803dd87f3c3b6
   languageName: node
   linkType: hard
 
