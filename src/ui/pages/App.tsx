@@ -3,7 +3,7 @@ import { APP_STAGE } from 'ui/constants/environment';
 import { Routes, Route } from 'react-router-dom';
 
 if (APP_STAGE === 'local') {
-  require('./mocks');
+  require('../mocks');
 }
 
 function App() {
