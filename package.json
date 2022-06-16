@@ -87,9 +87,7 @@
   "devDependencies": {
     "@commitlint/cli": "^16.2.3",
     "@commitlint/config-conventional": "^16.2.1",
-    "@swc/cli": "^0.1.57",
     "@swc/core": "^1.2.203",
-    "@swc/helpers": "^0.3.8",
     "@tailwindcss/typography": "^0.5.2",
     "@testing-library/jest-dom": "^5.16.2",
     "@testing-library/react": "^12.1.4",

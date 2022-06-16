@@ -360,6 +360,32 @@ module.exports = function (webpackEnv) {
           use: {
             // `.swcrc` can be used to configure swc
             loader: 'swc-loader',
+            options: {
+              parseMap: true,
+              minify: true,
+              jsc: {
+                target: 'es5',
+                minify: {
+                  compress: true,
+                },
+                parser: {
+                  syntax: 'typescript',
+                  tsx: true,
+                  dynamicImport: true,
+                  exportDefaultFrom: true,
+                  decorators: true,
+                },
+                transform: {
+                  react: {
+                    pragma: 'React.createElement',
+                    pragmaFrag: 'React.Fragment',
+                    throwIfNamespace: true,
+                    development: false,
+                    useBuiltins: false,
+                  },
+                },
+              },
+            },
           },
         },
         {
