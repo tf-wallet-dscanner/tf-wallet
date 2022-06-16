@@ -57,6 +57,7 @@ module.exports = {
   appBuild: resolveApp(buildPath),
   appPublic: resolveApp('public'),
   appHtml: resolveApp('public/index.html'),
+  appPopupHtml: resolveApp('public/popup.html'),
   appIndexJs: resolveModule(resolveApp, 'src/index'),
   appPageIndexJs: resolveModule(resolveApp, 'src/ui/pages/index'),
   appPopupIndexJs: resolveModule(resolveApp, 'src/ui/popup/index'),

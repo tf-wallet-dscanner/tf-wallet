@@ -636,7 +636,7 @@ module.exports = function (webpackEnv) {
           {},
           {
             filename: 'pages.html',
-            template: path.resolve(__dirname, '../public/index.html'),
+            template: paths.appHtml,
             chunks: ['pages'],
           },
         ),
@@ -646,7 +646,7 @@ module.exports = function (webpackEnv) {
           {},
           {
             filename: 'popup.html',
-            template: path.resolve(__dirname, '../public/popup.html'),
+            template: paths.appPopupHtml,
             chunks: ['popup'],
           },
         ),
