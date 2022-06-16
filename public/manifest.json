@@ -8,16 +8,13 @@
     "default_popup": "popup.html",
     "default_icon": "logo192.png"
   },
-  "chrome_url_overrides": {
-    "newtab": "pages.html"
-  },
   "icons": {
     "128": "logo192.png"
   },
   "content_scripts": [
     {
       "matches": ["http://*/*", "https://*/*", "<all_urls>"],
-      "js": ["static/js/content.bundle.js"]
+      "js": ["static/js/contentScript.bundle.js"]
     }
   ],
   "web_accessible_resources": [

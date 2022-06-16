@@ -9,8 +9,24 @@ if (APP_STAGE === 'local') {
 function App() {
   return (
     <Routes>
-      <Route path="/" element={<div>TF Wallet</div>} />
+      <Route
+        path="/"
+        element={
+          <div
+            className="bg-black text-white"
+            style={{ width: '1000px', height: '1000px' }}
+          >
+            TF Wallet
+          </div>
+        }
+      />
     </Routes>
+    // <div
+    //   className="bg-black text-white"
+    //   style={{ width: '1000px', height: '1000px' }}
+    // >
+    //   TF Wallet
+    // </div>
   );
 }
 

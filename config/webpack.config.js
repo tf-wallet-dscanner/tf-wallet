@@ -200,11 +200,9 @@ module.exports = function (webpackEnv) {
     // This means they will be the "root" imports that are included in JS bundle.
     // entry: paths.appIndexJs,
     entry: {
-      main: paths.appIndexJs,
-      pages: paths.appPageIndexJs,
-      popup: paths.appPopupIndexJs,
-      background: paths.appBackgroundIndexJs,
-      content: paths.appContentIndexJs,
+      popup: paths.appPopupJs,
+      background: paths.appBackgroundJs,
+      contentScript: paths.appContentScriptJs,
     },
     output: {
       // The build folder.
@@ -213,13 +211,6 @@ module.exports = function (webpackEnv) {
       pathinfo: isEnvDevelopment,
       // There will be one main bundle, and one file per asynchronous chunk.
       // In development, it does not produce real files.
-      // filename: isEnvProduction
-      //   ? 'static/js/[name].[contenthash:8].js'
-      //   : isEnvDevelopment && 'static/js/bundle.js',
-      // There are also additional JS chunk files if you use code splitting.
-      // chunkFilename: isEnvProduction
-      //   ? 'static/js/[name].[contenthash:8].chunk.js'
-      //   : isEnvDevelopment && 'static/js/[name].chunk.js',
       filename: 'static/js/[name].bundle.js',
       chunkFilename: 'static/js/[name].[contenthash:8].chunk.js',
       assetModuleFilename: 'static/media/[name].[hash][ext]',
@@ -605,16 +596,19 @@ module.exports = function (webpackEnv) {
       ].filter(Boolean),
     },
     plugins: [
-      // Generates an `index.html` file with the <script> injected.
+      // Generates an `popup.html` file with the <script> injected.
       new HtmlWebpackPlugin(
         Object.assign(
           {},
           {
             inject: true,
-            template: paths.appHtml,
+            filename: 'popup.html',
+            template: paths.appPopupHtml,
+            chunks: ['popup'],
           },
           isEnvProduction
             ? {
+                excludeChunks: ['background', 'contentScript'],
                 minify: {
                   removeComments: true,
                   collapseWhitespace: true,
@@ -629,36 +623,6 @@ module.exports = function (webpackEnv) {
                 },
               }
             : undefined,
-        ),
-      ),
-      new HtmlWebpackPlugin(
-        Object.assign(
-          {},
-          {
-            filename: 'pages.html',
-            template: paths.appHtml,
-            chunks: ['pages'],
-          },
-          isEnvProduction
-            ? {
-                excludeChunks: ['background', 'content'],
-              }
-            : {},
-        ),
-      ),
-      new HtmlWebpackPlugin(
-        Object.assign(
-          {},
-          {
-            filename: 'popup.html',
-            template: paths.appPopupHtml,
-            chunks: ['popup'],
-          },
-          isEnvProduction
-            ? {
-                excludeChunks: ['background', 'content'],
-              }
-            : {},
         ),
       ),
       // Inlines the webpack runtime script. This script is too small to warrant
