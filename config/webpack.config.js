@@ -639,6 +639,11 @@ module.exports = function (webpackEnv) {
             template: paths.appHtml,
             chunks: ['pages'],
           },
+          isEnvProduction
+            ? {
+                excludeChunks: ['background', 'content'],
+              }
+            : {},
         ),
       ),
       new HtmlWebpackPlugin(
@@ -649,6 +654,11 @@ module.exports = function (webpackEnv) {
             template: paths.appPopupHtml,
             chunks: ['popup'],
           },
+          isEnvProduction
+            ? {
+                excludeChunks: ['background', 'content'],
+              }
+            : {},
         ),
       ),
       // Inlines the webpack runtime script. This script is too small to warrant
@@ -704,7 +714,7 @@ module.exports = function (webpackEnv) {
             manifest[file.name] = file.path;
             return manifest;
           }, seed);
-          const entrypointFiles = entrypoints.main.filter(
+          const entrypointFiles = entrypoints.popup.filter(
             (fileName) => !fileName.endsWith('.map'),
           );
 
