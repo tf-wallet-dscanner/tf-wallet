@@ -38,9 +38,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@commitlint/config-conventional", "npm:16.2.1"],\
             ["@pmmmwh/react-refresh-webpack-plugin", "virtual:41f4f1af63cb66a88ac4fe69085f85ee4caa2a2bb9410ef3729549d2435a69be6fa60490b2dc2cf6a8efb86a26ccf9a87503f5f1ab7707329ba7bf903a431145#npm:0.5.4"],\
             ["@svgr/webpack", "npm:5.5.0"],\
-            ["@swc/cli", "virtual:41f4f1af63cb66a88ac4fe69085f85ee4caa2a2bb9410ef3729549d2435a69be6fa60490b2dc2cf6a8efb86a26ccf9a87503f5f1ab7707329ba7bf903a431145#npm:0.1.57"],\
             ["@swc/core", "npm:1.2.203"],\
-            ["@swc/helpers", "npm:0.3.8"],\
             ["@tailwindcss/typography", "virtual:41f4f1af63cb66a88ac4fe69085f85ee4caa2a2bb9410ef3729549d2435a69be6fa60490b2dc2cf6a8efb86a26ccf9a87503f5f1ab7707329ba7bf903a431145#npm:0.5.2"],\
             ["@testing-library/jest-dom", "npm:5.16.2"],\
             ["@testing-library/react", "virtual:41f4f1af63cb66a88ac4fe69085f85ee4caa2a2bb9410ef3729549d2435a69be6fa60490b2dc2cf6a8efb86a26ccf9a87503f5f1ab7707329ba7bf903a431145#npm:12.1.4"],\
@@ -4087,36 +4085,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD"\
         }]\
       ]],\
-      ["@swc/cli", [\
-        ["npm:0.1.57", {\
-          "packageLocation": "./.yarn/cache/@swc-cli-npm-0.1.57-161586148e-d19f02233f.zip/node_modules/@swc/cli/",\
-          "packageDependencies": [\
-            ["@swc/cli", "npm:0.1.57"]\
-          ],\
-          "linkType": "SOFT"\
-        }],\
-        ["virtual:41f4f1af63cb66a88ac4fe69085f85ee4caa2a2bb9410ef3729549d2435a69be6fa60490b2dc2cf6a8efb86a26ccf9a87503f5f1ab7707329ba7bf903a431145#npm:0.1.57", {\
-          "packageLocation": "./.yarn/__virtual__/@swc-cli-virtual-8e0be2714f/0/cache/@swc-cli-npm-0.1.57-161586148e-d19f02233f.zip/node_modules/@swc/cli/",\
-          "packageDependencies": [\
-            ["@swc/cli", "virtual:41f4f1af63cb66a88ac4fe69085f85ee4caa2a2bb9410ef3729549d2435a69be6fa60490b2dc2cf6a8efb86a26ccf9a87503f5f1ab7707329ba7bf903a431145#npm:0.1.57"],\
-            ["@swc/core", "npm:1.2.203"],\
-            ["@types/chokidar", null],\
-            ["@types/swc__core", null],\
-            ["chokidar", null],\
-            ["commander", "npm:7.2.0"],\
-            ["fast-glob", "npm:3.2.11"],\
-            ["slash", "npm:3.0.0"],\
-            ["source-map", "npm:0.7.3"]\
-          ],\
-          "packagePeers": [\
-            "@swc/core",\
-            "@types/chokidar",\
-            "@types/swc__core",\
-            "chokidar"\
-          ],\
-          "linkType": "HARD"\
-        }]\
-      ]],\
       ["@swc/core", [\
         ["npm:1.2.203", {\
           "packageLocation": "./.yarn/cache/@swc-core-npm-1.2.203-2e5b8b4161-ef7a7a5fe0.zip/node_modules/@swc/core/",\
@@ -4252,15 +4220,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/unplugged/@swc-core-win32-x64-msvc-npm-1.2.203-54fa5988f5/node_modules/@swc/core-win32-x64-msvc/",\
           "packageDependencies": [\
             ["@swc/core-win32-x64-msvc", "npm:1.2.203"]\
-          ],\
-          "linkType": "HARD"\
-        }]\
-      ]],\
-      ["@swc/helpers", [\
-        ["npm:0.3.8", {\
-          "packageLocation": "./.yarn/cache/@swc-helpers-npm-0.3.8-3ddc2f312f-105e77db77.zip/node_modules/@swc/helpers/",\
-          "packageDependencies": [\
-            ["@swc/helpers", "npm:0.3.8"]\
           ],\
           "linkType": "HARD"\
         }]\
@@ -18404,9 +18363,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@commitlint/config-conventional", "npm:16.2.1"],\
             ["@pmmmwh/react-refresh-webpack-plugin", "virtual:41f4f1af63cb66a88ac4fe69085f85ee4caa2a2bb9410ef3729549d2435a69be6fa60490b2dc2cf6a8efb86a26ccf9a87503f5f1ab7707329ba7bf903a431145#npm:0.5.4"],\
             ["@svgr/webpack", "npm:5.5.0"],\
-            ["@swc/cli", "virtual:41f4f1af63cb66a88ac4fe69085f85ee4caa2a2bb9410ef3729549d2435a69be6fa60490b2dc2cf6a8efb86a26ccf9a87503f5f1ab7707329ba7bf903a431145#npm:0.1.57"],\
             ["@swc/core", "npm:1.2.203"],\
-            ["@swc/helpers", "npm:0.3.8"],\
             ["@tailwindcss/typography", "virtual:41f4f1af63cb66a88ac4fe69085f85ee4caa2a2bb9410ef3729549d2435a69be6fa60490b2dc2cf6a8efb86a26ccf9a87503f5f1ab7707329ba7bf903a431145#npm:0.5.2"],\
             ["@testing-library/jest-dom", "npm:5.16.2"],\
             ["@testing-library/react", "virtual:41f4f1af63cb66a88ac4fe69085f85ee4caa2a2bb9410ef3729549d2435a69be6fa60490b2dc2cf6a8efb86a26ccf9a87503f5f1ab7707329ba7bf903a431145#npm:12.1.4"],\
