@@ -198,7 +198,14 @@ module.exports = function (webpackEnv) {
       : isEnvDevelopment && 'cheap-module-source-map',
     // These are the "entry points" to our application.
     // This means they will be the "root" imports that are included in JS bundle.
-    entry: paths.appIndexJs,
+    // entry: paths.appIndexJs,
+    entry: {
+      main: paths.appIndexJs,
+      pages: paths.appPageIndexJs,
+      popup: paths.appPopupIndexJs,
+      background: paths.appBackgroundIndexJs,
+      content: paths.appContentIndexJs,
+    },
     output: {
       // The build folder.
       path: paths.appBuild,
@@ -206,13 +213,15 @@ module.exports = function (webpackEnv) {
       pathinfo: isEnvDevelopment,
       // There will be one main bundle, and one file per asynchronous chunk.
       // In development, it does not produce real files.
-      filename: isEnvProduction
-        ? 'static/js/[name].[contenthash:8].js'
-        : isEnvDevelopment && 'static/js/bundle.js',
+      // filename: isEnvProduction
+      //   ? 'static/js/[name].[contenthash:8].js'
+      //   : isEnvDevelopment && 'static/js/bundle.js',
       // There are also additional JS chunk files if you use code splitting.
-      chunkFilename: isEnvProduction
-        ? 'static/js/[name].[contenthash:8].chunk.js'
-        : isEnvDevelopment && 'static/js/[name].chunk.js',
+      // chunkFilename: isEnvProduction
+      //   ? 'static/js/[name].[contenthash:8].chunk.js'
+      //   : isEnvDevelopment && 'static/js/[name].chunk.js',
+      filename: 'static/js/[name].bundle.js',
+      chunkFilename: 'static/js/[name].[contenthash:8].chunk.js',
       assetModuleFilename: 'static/media/[name].[hash][ext]',
       // webpack uses `publicPath` to determine where the app is being served from.
       // It requires a trailing slash, or the file assets will get an incorrect path.
@@ -594,6 +603,26 @@ module.exports = function (webpackEnv) {
                 },
               }
             : undefined,
+        ),
+      ),
+      new HtmlWebpackPlugin(
+        Object.assign(
+          {},
+          {
+            filename: 'pages.html',
+            template: path.resolve(__dirname, '../public/index.html'),
+            chunks: ['pages'],
+          },
+        ),
+      ),
+      new HtmlWebpackPlugin(
+        Object.assign(
+          {},
+          {
+            filename: 'popup.html',
+            template: path.resolve(__dirname, '../public/popup.html'),
+            chunks: ['popup'],
+          },
         ),
       ),
       // Inlines the webpack runtime script. This script is too small to warrant

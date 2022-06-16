@@ -3,7 +3,7 @@
   "manifest_version": 3,
   "name": "tf-wallet",
   "description": "TF Wallet Project",
-  "background": { "service_worker": "background.bundle.js" },
+  "background": { "service_worker": "static/js/background.bundle.js" },
   "action": {
     "default_popup": "popup.html",
     "default_icon": "logo192.png"
@@ -17,7 +17,7 @@
   "content_scripts": [
     {
       "matches": ["http://*/*", "https://*/*", "<all_urls>"],
-      "js": ["content.bundle.js"]
+      "js": ["static/js/content.bundle.js"]
     }
   ],
   "web_accessible_resources": [
