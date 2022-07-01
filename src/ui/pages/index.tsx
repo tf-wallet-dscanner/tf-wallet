@@ -5,11 +5,14 @@ import App from './App';
 import { QueryClientProvider, QueryClient } from 'react-query';
 import { ReactQueryDevtools } from 'react-query/devtools';
 import { HashRouter } from 'react-router-dom';
+import browser from 'webextension-polyfill';
 
 const root = ReactDOM.createRoot(
   document.getElementById('popup') as HTMLElement,
 );
 const queryClient = new QueryClient();
+
+browser.runtime.connect({ name: 'popup' });
 
 root.render(
   <React.StrictMode>
