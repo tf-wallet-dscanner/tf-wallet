@@ -1,6 +1,5 @@
 import { FaBeer } from 'react-icons/fa';
 import { NavigateFunction, useNavigate } from 'react-router-dom';
-
 import Button from 'ui/components/atoms/button';
 import Container from 'ui/components/atoms/container';
 import { THEME_COLOR } from 'ui/constants/colors';

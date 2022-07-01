@@ -1,7 +1,6 @@
 import { useCallback, useState } from 'react';
 import { FaEye, FaEyeSlash, FaSearch } from 'react-icons/fa';
 import { NavigateFunction, useNavigate } from 'react-router-dom';
-
 import Alert from 'ui/components/atoms/alert/alert';
 import Box from 'ui/components/atoms/box';
 import TextField from 'ui/components/atoms/text-field';

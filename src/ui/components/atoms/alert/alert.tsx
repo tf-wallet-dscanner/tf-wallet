@@ -1,6 +1,5 @@
 import classnames from 'classnames';
 import type { ReactElement } from 'react';
-
 import AlertIcon from 'ui/components/atoms/alert-icon/alert-icon';
 
 import './alert.scss';

@@ -5,7 +5,6 @@ import type {
   PropsWithChildren,
   ReactElement,
 } from 'react';
-
 import { THEME_COLOR } from 'ui/constants/colors';
 
 import './button.scss';

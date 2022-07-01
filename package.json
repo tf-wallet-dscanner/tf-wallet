@@ -11,7 +11,7 @@
     "lint:fix": "eslint --fix \"./**/*.{ts,tsx,js,jsx}\" --ignore-path .eslintignore || true",
     "lint:style": "stylelint ./**/*.{css,scss,pcss} --fix",
     "lint:commit": "commitlint --edit",
-    "prettier": "prettier --write --config ./.prettierrc \"./src/**/*.{ts,tsx,js,jsx}\" || true",
+    "prettier": "prettier --write --config ./.prettierrc.cjs \"./src/**/*.{ts,tsx,js,jsx}\" || true",
     "postinstall": "husky install",
     "prepack": "pinst --disable",
     "postpack": "pinst --enable"

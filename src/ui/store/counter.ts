@@ -1,7 +1,6 @@
 import create from 'zustand';
 
 import { CommonStateCreator } from '.';
-
 import logger from './middlewares/logger';
 
 interface CounterState {
