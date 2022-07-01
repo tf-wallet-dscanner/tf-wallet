@@ -6,6 +6,7 @@
     "start:extension": "nodemon scripts/build.dev.js",
     "build": "rm -rf ./build && node scripts/build.js",
     "test": "node scripts/test.js",
+    "test:coverage": "yarn test --watchAll=false --coverage",
     "lint": "eslint \"./**/*.{ts,tsx,js,jsx}\" --ignore-path .eslintignore || true",
     "lint:fix": "eslint --fix \"./**/*.{ts,tsx,js,jsx}\" --ignore-path .eslintignore || true",
     "lint:style": "stylelint ./**/*.{css,scss,pcss} --fix",
@@ -92,13 +93,14 @@
     "@commitlint/config-conventional": "^16.2.1",
     "@swc/core": "^1.2.203",
     "@tailwindcss/typography": "^0.5.2",
-    "@testing-library/jest-dom": "^5.16.2",
+    "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^12.1.4",
     "@testing-library/user-event": "^13.5.0",
     "@types/jest": "^27.4.1",
     "@types/node": "^16.11.26",
     "@types/react": "^18.0.12",
     "@types/react-dom": "^18.0.5",
+    "@types/testing-library__jest-dom": "^5",
     "@types/webextension-polyfill": "^0.9.0",
     "@typescript-eslint/eslint-plugin": "^5.15.0",
     "@typescript-eslint/parser": "^5.15.0",
@@ -116,6 +118,7 @@
     "eslint-plugin-react-hooks": "^4.3.0",
     "https-browserify": "^1.0.0",
     "husky": "^7.0.4",
+    "jest-css-modules": "^2.1.0",
     "lint-staged": "^12.3.7",
     "msw": "^0.39.2",
     "nodemon": "^2.0.16",
@@ -159,7 +162,7 @@
     "workerDirectory": "public"
   },
   "engines": {
-    "node": "^14.17.0"
+    "node": "^16.15.1"
   },
   "jest": {
     "roots": [
@@ -167,12 +170,18 @@
     ],
     "collectCoverageFrom": [
       "src/**/*.{js,jsx,ts,tsx}",
-      "!src/**/*.d.ts"
+      "!src/**/*.d.ts",
+      "!<rootDir>/node_modules/"
+    ],
+    "coveragePathIgnorePatterns": [
+      "src/index.tsx"
     ],
     "setupFiles": [
       "react-app-polyfill/jsdom"
     ],
-    "setupFilesAfterEnv": [],
+    "setupFilesAfterEnv": [
+      "<rootDir>/src/ui/setupTests.ts"
+    ],
     "testMatch": [
       "<rootDir>/src/**/__tests__/**/*.{js,jsx,ts,tsx}",
       "<rootDir>/src/**/*.{spec,test}.{js,jsx,ts,tsx}"
@@ -187,12 +196,8 @@
       "[/\\\\]node_modules[/\\\\].+\\.(js|jsx|mjs|cjs|ts|tsx)$",
       "^.+\\.module\\.(css|sass|scss)$"
     ],
-    "modulePaths": [
-      "/Users/jtpark/git/tf-wallet/src"
-    ],
     "moduleNameMapper": {
-      "^react-native$": "react-native-web",
-      "^.+\\.module\\.(css|sass|scss)$": "identity-obj-proxy"
+      "\\.(css|less|scss|sss|styl)$": "<rootDir>/node_modules/jest-css-modules"
     },
     "moduleFileExtensions": [
       "web.js",
@@ -210,7 +215,7 @@
       "jest-watch-typeahead/filename",
       "jest-watch-typeahead/testname"
     ],
-    "resetMocks": true
+    "resetMocks": false
   },
   "babel": {
     "presets": [

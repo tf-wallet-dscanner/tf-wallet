@@ -50,5 +50,13 @@ module.exports = {
     Map: false,
     Promise: false,
   },
-  ignorePatterns: ['node_modules/', '*.js'],
+  ignorePatterns: ['node_modules/', '*.js', 'build/', '.pnp.cjs', '.yarn/'],
+  overrides: [
+    {
+      files: ['**/*.test.ts', '**/*.spec.ts', '**/*.test.tsx', '**/*.spec.tsx'],
+      env: {
+        jest: true,
+      },
+    },
+  ],
 };
