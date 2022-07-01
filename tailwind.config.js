@@ -1,17 +1,29 @@
 module.exports = {
+  darkMode: 'class',
   content: ['./public/**/*.html', './src/**/*.{js,jsx,ts,tsx}'],
   important: false,
   theme: {
+    fontFamily: {
+      sans: ['Inter', 'sans-serif'],
+      serif: ['Georgia', 'serif'],
+    },
     extend: {
       colors: {
-        correct: '#6aaa64',
-        present: '#c9b458',
-        night: '#121213',
-        tile: '#787c7e', // 타일색
-        absent: '#3a3a3c',
-        key: '#818384',
+        primary: '#1976d2',
+        secondary: '#9c27b0',
+        error: '#ef5350',
+        warning: '#ff9800',
+        info: '#03a9f4',
+        success: '#4caf50',
+      },
+      backgroundColor: {
+        error: '#fdeded',
+        warning: '#fff4e5',
+        info: '#e5f6fd',
+        success: '#edf7ed',
       },
     },
   },
-  plugins: [require('@tailwindcss/typography')],
+  variants: { extend: { typography: ['dark'] } },
+  plugins: [require('@tailwindcss/forms'), require('@tailwindcss/typography')],
 };

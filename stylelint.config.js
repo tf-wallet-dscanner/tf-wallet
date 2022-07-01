@@ -13,5 +13,6 @@ module.exports = {
     'no-duplicate-selectors': null,
     'declaration-block-no-duplicate-properties': null,
     'font-family-no-duplicate-names': null,
+    'font-family-no-missing-generic-family-keyword': null,
   },
 };

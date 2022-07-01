@@ -39,6 +39,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@pmmmwh/react-refresh-webpack-plugin", "virtual:41f4f1af63cb66a88ac4fe69085f85ee4caa2a2bb9410ef3729549d2435a69be6fa60490b2dc2cf6a8efb86a26ccf9a87503f5f1ab7707329ba7bf903a431145#npm:0.5.4"],\
             ["@svgr/webpack", "npm:5.5.0"],\
             ["@swc/core", "npm:1.2.203"],\
+            ["@tailwindcss/forms", "virtual:41f4f1af63cb66a88ac4fe69085f85ee4caa2a2bb9410ef3729549d2435a69be6fa60490b2dc2cf6a8efb86a26ccf9a87503f5f1ab7707329ba7bf903a431145#npm:0.5.2"],\
             ["@tailwindcss/typography", "virtual:41f4f1af63cb66a88ac4fe69085f85ee4caa2a2bb9410ef3729549d2435a69be6fa60490b2dc2cf6a8efb86a26ccf9a87503f5f1ab7707329ba7bf903a431145#npm:0.5.2"],\
             ["@testing-library/jest-dom", "npm:4.2.4"],\
             ["@testing-library/react", "virtual:41f4f1af63cb66a88ac4fe69085f85ee4caa2a2bb9410ef3729549d2435a69be6fa60490b2dc2cf6a8efb86a26ccf9a87503f5f1ab7707329ba7bf903a431145#npm:12.1.4"],\
@@ -111,6 +112,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["react-app-polyfill", "npm:3.0.0"],\
             ["react-dev-utils", "npm:12.0.0"],\
             ["react-dom", "virtual:41f4f1af63cb66a88ac4fe69085f85ee4caa2a2bb9410ef3729549d2435a69be6fa60490b2dc2cf6a8efb86a26ccf9a87503f5f1ab7707329ba7bf903a431145#npm:18.1.0"],\
+            ["react-icons", "virtual:41f4f1af63cb66a88ac4fe69085f85ee4caa2a2bb9410ef3729549d2435a69be6fa60490b2dc2cf6a8efb86a26ccf9a87503f5f1ab7707329ba7bf903a431145#npm:4.4.0"],\
             ["react-query", "virtual:41f4f1af63cb66a88ac4fe69085f85ee4caa2a2bb9410ef3729549d2435a69be6fa60490b2dc2cf6a8efb86a26ccf9a87503f5f1ab7707329ba7bf903a431145#npm:3.39.1"],\
             ["react-refresh", "npm:0.11.0"],\
             ["react-router-dom", "virtual:41f4f1af63cb66a88ac4fe69085f85ee4caa2a2bb9410ef3729549d2435a69be6fa60490b2dc2cf6a8efb86a26ccf9a87503f5f1ab7707329ba7bf903a431145#npm:6.3.0"],\
@@ -4289,6 +4291,29 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageDependencies": [\
             ["@szmarczak/http-timer", "npm:1.1.2"],\
             ["defer-to-connect", "npm:1.1.3"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
+      ["@tailwindcss/forms", [\
+        ["npm:0.5.2", {\
+          "packageLocation": "./.yarn/cache/@tailwindcss-forms-npm-0.5.2-02045682b5-3c4df23491.zip/node_modules/@tailwindcss/forms/",\
+          "packageDependencies": [\
+            ["@tailwindcss/forms", "npm:0.5.2"]\
+          ],\
+          "linkType": "SOFT"\
+        }],\
+        ["virtual:41f4f1af63cb66a88ac4fe69085f85ee4caa2a2bb9410ef3729549d2435a69be6fa60490b2dc2cf6a8efb86a26ccf9a87503f5f1ab7707329ba7bf903a431145#npm:0.5.2", {\
+          "packageLocation": "./.yarn/__virtual__/@tailwindcss-forms-virtual-8e9a43a2f7/0/cache/@tailwindcss-forms-npm-0.5.2-02045682b5-3c4df23491.zip/node_modules/@tailwindcss/forms/",\
+          "packageDependencies": [\
+            ["@tailwindcss/forms", "virtual:41f4f1af63cb66a88ac4fe69085f85ee4caa2a2bb9410ef3729549d2435a69be6fa60490b2dc2cf6a8efb86a26ccf9a87503f5f1ab7707329ba7bf903a431145#npm:0.5.2"],\
+            ["@types/tailwindcss", null],\
+            ["mini-svg-data-uri", "npm:1.4.4"],\
+            ["tailwindcss", "virtual:41f4f1af63cb66a88ac4fe69085f85ee4caa2a2bb9410ef3729549d2435a69be6fa60490b2dc2cf6a8efb86a26ccf9a87503f5f1ab7707329ba7bf903a431145#npm:3.0.23"]\
+          ],\
+          "packagePeers": [\
+            "@types/tailwindcss",\
+            "tailwindcss"\
           ],\
           "linkType": "HARD"\
         }]\
@@ -13939,6 +13964,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD"\
         }]\
       ]],\
+      ["mini-svg-data-uri", [\
+        ["npm:1.4.4", {\
+          "packageLocation": "./.yarn/cache/mini-svg-data-uri-npm-1.4.4-929f6f1119-997f1fbd8d.zip/node_modules/mini-svg-data-uri/",\
+          "packageDependencies": [\
+            ["mini-svg-data-uri", "npm:1.4.4"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
       ["minimalistic-assert", [\
         ["npm:1.0.1", {\
           "packageLocation": "./.yarn/cache/minimalistic-assert-npm-1.0.1-dc8bb23d29-cc7974a926.zip/node_modules/minimalistic-assert/",\
@@ -17308,6 +17342,28 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD"\
         }]\
       ]],\
+      ["react-icons", [\
+        ["npm:4.4.0", {\
+          "packageLocation": "./.yarn/cache/react-icons-npm-4.4.0-a6c91164a4-dd93a1dcc8.zip/node_modules/react-icons/",\
+          "packageDependencies": [\
+            ["react-icons", "npm:4.4.0"]\
+          ],\
+          "linkType": "SOFT"\
+        }],\
+        ["virtual:41f4f1af63cb66a88ac4fe69085f85ee4caa2a2bb9410ef3729549d2435a69be6fa60490b2dc2cf6a8efb86a26ccf9a87503f5f1ab7707329ba7bf903a431145#npm:4.4.0", {\
+          "packageLocation": "./.yarn/__virtual__/react-icons-virtual-13a0502a6f/0/cache/react-icons-npm-4.4.0-a6c91164a4-dd93a1dcc8.zip/node_modules/react-icons/",\
+          "packageDependencies": [\
+            ["react-icons", "virtual:41f4f1af63cb66a88ac4fe69085f85ee4caa2a2bb9410ef3729549d2435a69be6fa60490b2dc2cf6a8efb86a26ccf9a87503f5f1ab7707329ba7bf903a431145#npm:4.4.0"],\
+            ["@types/react", "npm:18.0.12"],\
+            ["react", "npm:18.1.0"]\
+          ],\
+          "packagePeers": [\
+            "@types/react",\
+            "react"\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
       ["react-is", [\
         ["npm:16.13.1", {\
           "packageLocation": "./.yarn/cache/react-is-npm-16.13.1-a9b9382b4f-f7a19ac349.zip/node_modules/react-is/",\
@@ -19557,6 +19613,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@pmmmwh/react-refresh-webpack-plugin", "virtual:41f4f1af63cb66a88ac4fe69085f85ee4caa2a2bb9410ef3729549d2435a69be6fa60490b2dc2cf6a8efb86a26ccf9a87503f5f1ab7707329ba7bf903a431145#npm:0.5.4"],\
             ["@svgr/webpack", "npm:5.5.0"],\
             ["@swc/core", "npm:1.2.203"],\
+            ["@tailwindcss/forms", "virtual:41f4f1af63cb66a88ac4fe69085f85ee4caa2a2bb9410ef3729549d2435a69be6fa60490b2dc2cf6a8efb86a26ccf9a87503f5f1ab7707329ba7bf903a431145#npm:0.5.2"],\
             ["@tailwindcss/typography", "virtual:41f4f1af63cb66a88ac4fe69085f85ee4caa2a2bb9410ef3729549d2435a69be6fa60490b2dc2cf6a8efb86a26ccf9a87503f5f1ab7707329ba7bf903a431145#npm:0.5.2"],\
             ["@testing-library/jest-dom", "npm:4.2.4"],\
             ["@testing-library/react", "virtual:41f4f1af63cb66a88ac4fe69085f85ee4caa2a2bb9410ef3729549d2435a69be6fa60490b2dc2cf6a8efb86a26ccf9a87503f5f1ab7707329ba7bf903a431145#npm:12.1.4"],\
@@ -19629,6 +19686,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["react-app-polyfill", "npm:3.0.0"],\
             ["react-dev-utils", "npm:12.0.0"],\
             ["react-dom", "virtual:41f4f1af63cb66a88ac4fe69085f85ee4caa2a2bb9410ef3729549d2435a69be6fa60490b2dc2cf6a8efb86a26ccf9a87503f5f1ab7707329ba7bf903a431145#npm:18.1.0"],\
+            ["react-icons", "virtual:41f4f1af63cb66a88ac4fe69085f85ee4caa2a2bb9410ef3729549d2435a69be6fa60490b2dc2cf6a8efb86a26ccf9a87503f5f1ab7707329ba7bf903a431145#npm:4.4.0"],\
             ["react-query", "virtual:41f4f1af63cb66a88ac4fe69085f85ee4caa2a2bb9410ef3729549d2435a69be6fa60490b2dc2cf6a8efb86a26ccf9a87503f5f1ab7707329ba7bf903a431145#npm:3.39.1"],\
             ["react-refresh", "npm:0.11.0"],\
             ["react-router-dom", "virtual:41f4f1af63cb66a88ac4fe69085f85ee4caa2a2bb9410ef3729549d2435a69be6fa60490b2dc2cf6a8efb86a26ccf9a87503f5f1ab7707329ba7bf903a431145#npm:6.3.0"],\
