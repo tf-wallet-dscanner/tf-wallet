@@ -1,6 +1,6 @@
 import React from 'react';
+import { Route, Routes } from 'react-router-dom';
 import { APP_STAGE } from 'ui/constants/environment';
-import { Routes, Route } from 'react-router-dom';
 
 import About from './about';
 import Home from './home';
