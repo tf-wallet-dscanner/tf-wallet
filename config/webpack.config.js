@@ -335,6 +335,12 @@ module.exports = function (webpackEnv) {
         ]),
       ],
       fallback: {
+        url: require.resolve('url'),
+        fs: false,
+        crypto: require.resolve('crypto-browserify'),
+        http: require.resolve('stream-http'),
+        https: require.resolve('https-browserify'),
+        os: require.resolve('os-browserify/browser'),
         stream: require.resolve('stream-browserify'),
         events: require.resolve('events/'),
       },
