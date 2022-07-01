@@ -14,7 +14,8 @@
     "prettier": "prettier --write --config ./.prettierrc.cjs \"./src/**/*.{ts,tsx,js,jsx}\" || true",
     "postinstall": "husky install",
     "prepack": "pinst --disable",
-    "postpack": "pinst --enable"
+    "postpack": "pinst --enable",
+    "audit:fix": "npm_config_yes=true npx yarn-audit-fix"
   },
   "lint-staged": {
     "src/**": [
