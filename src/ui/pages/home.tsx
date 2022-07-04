@@ -2,6 +2,7 @@ import { FaBeer } from 'react-icons/fa';
 import { NavigateFunction, useNavigate } from 'react-router-dom';
 import Button from 'ui/components/atoms/button';
 import Container from 'ui/components/atoms/container';
+import Tooltip from 'ui/components/atoms/tooltip';
 import { THEME_COLOR } from 'ui/constants/colors';
 import { useCounterStore } from 'ui/store';
 
@@ -37,6 +38,26 @@ function Home() {
       <Button color={THEME_COLOR.WARNING} onClick={increasePopulation}>
         Click!
       </Button>
+      <div className="mt-10 ml-12">
+        <Tooltip message="top tooltip" placement="top">
+          <Button color={THEME_COLOR.WARNING}>top!!</Button>
+        </Tooltip>
+      </div>
+      <div className="mt-2 ml-12">
+        <Tooltip message="bottom  tooltip" placement="bottom">
+          <Button color={THEME_COLOR.WARNING}>bottom!!</Button>
+        </Tooltip>
+      </div>
+      <div className="mt-12 ml-20">
+        <Tooltip message="left  tooltip" placement="left">
+          <Button color={THEME_COLOR.WARNING}>left!!</Button>
+        </Tooltip>
+      </div>
+      <div className="mt-2 ml-12">
+        <Tooltip message="right tooltip" placement="right">
+          <Button color={THEME_COLOR.WARNING}>right!!</Button>
+        </Tooltip>
+      </div>
     </Container>
   );
 }

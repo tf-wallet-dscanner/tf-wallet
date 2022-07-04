@@ -22,7 +22,7 @@ function Tooltip({
 }: TooltipProps &
   Omit<ComponentPropsWithoutRef<typeof DEFAULT_TAG>, keyof TooltipProps>) {
   const tooltipClassName = classnames('tooltip', className);
-  const tooltipPlacement = `tooltip__message__${placement}`;
+  const tooltipPlacement = `tooltip__message-${placement}`;
   const tooltipMessageClassName = classnames(
     'tooltip__message',
     tooltipPlacement,

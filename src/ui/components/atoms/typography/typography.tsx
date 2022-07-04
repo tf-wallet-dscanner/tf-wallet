@@ -21,7 +21,7 @@ function Typography<T extends ElementType = typeof DEFAULT_TAG>({
   ...typographyProps
 }: TypographyProps<T> &
   Omit<ComponentPropsWithoutRef<T>, keyof TypographyProps<T>>) {
-  let Tag = as || DEFAULT_TAG;
+  const Tag = as || DEFAULT_TAG;
   const typographyClassName = classnames('typography', className);
 
   return (
