@@ -1,0 +1,33 @@
+.tooltip {
+  @apply relative;
+
+  &:hover &__message,
+  &:active &__message {
+    @apply block;
+  }
+
+  &__message {
+    @apply absolute hidden;
+
+    &__bottom {
+      &:before {
+        content: '';
+      }
+    }
+    &__left {
+      &:before {
+        content: '';
+      }
+    }
+    &__right {
+      &:before {
+        content: '';
+      }
+    }
+    &__top {
+      &:before {
+        content: '';
+      }
+    }
+  }
+}
