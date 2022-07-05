@@ -1,0 +1,52 @@
+.tooltip {
+  @apply relative w-fit h-fit;
+
+  &:hover &__message,
+  &:active &__message {
+    @apply opacity-100;
+  }
+
+  &__message {
+    @apply absolute w-fit z-10 text-white p-1 rounded opacity-0 transition;
+
+    &-bottom {
+      @apply right-1/2 translate-x-1/2 translate-y-3 bg-tooltip;
+
+      &:before {
+        content: '';
+        @apply absolute top-0 left-1/2 -translate-x-1/2 -translate-y-full
+          border-solid border-[5px] border-transparent border-b-tooltip;
+      }
+    }
+
+    &-left {
+      @apply -left-[10%] top-1/2 -translate-x-full -translate-y-1/2 bg-tooltip;
+
+      &:before {
+        content: '';
+        @apply absolute top-1/2 left-[99%] translate-x-0 -translate-y-1/2
+          border-solid border-[5px] border-transparent border-l-tooltip;
+      }
+    }
+
+    &-right {
+      @apply -right-[10%] top-1/2 translate-x-full -translate-y-1/2 bg-tooltip;
+
+      &:before {
+        content: '';
+        @apply absolute top-1/2 right-[99%] translate-x-0 -translate-y-1/2
+          border-solid border-[5px] border-transparent border-r-tooltip;
+      }
+    }
+
+    &-top {
+      @apply -top-3 right-1/2 translate-x-1/2 -translate-y-full bg-tooltip;
+
+      &:before {
+        content: '';
+        @apply absolute top-full left-1/2 -translate-x-1/2
+          border-solid border-[5px] border-transparent border-t-tooltip;
+      }
+    }
+  }
+}

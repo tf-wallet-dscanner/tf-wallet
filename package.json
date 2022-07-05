@@ -4,7 +4,7 @@
   "scripts": {
     "start:web": "node scripts/start.js",
     "start:extension": "nodemon scripts/build.dev.js",
-    "build": "rm -rf ./build && node scripts/build.js",
+    "build": "node scripts/build.js",
     "test": "node scripts/test.js",
     "test:coverage": "yarn test --watchAll=false --coverage",
     "lint": "eslint \"./**/*.{ts,tsx,js,jsx}\" --ignore-path .eslintignore || true",
@@ -14,7 +14,8 @@
     "prettier": "prettier --write --config ./.prettierrc.cjs \"./src/**/*.{ts,tsx,js,jsx}\" || true",
     "postinstall": "husky install",
     "prepack": "pinst --disable",
-    "postpack": "pinst --enable"
+    "postpack": "pinst --enable",
+    "audit:fix": "npm_config_yes=true npx yarn-audit-fix"
   },
   "lint-staged": {
     "src/**": [

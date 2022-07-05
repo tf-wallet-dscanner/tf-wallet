@@ -1,0 +1,27 @@
+.tabs {
+  @apply flex flex-col w-full h-[300px];
+
+  &__header {
+    @apply relative flex border border-gray-200 cursor-pointer;
+
+    &-item {
+      @apply flex-auto p-3 text-center font-bold;
+
+      &-active {
+        @apply text-blue-500;
+      }
+    }
+
+    &-indicator {
+      @apply transition-all duration-300 ease-in-out h-[2px] bg-blue-500 left-0 absolute bottom-0;
+    }
+  }
+
+  &__body {
+    @apply h-full border-x border-b border-gray-200;
+
+    &-item {
+      @apply w-full h-full;
+    }
+  }
+}

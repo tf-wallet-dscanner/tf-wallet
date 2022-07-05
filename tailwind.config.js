@@ -21,6 +21,10 @@ module.exports = {
         warning: '#fff4e5',
         info: '#e5f6fd',
         success: '#edf7ed',
+        tooltip: '#3e3434',
+      },
+      borderColor: {
+        tooltip: '#3e3434',
       },
     },
   },
