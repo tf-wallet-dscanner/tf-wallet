@@ -42,7 +42,7 @@ export const TRANSACTION_STATUSES = {
 /**
  * @type {TransactionEnvelopeTypes}
  */
- export const TRANSACTION_ENVELOPE_TYPES = {
+export const TRANSACTION_ENVELOPE_TYPES = {
   LEGACY: '0x0',
   ACCESS_LIST: '0x1',
   FEE_MARKET: '0x2',

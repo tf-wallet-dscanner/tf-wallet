@@ -1,7 +1,7 @@
 import SafeEventEmitter from '@metamask/safe-event-emitter';
 import { EthereumRpcError } from 'eth-rpc-errors';
 
-import createRandomId from '../../../shared/modules/random-id';
+import createRandomId from '../../shared/modules/random-id';
 
 const TEN_SECONDS_IN_MILLISECONDS = 10_000;
 

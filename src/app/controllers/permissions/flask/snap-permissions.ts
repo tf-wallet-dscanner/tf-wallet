@@ -4,7 +4,7 @@ import {
 } from '@metamask/rpc-methods';
 import { endowmentPermissionBuilders } from '@metamask/snap-controllers';
 
-import { ExcludedSnapPermissions } from '../../../../../shared/constants/permissions';
+import { ExcludedSnapPermissions } from '../../../../shared/constants/permissions';
 
 /**
  * @returns {Record<string, Record<string, unknown>>} All endowment permission

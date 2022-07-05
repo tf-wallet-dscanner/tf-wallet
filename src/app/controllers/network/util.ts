@@ -1,5 +1,5 @@
-import { NETWORK_TO_NAME_MAP } from '../../../../shared/constants/network';
-import { TRANSACTION_ENVELOPE_TYPES } from '../../../../shared/constants/transaction';
+import { NETWORK_TO_NAME_MAP } from '../../../shared/constants/network';
+import { TRANSACTION_ENVELOPE_TYPES } from '../../../shared/constants/transaction';
 
 export const getNetworkDisplayName = (key: any) => NETWORK_TO_NAME_MAP[key];
 

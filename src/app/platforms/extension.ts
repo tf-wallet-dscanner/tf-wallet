@@ -1,8 +1,8 @@
 import { getBlockExplorerLink } from '@metamask/etherscan-link';
 import browser from 'webextension-polyfill';
 
-import { ENVIRONMENT_TYPE_BACKGROUND } from '../../../shared/constants/app';
-import { TRANSACTION_STATUSES } from '../../../shared/constants/transaction';
+import { ENVIRONMENT_TYPE_BACKGROUND } from '../../shared/constants/app';
+// import { TRANSACTION_STATUSES } from '../../shared/constants/transaction';
 import { checkForError, getEnvironmentType } from '../lib/util';
 
 export default class ExtensionPlatform {
@@ -149,21 +149,21 @@ export default class ExtensionPlatform {
     }
   }
 
-  showTransactionNotification(txMeta: any, rpcPrefs: any) {
-    const { status, txReceipt: { status: receiptStatus } = {} as any } = txMeta;
+  // showTransactionNotification(txMeta: any, rpcPrefs: any) {
+  //   const { status, txReceipt: { status: receiptStatus } = {} as any } = txMeta;
 
-    if (status === TRANSACTION_STATUSES.CONFIRMED) {
-      // There was an on-chain failure
-      receiptStatus === '0x0'
-        ? this._showFailedTransaction(
-            txMeta,
-            'Transaction encountered an error.',
-          )
-        : this._showConfirmedTransaction(txMeta, rpcPrefs);
-    } else if (status === TRANSACTION_STATUSES.FAILED) {
-      this._showFailedTransaction(txMeta);
-    }
-  }
+  //   if (status === TRANSACTION_STATUSES.CONFIRMED) {
+  //     // There was an on-chain failure
+  //     receiptStatus === '0x0'
+  //       ? this._showFailedTransaction(
+  //           txMeta,
+  //           'Transaction encountered an error.',
+  //         )
+  //       : this._showConfirmedTransaction(txMeta, rpcPrefs);
+  //   } else if (status === TRANSACTION_STATUSES.FAILED) {
+  //     this._showFailedTransaction(txMeta);
+  //   }
+  // }
 
   addOnRemovedListener(listener: any) {
     browser.windows.onRemoved.addListener(listener);

@@ -3,35 +3,31 @@ import { PermissionType, constructPermission } from '@metamask/controllers';
 import {
   CaveatTypes,
   RestrictedMethods,
-} from '../../../../shared/constants/permissions';
+} from '../../../shared/constants/permissions';
 
 /**
- * Gets the specifications for all caveats that will be recognized by the
- * PermissionController.
- *
- * @param {{
- *   getIdentities: () => Record<string, Identity>,
- * }} options - Options bag.
+ * This file contains the specifications of the permissions and caveats
+ * that are recognized by our permission system. See the PermissionController
+ * README in @metamask/snap-controllers for details.
  */
-export const getCaveatSpecifications = ({ getIdentities }: any) => {
-  return {
-    [CaveatTypes.restrictReturnedAccounts]: {
-      type: CaveatTypes.restrictReturnedAccounts,
 
-      decorator: (method: any, caveat: any) => {
-        return async (args: any) => {
-          const result = await method(args);
-          return result
-            .filter((account: any) => caveat.value.includes(account))
-            .slice(0, 1);
-        };
-      },
+/**
+ * The "keys" of all of permissions recognized by the PermissionController.
+ * Permission keys and names have distinct meanings in the permission system.
+ */
+const PermissionKeys = Object.freeze({
+  ...RestrictedMethods,
+});
 
-      validator: (caveat: any, _origin: any, _target: any) =>
-        validateCaveatAccounts(caveat.value, getIdentities),
-    },
-  };
-};
+/**
+ * Factory functions for all caveat types recognized by the
+ * PermissionController.
+ */
+const CaveatFactories = Object.freeze({
+  [CaveatTypes.restrictReturnedAccounts]: (accounts: any) => {
+    return { type: CaveatTypes.restrictReturnedAccounts, value: accounts };
+  },
+});
 
 /**
  * Gets the specifications for all permissions that will be recognized by the
@@ -85,7 +81,8 @@ export const getPermissionSpecifications = ({
         });
       },
 
-      methodImplementation: async (_args: any) => {
+      // methodImplementation: async (_args: any) => {
+      methodImplementation: async () => {
         const accounts = await getAllAccounts();
         const identities = getIdentities();
 
@@ -116,7 +113,8 @@ export const getPermissionSpecifications = ({
         });
       },
 
-      validator: (permission: any, _origin: any, _target: any) => {
+      // validator: (permission: any, _origin: any, _target: any) => {
+      validator: (permission: any) => {
         const { caveats } = permission;
         if (
           !caveats ||
@@ -165,28 +163,33 @@ function validateCaveatAccounts(accounts: any, getIdentities: any) {
 }
 
 /**
- * This file contains the specifications of the permissions and caveats
- * that are recognized by our permission system. See the PermissionController
- * README in @metamask/snap-controllers for details.
- */
-
-/**
- * The "keys" of all of permissions recognized by the PermissionController.
- * Permission keys and names have distinct meanings in the permission system.
- */
-const PermissionKeys = Object.freeze({
-  ...RestrictedMethods,
-});
-
-/**
- * Factory functions for all caveat types recognized by the
+ * Gets the specifications for all caveats that will be recognized by the
  * PermissionController.
+ *
+ * @param {{
+ *   getIdentities: () => Record<string, Identity>,
+ * }} options - Options bag.
  */
-const CaveatFactories = Object.freeze({
-  [CaveatTypes.restrictReturnedAccounts]: (accounts: any) => {
-    return { type: CaveatTypes.restrictReturnedAccounts, value: accounts };
-  },
-});
+export const getCaveatSpecifications = ({ getIdentities }: any) => {
+  return {
+    [CaveatTypes.restrictReturnedAccounts]: {
+      type: CaveatTypes.restrictReturnedAccounts,
+
+      decorator: (method: any, caveat: any) => {
+        return async (args: any) => {
+          const result = await method(args);
+          return result
+            .filter((account: any) => caveat.value.includes(account))
+            .slice(0, 1);
+        };
+      },
+
+      // validator: (caveat: any, _origin: any, _target: any) =>
+      validator: (caveat: any) =>
+        validateCaveatAccounts(caveat.value, getIdentities),
+    },
+  };
+};
 
 /**
  * All unrestricted methods recognized by the PermissionController.

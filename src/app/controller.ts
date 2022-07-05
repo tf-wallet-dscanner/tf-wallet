@@ -18,9 +18,9 @@ import {
   MESSAGE_TYPE, ///: END:ONLY_INCLUDE_IN
   // ORIGIN_METAMASK,
   SUBJECT_TYPES,
-} from '../../shared/constants/app';
-import { RestrictedMethods } from '../../shared/constants/permissions';
-import { MILLISECOND } from '../../shared/constants/time';
+} from '../shared/constants/app';
+import { RestrictedMethods } from '../shared/constants/permissions';
+import { MILLISECOND } from '../shared/constants/time';
 import {
   NOTIFICATION_NAMES,
   buildSnapEndowmentSpecifications,

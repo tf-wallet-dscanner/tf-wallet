@@ -343,7 +343,9 @@ module.exports = function (webpackEnv) {
         os: require.resolve('os-browserify/browser'),
         stream: require.resolve('stream-browserify'),
         events: require.resolve('events/'),
-        stream_transform: require.resolve('readable-stream/transform'),
+        assert: require.resolve('assert/'),
+        _stream_transform: require.resolve('readable-stream/'),
+        constants: require.resolve('constants-browserify'),
       },
     },
     module: {

@@ -1,12 +1,13 @@
 import PortStream from 'extension-port-stream';
 import browser, { Runtime } from 'webextension-polyfill';
 
-import MetamaskController from './controller';
-import ExtensionPlatform from './platforms/extension';
+// import MetamaskController from './controller';
 
-const INFURA_PROJECT_ID = '00000000000';
+// import ExtensionPlatform from './platforms/extension';
 
-const platform = new ExtensionPlatform();
+// const INFURA_PROJECT_ID = '00000000000';
+
+// const platform = new ExtensionPlatform();
 
 /**
  * Initializes the MetaMask Controller with any initial state and default language.
@@ -26,27 +27,27 @@ const setupController = async (
 ): Promise<any> => {
   console.log('setupController', remoteSourcePort);
 
-  const controller = new MetamaskController({
-    infuraProjectId: INFURA_PROJECT_ID,
-    // User confirmation callbacks:
-    // showUserConfirmation: triggerUi,
-    // openPopup,
-    // initial state
-    initState,
-    // initial locale code
-    initLangCode,
-    // platform specific api
-    platform,
-    // notificationManager,
-    browser,
-    // getRequestAccountTabIds: () => {
-    //   return requestAccountTabIds;
-    // },
-    // getOpenMetamaskTabsIds: () => {
-    //   return openMetamaskTabsIDs;
-    // },
-  });
-  console.log(controller);
+  // const controller = new MetamaskController({
+  //   infuraProjectId: INFURA_PROJECT_ID,
+  //   // User confirmation callbacks:
+  //   // showUserConfirmation: triggerUi,
+  //   // openPopup,
+  //   // initial state
+  //   initState,
+  //   // initial locale code
+  //   initLangCode,
+  //   // platform specific api
+  //   platform,
+  //   // notificationManager,
+  //   browser,
+  //   // getRequestAccountTabIds: () => {
+  //   //   return requestAccountTabIds;
+  //   // },
+  //   // getOpenMetamaskTabsIds: () => {
+  //   //   return openMetamaskTabsIDs;
+  //   // },
+  // });
+  // console.log('controller', controller);
 
   /**
    * Connects a Port to the MetaMask controller via a multiplexed duplex stream.
@@ -64,8 +65,8 @@ const setupController = async (
       const portStream = new PortStream(remotePort);
       console.log('BG - portStream', portStream, ',processName', processName);
       // communication with popup
-      controller.isClientOpen = true;
-      controller.setupTrustedCommunication(portStream, remotePort.sender);
+      // controller.isClientOpen = true;
+      // controller.setupTrustedCommunication(portStream, remotePort.sender);
       // Message below if captured by UI code in app/scripts/ui.js which will trigger UI initialisation
       // This ensures that UI is initialised only after background is ready
       // It fixes the issue of blank screen coming when extension is loaded, the issue is very frequent in MV3

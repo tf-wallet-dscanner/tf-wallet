@@ -6,7 +6,7 @@ import {
   ENVIRONMENT_TYPE_FULLSCREEN,
   ENVIRONMENT_TYPE_NOTIFICATION,
   ENVIRONMENT_TYPE_POPUP,
-} from '../../../shared/constants/app';
+} from '../../shared/constants/app';
 
 /**
  * @see {@link getEnvironmentType}

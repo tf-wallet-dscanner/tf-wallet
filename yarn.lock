@@ -4180,23 +4180,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/jest@npm:*":
+"@types/jest@npm:*, @types/jest@npm:^28.1.4":
   version: 28.1.4
   resolution: "@types/jest@npm:28.1.4"
   dependencies:
     jest-matcher-utils: ^28.0.0
     pretty-format: ^28.0.0
   checksum: 97e22c600397bb4f30e39b595f8285ae92e4eb29a1ef6d1689749e4a4da683d88ecfe717b64492f6adc4c17c1c989520c3546f938c84a7d435c6ac3acf1a2bdc
-  languageName: node
-  linkType: hard
-
-"@types/jest@npm:^27.4.1":
-  version: 27.4.1
-  resolution: "@types/jest@npm:27.4.1"
-  dependencies:
-    jest-matcher-utils: ^27.0.0
-    pretty-format: ^27.0.0
-  checksum: 5184f3eef4832d01ee8f59bed15eec45ccc8e29c724a5e6ce37bf74396b37bdf04f557000f45ba4fc38ae6075cf9cfcce3d7a75abc981023c61ceb27230a93e4
   languageName: node
   linkType: hard
 
@@ -4292,6 +4282,13 @@ __metadata:
   dependencies:
     "@types/node": "*"
   checksum: d15024b1957c21cf3b8887329d9bd8dfde754cf13a09d76ae25f1391cfc62bb8b8d7b760773c5dbaa748172fba8b3e0c3dbe962af6ccbd69b76df12a48dfba40
+  languageName: node
+  linkType: hard
+
+"@types/pify@npm:^5.0.1":
+  version: 5.0.1
+  resolution: "@types/pify@npm:5.0.1"
+  checksum: f85bf0739666d74b80ca04d4a6cb75aebdea18bc29d44a1ad28f8d49e4f2f8cfc0fd92b6939e7250beb7815db937299d381eadbcb8e99988700772303da66fb7
   languageName: node
   linkType: hard
 
@@ -6896,6 +6893,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"constants-browserify@npm:^1.0.0":
+  version: 1.0.0
+  resolution: "constants-browserify@npm:1.0.0"
+  checksum: f7ac8c6d0b6e4e0c77340a1d47a3574e25abd580bfd99ad707b26ff7618596cf1a5e5ce9caf44715e9e01d4a5d12cb3b4edaf1176f34c19adb2874815a56e64f
+  languageName: node
+  linkType: hard
+
 "content-disposition@npm:0.5.4":
   version: 0.5.4
   resolution: "content-disposition@npm:0.5.4"
@@ -8068,6 +8072,18 @@ __metadata:
   languageName: node
   linkType: hard
 
+"duplexify@npm:^4.1.2":
+  version: 4.1.2
+  resolution: "duplexify@npm:4.1.2"
+  dependencies:
+    end-of-stream: ^1.4.1
+    inherits: ^2.0.3
+    readable-stream: ^3.1.1
+    stream-shift: ^1.0.0
+  checksum: 964376c61c0e92f6ed0694b3ba97c84f199413dc40ab8dfdaef80b7a7f4982fcabf796214e28ed614a5bc1ec45488a29b81e7d46fa3f5ddf65bcb118c20145ad
+  languageName: node
+  linkType: hard
+
 "eastasianwidth@npm:^0.2.0":
   version: 0.2.0
   resolution: "eastasianwidth@npm:0.2.0"
@@ -8122,6 +8138,13 @@ __metadata:
     minimalistic-assert: ^1.0.1
     minimalistic-crypto-utils: ^1.0.1
   checksum: d56d21fd04e97869f7ffcc92e18903b9f67f2d4637a23c860492fbbff5a3155fd9ca0184ce0c865dd6eb2487d234ce9551335c021c376cd2d3b7cb749c7d10f4
+  languageName: node
+  linkType: hard
+
+"emitter-component@npm:^1.1.1":
+  version: 1.1.1
+  resolution: "emitter-component@npm:1.1.1"
+  checksum: 10e907f507a8c16a318e07595119e58b5c3267528d4e3b962ee9b14fd83c97599e7931ccb983ec551a8de8116955c1d6ae7d213c5b0c920b62c02b7cb8d7a4d7
   languageName: node
   linkType: hard
 
@@ -8812,6 +8835,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"eth-block-tracker@npm:^5.0.1":
+  version: 5.0.1
+  resolution: "eth-block-tracker@npm:5.0.1"
+  dependencies:
+    "@metamask/safe-event-emitter": ^2.0.0
+    json-rpc-random-id: ^1.0.1
+    pify: ^3.0.0
+  checksum: 83b2dd28fb7f12d644f1c1bc72011fb6bb683012489973e31171d445a34ddf6a1c167be4e4232bf7eb65144f08d92705795cf6b371c5aa6a8e78ebf48e4d5654
+  languageName: node
+  linkType: hard
+
 "eth-ens-namehash@npm:^2.0.8":
   version: 2.0.8
   resolution: "eth-ens-namehash@npm:2.0.8"
@@ -8864,6 +8898,24 @@ __metadata:
     pify: ^3.0.0
     safe-event-emitter: ^1.0.1
   checksum: d4ef8c6ba85cc0060c09ded79152d46cdd1a85124c655f40bb8ca72a4b52dfe7ef101b45dae1ac04558900ccb10b98e5c9570be22715a7dc158e822728e159b5
+  languageName: node
+  linkType: hard
+
+"eth-json-rpc-middleware@npm:^8.1.0":
+  version: 8.1.0
+  resolution: "eth-json-rpc-middleware@npm:8.1.0"
+  dependencies:
+    "@metamask/safe-event-emitter": ^2.0.0
+    btoa: ^1.2.1
+    clone: ^2.1.1
+    eth-block-tracker: ^5.0.1
+    eth-rpc-errors: ^4.0.3
+    eth-sig-util: ^1.4.2
+    json-rpc-engine: ^6.1.0
+    json-stable-stringify: ^1.0.1
+    node-fetch: ^2.6.7
+    pify: ^3.0.0
+  checksum: ec10bbc04e3b7696f82db2db528b052c8f6de811c90a12d4eb32f23cbe6ea198d86656afa5b53c52de06b631fef633cf29409bb56c04a16f173da94ee1d89ab6
   languageName: node
   linkType: hard
 
@@ -11836,7 +11888,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"jest-matcher-utils@npm:^27.0.0, jest-matcher-utils@npm:^27.5.1":
+"jest-matcher-utils@npm:^27.5.1":
   version: 27.5.1
   resolution: "jest-matcher-utils@npm:27.5.1"
   dependencies:
@@ -15404,7 +15456,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"pretty-format@npm:^27.0.0, pretty-format@npm:^27.0.2, pretty-format@npm:^27.5.1":
+"pretty-format@npm:^27.0.2, pretty-format@npm:^27.5.1":
   version: 27.5.1
   resolution: "pretty-format@npm:27.5.1"
   dependencies:
@@ -17266,6 +17318,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"stream@npm:^0.0.2":
+  version: 0.0.2
+  resolution: "stream@npm:0.0.2"
+  dependencies:
+    emitter-component: ^1.1.1
+  checksum: 43d89e176c282234d452754f9b55a82c74ea68345bf6176af32c4c213801f88df7984c83ec5a735457705dddf4668373edb9f0ec270a7491e1d881631a763978
+  languageName: node
+  linkType: hard
+
 "strict-event-emitter@npm:^0.2.0":
   version: 0.2.0
   resolution: "strict-event-emitter@npm:0.2.0"
@@ -17389,7 +17450,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"string_decoder@npm:^1.1.1":
+"string_decoder@npm:^1.1.1, string_decoder@npm:^1.3.0":
   version: 1.3.0
   resolution: "string_decoder@npm:1.3.0"
   dependencies:
@@ -17934,6 +17995,7 @@ __metadata:
     "@commitlint/config-conventional": ^16.2.1
     "@metamask/controllers": ^30.0.2
     "@metamask/etherscan-link": ^2.1.0
+    "@metamask/object-multiplex": ^1.2.0
     "@metamask/obs-store": ^7.0.0
     "@metamask/rpc-methods": ^0.16.0
     "@metamask/safe-event-emitter": ^2.0.0
@@ -17947,9 +18009,10 @@ __metadata:
     "@testing-library/react": ^12.1.4
     "@testing-library/user-event": ^13.5.0
     "@trivago/prettier-plugin-sort-imports": ^3.2.0
-    "@types/jest": ^27.4.1
+    "@types/jest": ^28.1.4
     "@types/lodash": ^4
     "@types/node": ^16.11.26
+    "@types/pify": ^5.0.1
     "@types/pump": ^1.1.1
     "@types/react": ^18.0.12
     "@types/react-dom": ^18.0.5
@@ -17958,6 +18021,7 @@ __metadata:
     "@types/webextension-polyfill": ^0.9.0
     "@typescript-eslint/eslint-plugin": ^5.15.0
     "@typescript-eslint/parser": ^5.15.0
+    assert: ^2.0.0
     async-mutex: ^0.3.2
     autoprefixer: ^10.4.4
     axios: ^0.26.1
@@ -17965,12 +18029,14 @@ __metadata:
     babel-loader: ^8.2.3
     babel-plugin-named-asset-import: ^0.3.8
     babel-preset-react-app: ^10.0.1
+    babel-runtime: ^6.26.0
     bfj: ^7.0.2
     browserslist: ^4.18.1
     buffer: ^6.0.3
     camelcase: ^6.2.1
     case-sensitive-paths-webpack-plugin: ^2.4.0
     classnames: ^2.3.1
+    constants-browserify: ^1.0.0
     copy-webpack-plugin: ^11.0.0
     crypto-browserify: ^3.12.0
     css-loader: ^6.5.1
@@ -17978,6 +18044,7 @@ __metadata:
     cssnano: ^5.1.4
     dotenv: ^10.0.0
     dotenv-expand: ^5.1.0
+    duplexify: ^4.1.2
     eslint: ^8.11.0
     eslint-config-airbnb-typescript: ^16.1.3
     eslint-config-prettier: ^8.5.0
@@ -17988,6 +18055,7 @@ __metadata:
     eslint-plugin-react: ^7.29.4
     eslint-plugin-react-hooks: ^4.3.0
     eslint-webpack-plugin: ^3.1.1
+    eth-json-rpc-middleware: ^8.1.0
     eth-keyring-controller: ^7.0.2
     eth-rpc-errors: ^4.0.3
     eth-sig-util: ^3.0.1
@@ -18021,6 +18089,7 @@ __metadata:
     postcss-preset-env: ^7.0.1
     postcss-scss: ^4.0.3
     prettier: ^2.6.0
+    promise-to-callback: ^1.0.0
     prompts: ^2.4.2
     pump: ^3.0.0
     react: ^18.1.0
@@ -18038,8 +18107,10 @@ __metadata:
     sass-loader: ^12.3.0
     semver: ^7.3.5
     source-map-loader: ^3.0.0
+    stream: ^0.0.2
     stream-browserify: ^3.0.0
     stream-http: ^3.2.0
+    string_decoder: ^1.3.0
     style-loader: ^3.3.1
     stylelint: ^14.6.0
     stylelint-config-prettier: ^9.0.3
