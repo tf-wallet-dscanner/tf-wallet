@@ -1,13 +1,12 @@
 import PortStream from 'extension-port-stream';
 import browser, { Runtime } from 'webextension-polyfill';
 
-// import MetamaskController from './controller';
+import MetamaskController from './controller';
+import ExtensionPlatform from './platforms/extension';
 
-// import ExtensionPlatform from './platforms/extension';
+const INFURA_PROJECT_ID = '00000000000';
 
-// const INFURA_PROJECT_ID = '00000000000';
-
-// const platform = new ExtensionPlatform();
+const platform = new ExtensionPlatform();
 
 /**
  * Initializes the MetaMask Controller with any initial state and default language.
@@ -27,27 +26,27 @@ const setupController = async (
 ): Promise<any> => {
   console.log('setupController', remoteSourcePort);
 
-  // const controller = new MetamaskController({
-  //   infuraProjectId: INFURA_PROJECT_ID,
-  //   // User confirmation callbacks:
-  //   // showUserConfirmation: triggerUi,
-  //   // openPopup,
-  //   // initial state
-  //   initState,
-  //   // initial locale code
-  //   initLangCode,
-  //   // platform specific api
-  //   platform,
-  //   // notificationManager,
-  //   browser,
-  //   // getRequestAccountTabIds: () => {
-  //   //   return requestAccountTabIds;
-  //   // },
-  //   // getOpenMetamaskTabsIds: () => {
-  //   //   return openMetamaskTabsIDs;
-  //   // },
-  // });
-  // console.log('controller', controller);
+  const controller = new MetamaskController({
+    infuraProjectId: INFURA_PROJECT_ID,
+    // User confirmation callbacks:
+    // showUserConfirmation: triggerUi,
+    // openPopup,
+    // initial state
+    initState,
+    // initial locale code
+    initLangCode,
+    // platform specific api
+    platform,
+    // notificationManager,
+    browser,
+    // getRequestAccountTabIds: () => {
+    //   return requestAccountTabIds;
+    // },
+    // getOpenMetamaskTabsIds: () => {
+    //   return openMetamaskTabsIDs;
+    // },
+  });
+  console.log('controller', controller);
 
   /**
    * Connects a Port to the MetaMask controller via a multiplexed duplex stream.

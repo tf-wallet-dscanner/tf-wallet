@@ -346,6 +346,7 @@ module.exports = function (webpackEnv) {
         assert: require.resolve('assert/'),
         _stream_transform: require.resolve('readable-stream/'),
         constants: require.resolve('constants-browserify'),
+        buffer: require.resolve('buffer/'),
       },
     },
     module: {
@@ -796,6 +797,12 @@ module.exports = function (webpackEnv) {
             },
           },
         }),
+      new webpack.ProvidePlugin({
+        Buffer: ['buffer', 'Buffer'],
+      }),
+      new webpack.ProvidePlugin({
+        process: 'process/browser',
+      }),
     ].filter(Boolean),
     // Turn off performance processing because we utilize
     // our own hints via the FileSizeReporter

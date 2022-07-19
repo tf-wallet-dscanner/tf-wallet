@@ -14,7 +14,15 @@ const root = ReactDOM.createRoot(
 );
 const queryClient = new QueryClient();
 
-browser.runtime.connect({ name: 'popup' });
+const extensionPort = browser.runtime.connect({ name: 'popup' });
+//const connectionStream = new PortStream(extensionPort);
+
+extensionPort.onMessage.addListener((message) => {
+  if (message?.name === 'CONNECTION_READY') {
+    //initializeUiWithTab(activeTab);
+    console.log('UI - CONNECTION_READY', message);
+  }
+});
 
 root.render(
   <React.StrictMode>

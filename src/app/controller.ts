@@ -102,7 +102,6 @@ export default class MetamaskController extends EventEmitter {
    * @param {Object} opts
    */
   constructor(opts: MetamaskControllerOptions) {
-    console.log('MetamaskControllerOptions constructor');
     super();
     this.defaultMaxListeners = 20;
 
@@ -115,6 +114,7 @@ export default class MetamaskController extends EventEmitter {
     this.platform = opts.platform;
     this.notificationManager = opts.notificationManager;
     const initState = opts.initState || {};
+    console.log('MetamaskController: initState', initState);
     const version = this.platform.getVersion();
     this.recordFirstTimeInfo(initState);
 
