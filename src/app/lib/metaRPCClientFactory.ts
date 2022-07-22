@@ -30,6 +30,8 @@ class MetaRPCClient {
     this.requests.set(id, cb);
     this.connectionStream.write(payload);
     this.responseHandled[id] = false;
+    // this.responseHandled[id] = true;
+    console.log('metaRPC payload', payload, this.responseHandled);
     if (payload.method === 'getState') {
       setTimeout(() => {
         if (!this.responseHandled[id] && cb) {

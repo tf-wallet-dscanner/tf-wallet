@@ -13,9 +13,12 @@ async function startApp(
 
 export default function launchMetamaskUi(opts: any, cb: any) {
   const { backgroundConnection } = opts;
+  console.log('launchMetamaskUi 1', backgroundConnection);
   actions._setBackgroundConnection(backgroundConnection);
+
   // check if we are unlocked first
   backgroundConnection.getState(function (err: any, metamaskState: any) {
+    console.log('launchMetamaskUi 2', err, metamaskState);
     if (err) {
       cb(err, metamaskState);
       return;

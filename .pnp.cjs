@@ -100,9 +100,11 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["eslint-webpack-plugin", "virtual:41f4f1af63cb66a88ac4fe69085f85ee4caa2a2bb9410ef3729549d2435a69be6fa60490b2dc2cf6a8efb86a26ccf9a87503f5f1ab7707329ba7bf903a431145#npm:3.1.1"],\
             ["eth-json-rpc-middleware", "npm:8.1.0"],\
             ["eth-keyring-controller", "npm:7.0.2"],\
+            ["eth-query", "npm:2.1.2"],\
             ["eth-rpc-errors", "npm:4.0.3"],\
             ["eth-sig-util", "npm:3.0.1"],\
             ["ethers", "npm:5.6.9"],\
+            ["ethjs", "npm:0.4.0"],\
             ["events", "npm:3.3.0"],\
             ["extension-port-stream", "npm:2.0.1"],\
             ["file-loader", "virtual:41f4f1af63cb66a88ac4fe69085f85ee4caa2a2bb9410ef3729549d2435a69be6fa60490b2dc2cf6a8efb86a26ccf9a87503f5f1ab7707329ba7bf903a431145#npm:6.2.0"],\
@@ -124,6 +126,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["node-sass", "npm:7.0.1"],\
             ["nodemon", "npm:2.0.16"],\
             ["os-browserify", "npm:0.3.0"],\
+            ["pify", "npm:6.0.0"],\
             ["pinst", "npm:3.0.0"],\
             ["postcss", "npm:8.4.12"],\
             ["postcss-flexbugs-fixes", "virtual:41f4f1af63cb66a88ac4fe69085f85ee4caa2a2bb9410ef3729549d2435a69be6fa60490b2dc2cf6a8efb86a26ccf9a87503f5f1ab7707329ba7bf903a431145#npm:5.0.2"],\
@@ -168,6 +171,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["typescript", "patch:typescript@npm%3A4.6.2#~builtin<compat/typescript>::version=4.6.2&hash=bda367"],\
             ["url", "npm:0.11.0"],\
             ["util", "npm:0.12.4"],\
+            ["web3-stream-provider", "npm:4.0.0"],\
             ["webextension-polyfill", "npm:0.9.0"],\
             ["webpack", "virtual:41f4f1af63cb66a88ac4fe69085f85ee4caa2a2bb9410ef3729549d2435a69be6fa60490b2dc2cf6a8efb86a26ccf9a87503f5f1ab7707329ba7bf903a431145#npm:5.70.0"],\
             ["webpack-dev-server", "virtual:41f4f1af63cb66a88ac4fe69085f85ee4caa2a2bb9410ef3729549d2435a69be6fa60490b2dc2cf6a8efb86a26ccf9a87503f5f1ab7707329ba7bf903a431145#npm:4.7.4"],\
@@ -18485,6 +18489,23 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["number-to-bn", "npm:1.7.0"]\
           ],\
           "linkType": "HARD"\
+        }],\
+        ["npm:0.4.0", {\
+          "packageLocation": "./.yarn/cache/ethjs-npm-0.4.0-0ce2b20317-19d3bfa954.zip/node_modules/ethjs/",\
+          "packageDependencies": [\
+            ["ethjs", "npm:0.4.0"],\
+            ["bn.js", "npm:4.11.6"],\
+            ["ethjs-abi", "npm:0.2.1"],\
+            ["ethjs-contract", "npm:0.2.3"],\
+            ["ethjs-filter", "npm:0.1.8"],\
+            ["ethjs-provider-http", "npm:0.1.6"],\
+            ["ethjs-query", "npm:0.3.8"],\
+            ["ethjs-unit", "npm:0.1.6"],\
+            ["ethjs-util", "npm:0.1.3"],\
+            ["js-sha3", "npm:0.5.5"],\
+            ["number-to-bn", "npm:1.7.0"]\
+          ],\
+          "linkType": "HARD"\
         }]\
       ]],\
       ["ethjs-abi", [\
@@ -18514,6 +18535,18 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/ethjs-contract-npm-0.2.2-a673a3f380-b340749cf5.zip/node_modules/ethjs-contract/",\
           "packageDependencies": [\
             ["ethjs-contract", "npm:0.2.2"],\
+            ["ethjs-abi", "npm:0.2.0"],\
+            ["ethjs-filter", "npm:0.1.8"],\
+            ["ethjs-util", "npm:0.1.3"],\
+            ["js-sha3", "npm:0.5.5"]\
+          ],\
+          "linkType": "HARD"\
+        }],\
+        ["npm:0.2.3", {\
+          "packageLocation": "./.yarn/cache/ethjs-contract-npm-0.2.3-f6cc6947d4-3048bc972b.zip/node_modules/ethjs-contract/",\
+          "packageDependencies": [\
+            ["ethjs-contract", "npm:0.2.3"],\
+            ["babel-runtime", "npm:6.26.0"],\
             ["ethjs-abi", "npm:0.2.0"],\
             ["ethjs-filter", "npm:0.1.8"],\
             ["ethjs-util", "npm:0.1.3"],\
@@ -18561,6 +18594,17 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/ethjs-query-npm-0.3.7-1f2f795423-08e8fcced0.zip/node_modules/ethjs-query/",\
           "packageDependencies": [\
             ["ethjs-query", "npm:0.3.7"],\
+            ["ethjs-format", "npm:0.2.7"],\
+            ["ethjs-rpc", "npm:0.2.0"],\
+            ["promise-to-callback", "npm:1.0.0"]\
+          ],\
+          "linkType": "HARD"\
+        }],\
+        ["npm:0.3.8", {\
+          "packageLocation": "./.yarn/cache/ethjs-query-npm-0.3.8-7d397fe118-6673167101.zip/node_modules/ethjs-query/",\
+          "packageDependencies": [\
+            ["ethjs-query", "npm:0.3.8"],\
+            ["babel-runtime", "npm:6.26.0"],\
             ["ethjs-format", "npm:0.2.7"],\
             ["ethjs-rpc", "npm:0.2.0"],\
             ["promise-to-callback", "npm:1.0.0"]\
@@ -26889,6 +26933,13 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["pify", "npm:5.0.0"]\
           ],\
           "linkType": "HARD"\
+        }],\
+        ["npm:6.0.0", {\
+          "packageLocation": "./.yarn/cache/pify-npm-6.0.0-d53d79cca5-f5837e8351.zip/node_modules/pify/",\
+          "packageDependencies": [\
+            ["pify", "npm:6.0.0"]\
+          ],\
+          "linkType": "HARD"\
         }]\
       ]],\
       ["pinkie", [\
@@ -33689,9 +33740,11 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["eslint-webpack-plugin", "virtual:41f4f1af63cb66a88ac4fe69085f85ee4caa2a2bb9410ef3729549d2435a69be6fa60490b2dc2cf6a8efb86a26ccf9a87503f5f1ab7707329ba7bf903a431145#npm:3.1.1"],\
             ["eth-json-rpc-middleware", "npm:8.1.0"],\
             ["eth-keyring-controller", "npm:7.0.2"],\
+            ["eth-query", "npm:2.1.2"],\
             ["eth-rpc-errors", "npm:4.0.3"],\
             ["eth-sig-util", "npm:3.0.1"],\
             ["ethers", "npm:5.6.9"],\
+            ["ethjs", "npm:0.4.0"],\
             ["events", "npm:3.3.0"],\
             ["extension-port-stream", "npm:2.0.1"],\
             ["file-loader", "virtual:41f4f1af63cb66a88ac4fe69085f85ee4caa2a2bb9410ef3729549d2435a69be6fa60490b2dc2cf6a8efb86a26ccf9a87503f5f1ab7707329ba7bf903a431145#npm:6.2.0"],\
@@ -33713,6 +33766,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["node-sass", "npm:7.0.1"],\
             ["nodemon", "npm:2.0.16"],\
             ["os-browserify", "npm:0.3.0"],\
+            ["pify", "npm:6.0.0"],\
             ["pinst", "npm:3.0.0"],\
             ["postcss", "npm:8.4.12"],\
             ["postcss-flexbugs-fixes", "virtual:41f4f1af63cb66a88ac4fe69085f85ee4caa2a2bb9410ef3729549d2435a69be6fa60490b2dc2cf6a8efb86a26ccf9a87503f5f1ab7707329ba7bf903a431145#npm:5.0.2"],\
@@ -33757,6 +33811,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["typescript", "patch:typescript@npm%3A4.6.2#~builtin<compat/typescript>::version=4.6.2&hash=bda367"],\
             ["url", "npm:0.11.0"],\
             ["util", "npm:0.12.4"],\
+            ["web3-stream-provider", "npm:4.0.0"],\
             ["webextension-polyfill", "npm:0.9.0"],\
             ["webpack", "virtual:41f4f1af63cb66a88ac4fe69085f85ee4caa2a2bb9410ef3729549d2435a69be6fa60490b2dc2cf6a8efb86a26ccf9a87503f5f1ab7707329ba7bf903a431145#npm:5.70.0"],\
             ["webpack-dev-server", "virtual:41f4f1af63cb66a88ac4fe69085f85ee4caa2a2bb9410ef3729549d2435a69be6fa60490b2dc2cf6a8efb86a26ccf9a87503f5f1ab7707329ba7bf903a431145#npm:4.7.4"],\
@@ -35035,6 +35090,17 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["ws", "virtual:f195087a4da42d528ba2ec64f95f4f1a7315f74d5242d53dbb757c5f1fb8ac3b0b2c7d8f5ebbad50ea8f01fc469a0f3cc53a31832f73b8cec7583fd37fb1dccb#npm:5.2.3"],\
             ["xhr", "npm:2.6.0"],\
             ["xtend", "npm:4.0.2"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
+      ["web3-stream-provider", [\
+        ["npm:4.0.0", {\
+          "packageLocation": "./.yarn/cache/web3-stream-provider-npm-4.0.0-fe2fb6a37a-89e00b55d9.zip/node_modules/web3-stream-provider/",\
+          "packageDependencies": [\
+            ["web3-stream-provider", "npm:4.0.0"],\
+            ["readable-stream", "npm:2.3.7"],\
+            ["uuid", "npm:3.4.0"]\
           ],\
           "linkType": "HARD"\
         }]\

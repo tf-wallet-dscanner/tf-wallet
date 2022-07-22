@@ -9,10 +9,12 @@ import pump from 'pump';
  */
 export function setupMultiplex(connectionStream: any) {
   const mux = new ObjectMultiplex();
+  console.log('mux', mux);
   pump(connectionStream, mux, connectionStream, (err) => {
     if (err) {
       console.error(err);
     }
   });
+  console.log('mux', mux);
   return mux;
 }

@@ -3,6 +3,7 @@ import browser, { Runtime } from 'webextension-polyfill';
 
 import MetamaskController from './controller';
 import ExtensionPlatform from './platforms/extension';
+import { startUi } from './ui';
 
 const INFURA_PROJECT_ID = '00000000000';
 
@@ -64,13 +65,13 @@ const setupController = async (
       const portStream = new PortStream(remotePort);
       console.log('BG - portStream', portStream, ',processName', processName);
       // communication with popup
-      // controller.isClientOpen = true;
-      // controller.setupTrustedCommunication(portStream, remotePort.sender);
+      controller.isClientOpen = true;
+      controller.setupTrustedCommunication(portStream, remotePort.sender);
       // Message below if captured by UI code in app/scripts/ui.js which will trigger UI initialisation
       // This ensures that UI is initialised only after background is ready
       // It fixes the issue of blank screen coming when extension is loaded, the issue is very frequent in MV3
       remotePort.postMessage({ name: 'CONNECTION_READY' });
-
+      startUi();
       // if (processName === ENVIRONMENT_TYPE_POPUP) {
       //   popupIsOpen = true;
       //   endOfStream(portStream, () => {

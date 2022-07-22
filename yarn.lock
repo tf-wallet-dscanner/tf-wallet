@@ -12920,6 +12920,19 @@ __metadata:
   languageName: node
   linkType: hard
 
+"ethjs-contract@npm:0.2.3":
+  version: 0.2.3
+  resolution: "ethjs-contract@npm:0.2.3"
+  dependencies:
+    babel-runtime: ^6.26.0
+    ethjs-abi: 0.2.0
+    ethjs-filter: 0.1.8
+    ethjs-util: 0.1.3
+    js-sha3: 0.5.5
+  checksum: 3048bc972b3115e1808cec7ca5998302b4b59f9478396b24db748ed1233b278ba19c736e409e4a2924161aaa6a621955982794fc03ab0ff3853e4e55d31a7c10
+  languageName: node
+  linkType: hard
+
 "ethjs-filter@npm:0.1.8":
   version: 0.1.8
   resolution: "ethjs-filter@npm:0.1.8"
@@ -12958,6 +12971,18 @@ __metadata:
     ethjs-rpc: 0.2.0
     promise-to-callback: ^1.0.0
   checksum: 08e8fcced0f7af2828da3f67df94a8a384430d988e43e5d5266aa161ac8f7b4bfc143897e613ba79dd158c0596a9422c0a6efdfe1308530e5b24cd4789ffd694
+  languageName: node
+  linkType: hard
+
+"ethjs-query@npm:0.3.8":
+  version: 0.3.8
+  resolution: "ethjs-query@npm:0.3.8"
+  dependencies:
+    babel-runtime: ^6.26.0
+    ethjs-format: 0.2.7
+    ethjs-rpc: 0.2.0
+    promise-to-callback: ^1.0.0
+  checksum: 6673167101e793dfdbb212f3ee2e7449a7c1eb7f4d72aba04a1c504eb36d9148f18c42a702839ebce7534709d821f32adcca84c56b7900788b2875cba8a371f1
   languageName: node
   linkType: hard
 
@@ -13022,6 +13047,24 @@ __metadata:
     js-sha3: 0.5.5
     number-to-bn: 1.7.0
   checksum: aa4e69ce4b5db75f8869850ba97199fbee086d0e1a228002a599bdf5617ff1fc914f7552ed25d7c916cf0457d3cbc5d4385f6ea20890b67762eed93a0ef74851
+  languageName: node
+  linkType: hard
+
+"ethjs@npm:^0.4.0":
+  version: 0.4.0
+  resolution: "ethjs@npm:0.4.0"
+  dependencies:
+    bn.js: 4.11.6
+    ethjs-abi: 0.2.1
+    ethjs-contract: 0.2.3
+    ethjs-filter: 0.1.8
+    ethjs-provider-http: 0.1.6
+    ethjs-query: 0.3.8
+    ethjs-unit: 0.1.6
+    ethjs-util: 0.1.3
+    js-sha3: 0.5.5
+    number-to-bn: 1.7.0
+  checksum: 19d3bfa954c5699c79d637a896511d04e0a1a55109694b1ea46d97c5a591028697a43519c59237c5794bb90e4438c1ee04e2f7d1f038ce28ed9d676b348d5c44
   languageName: node
   linkType: hard
 
@@ -20570,6 +20613,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"pify@npm:^6.0.0":
+  version: 6.0.0
+  resolution: "pify@npm:6.0.0"
+  checksum: f5837e835160d617b4ec6814753c114faed9a847a2be8264b86805b1bbdb84f6b35bad5277257a3e78f0fd210f7eaefc762443b5b74ce96a7c7a81e2fb056934
+  languageName: node
+  linkType: hard
+
 "pinkie-promise@npm:^2.0.0":
   version: 2.0.1
   resolution: "pinkie-promise@npm:2.0.1"
@@ -23084,7 +23134,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"readable-stream@npm:1 || 2, readable-stream@npm:^2.0.0, readable-stream@npm:^2.0.1, readable-stream@npm:^2.0.2, readable-stream@npm:^2.1.5, readable-stream@npm:^2.2.2, readable-stream@npm:^2.2.9, readable-stream@npm:^2.3.3, readable-stream@npm:^2.3.6, readable-stream@npm:~2.3.6":
+"readable-stream@npm:1 || 2, readable-stream@npm:^2.0.0, readable-stream@npm:^2.0.1, readable-stream@npm:^2.0.2, readable-stream@npm:^2.0.5, readable-stream@npm:^2.1.5, readable-stream@npm:^2.2.2, readable-stream@npm:^2.2.9, readable-stream@npm:^2.3.3, readable-stream@npm:^2.3.6, readable-stream@npm:~2.3.6":
   version: 2.3.7
   resolution: "readable-stream@npm:2.3.7"
   dependencies:
@@ -26079,9 +26129,11 @@ __metadata:
     eslint-webpack-plugin: ^3.1.1
     eth-json-rpc-middleware: ^8.1.0
     eth-keyring-controller: ^7.0.2
+    eth-query: ^2.1.2
     eth-rpc-errors: ^4.0.3
     eth-sig-util: ^3.0.1
     ethers: ^5.6.9
+    ethjs: ^0.4.0
     events: ^3.3.0
     extension-port-stream: ^2.0.1
     file-loader: ^6.2.0
@@ -26103,6 +26155,7 @@ __metadata:
     node-sass: ^7.0.1
     nodemon: ^2.0.16
     os-browserify: ^0.3.0
+    pify: ^6.0.0
     pinst: ^3.0.0
     postcss: ^8.4.12
     postcss-flexbugs-fixes: ^5.0.2
@@ -26147,6 +26200,7 @@ __metadata:
     typescript: ^4.6.2
     url: ^0.11.0
     util: ^0.12.4
+    web3-stream-provider: ^4.0.0
     webextension-polyfill: ^0.9.0
     webpack: ^5.64.4
     webpack-dev-server: ^4.6.0
@@ -27040,7 +27094,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"uuid@npm:^3.0.1, uuid@npm:^3.3.2":
+"uuid@npm:^3.0.1, uuid@npm:^3.3.2, uuid@npm:^3.3.3":
   version: 3.4.0
   resolution: "uuid@npm:3.4.0"
   bin:
@@ -27243,6 +27297,16 @@ __metadata:
     xhr: ^2.2.0
     xtend: ^4.0.1
   checksum: bf7f3bbe7de82fb7fef2ec645d0d9e29bb08e6ed126f831ddf6fd82f34e184252291085639553b39709fdf31701cc7461e4578f83ade33dd585043936d2022de
+  languageName: node
+  linkType: hard
+
+"web3-stream-provider@npm:^4.0.0":
+  version: 4.0.0
+  resolution: "web3-stream-provider@npm:4.0.0"
+  dependencies:
+    readable-stream: ^2.0.5
+    uuid: ^3.3.3
+  checksum: 89e00b55d9253dfe2f18185ede9af5af170d49ff50638750c2bacd9ebc14b94d62c9a601271cb790034139ff7393e72d08229340f31495c018594913d074e21a
   languageName: node
   linkType: hard
 

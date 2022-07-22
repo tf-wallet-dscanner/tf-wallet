@@ -1,37 +1,46 @@
-import EthQuery from 'eth-query';
-import Eth from 'ethjs';
+// import EthQuery from 'eth-query';
+// import Eth from 'ethjs';
 import PortStream from 'extension-port-stream';
-import log from 'loglevel';
-import StreamProvider from 'web3-stream-provider';
+// import StreamProvider from 'web3-stream-provider';
 import browser from 'webextension-polyfill';
 
 import {
-  ENVIRONMENT_TYPE_FULLSCREEN,
+  //ENVIRONMENT_TYPE_FULLSCREEN,
   ENVIRONMENT_TYPE_POPUP,
 } from '../shared/constants/app';
 import launchMetaMaskUi from '../ui';
 import metaRPCClientFactory from './lib/metaRPCClientFactory';
 import { setupMultiplex } from './lib/stream-utils';
-import { getEnvironmentType } from './lib/util';
-import ExtensionPlatform from './platforms/extension';
 
-let global: any;
+//import { getEnvironmentType } from './lib/util';
+//import ExtensionPlatform from './platforms/extension';
 
-async function start() {
+// interface Global {
+//   ethereumProvider: any;
+//   ethQuery: any;
+//   eth: any;
+// }
+
+async function startUi() {
+  // const global: Global = {
+  //   ethereumProvider: undefined,
+  //   ethQuery: undefined,
+  //   eth: undefined,
+  // };
   /**
    * Establishes a streamed connection to a Web3 provider
    *
    * @param {PortDuplexStream} connectionStream - PortStream instance establishing a background connection
    */
-  function setupWeb3Connection(connectionStream: any) {
-    const providerStream = new StreamProvider();
-    providerStream.pipe(connectionStream).pipe(providerStream);
-    connectionStream.on('error', console.error.bind(console));
-    providerStream.on('error', console.error.bind(console));
-    global.ethereumProvider = providerStream;
-    global.ethQuery = new EthQuery(providerStream);
-    global.eth = new Eth(providerStream);
-  }
+  // function setupWeb3Connection(connectionStream: any) {
+  //   const providerStream = new StreamProvider();
+  //   providerStream.pipe(connectionStream).pipe(providerStream);
+  //   connectionStream.on('error', console.error.bind(console));
+  //   providerStream.on('error', console.error.bind(console));
+  //   global.ethereumProvider = providerStream;
+  //   global.ethQuery = new EthQuery(providerStream);
+  //   global.eth = new Eth(providerStream);
+  // }
 
   /**
    * Establishes a streamed connection to the background account manager
@@ -53,7 +62,7 @@ async function start() {
   function connectToAccountManager(connectionStream: any, cb: any) {
     const mx = setupMultiplex(connectionStream);
     setupControllerConnection(mx.createStream('controller'), cb);
-    setupWeb3Connection(mx.createStream('provider'));
+    // setupWeb3Connection(mx.createStream('provider'));
   }
 
   async function queryCurrentActiveTab(windowType: any) {
@@ -93,7 +102,6 @@ async function start() {
           cb(err, null);
           return;
         }
-
         launchMetaMaskUi(
           {
             activeTab,
@@ -107,10 +115,10 @@ async function start() {
   }
 
   // create platform global
-  global.platform = new ExtensionPlatform();
-
+  // global.platform = new ExtensionPlatform();
   // identify window type (popup, notification)
-  const windowType = getEnvironmentType();
+  // const windowType = getEnvironmentType();
+  const windowType = 'popup';
 
   // setup stream to background
   const extensionPort = browser.runtime.connect({ name: windowType });
@@ -120,8 +128,8 @@ async function start() {
   const activeTab = await queryCurrentActiveTab(windowType);
 
   function initializeUiWithTab(tab: any) {
-    const container = document.getElementById('app-content');
-    initializeUi(tab, container, connectionStream, (err: any, store: any) => {
+    //const container = document.getElementById('app-content');
+    initializeUi(tab, 'container', connectionStream, (err: any, store: any) => {
       if (err) {
         // if there's an error, store will be = metamaskState
         // displayCriticalError(container, err, store);
@@ -130,11 +138,12 @@ async function start() {
       }
 
       const state = store.getState();
-      const { metamask: { completedOnboarding } = {} as any } = state;
+      console.log('BG(ui) state', state);
 
-      if (!completedOnboarding && windowType !== ENVIRONMENT_TYPE_FULLSCREEN) {
-        global.platform.openExtensionInBrowser();
-      }
+      // const { metamask: { completedOnboarding } = {} as any } = state;
+      // if (!completedOnboarding && windowType !== ENVIRONMENT_TYPE_FULLSCREEN) {
+      //   global.platform.openExtensionInBrowser();
+      // }
     });
   }
 
@@ -142,11 +151,14 @@ async function start() {
    * In case of MV3 the issue of blank screen was very frequent, it is caused by UI initialising before background is ready to send state.
    * Code below ensures that UI is rendered only after background is ready.
    */
-  extensionPort.onMessage.addListener((message) => {
-    if (message?.name === 'CONNECTION_READY') {
-      initializeUiWithTab(activeTab);
-    }
-  });
+  // extensionPort.onMessage.addListener((message) => {
+  //   if (message?.name === 'CONNECTION_READY') {
+  //     initializeUiWithTab(activeTab);
+  //   }
+  // });
+  initializeUiWithTab(activeTab);
 }
 
-start().catch(log.error);
+//start().catch(log.error);
+
+export { startUi };
