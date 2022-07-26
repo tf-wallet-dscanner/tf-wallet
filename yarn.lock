@@ -15249,6 +15249,7 @@ __metadata:
     typescript: ^4.6.2
     url: ^0.11.0
     webextension-polyfill: ^0.9.0
+    webextension-polyfill-ts: ^0.26.0
     webpack: ^5.64.4
     webpack-dev-server: ^4.6.0
     webpack-manifest-plugin: ^4.0.2
@@ -15971,10 +15972,26 @@ __metadata:
   languageName: node
   linkType: hard
 
+"webextension-polyfill-ts@npm:^0.26.0":
+  version: 0.26.0
+  resolution: "webextension-polyfill-ts@npm:0.26.0"
+  dependencies:
+    webextension-polyfill: ^0.8.0
+  checksum: cf9e21da6b1237e760d3774f707d9694c6e51e9629c15ebdac5b43e0c7b02fffe18570aeab1f5b3126e24fbb4bf6f523c56d5c9a92d944d900e7182c1fd81066
+  languageName: node
+  linkType: hard
+
 "webextension-polyfill@npm:^0.7.0":
   version: 0.7.0
   resolution: "webextension-polyfill@npm:0.7.0"
   checksum: fb738a5de07feb593875e02f25c3ab4276c8736118929556c8d4bdf965bb0f11c96ea263cd397b9b21259e8faf2dce2eaaa42ce08c922d96de7adb5896ec7d10
+  languageName: node
+  linkType: hard
+
+"webextension-polyfill@npm:^0.8.0":
+  version: 0.8.0
+  resolution: "webextension-polyfill@npm:0.8.0"
+  checksum: 56286e6216e15834fdcdc3dcf611000d96b49c9d925de3d657eb5f1e294074180dd3efe78a0966223eb311ac3a0ac5fdf71d324b836bf05724455ffd6c7c98c3
   languageName: node
   linkType: hard
 

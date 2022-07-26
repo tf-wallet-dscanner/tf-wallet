@@ -136,6 +136,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["typescript", "patch:typescript@npm%3A4.6.2#~builtin<compat/typescript>::version=4.6.2&hash=bda367"],\
             ["url", "npm:0.11.0"],\
             ["webextension-polyfill", "npm:0.9.0"],\
+            ["webextension-polyfill-ts", "npm:0.26.0"],\
             ["webpack", "virtual:41f4f1af63cb66a88ac4fe69085f85ee4caa2a2bb9410ef3729549d2435a69be6fa60490b2dc2cf6a8efb86a26ccf9a87503f5f1ab7707329ba7bf903a431145#npm:5.70.0"],\
             ["webpack-dev-server", "virtual:41f4f1af63cb66a88ac4fe69085f85ee4caa2a2bb9410ef3729549d2435a69be6fa60490b2dc2cf6a8efb86a26ccf9a87503f5f1ab7707329ba7bf903a431145#npm:4.7.4"],\
             ["webpack-manifest-plugin", "virtual:41f4f1af63cb66a88ac4fe69085f85ee4caa2a2bb9410ef3729549d2435a69be6fa60490b2dc2cf6a8efb86a26ccf9a87503f5f1ab7707329ba7bf903a431145#npm:4.1.1"],\
@@ -20036,6 +20037,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["typescript", "patch:typescript@npm%3A4.6.2#~builtin<compat/typescript>::version=4.6.2&hash=bda367"],\
             ["url", "npm:0.11.0"],\
             ["webextension-polyfill", "npm:0.9.0"],\
+            ["webextension-polyfill-ts", "npm:0.26.0"],\
             ["webpack", "virtual:41f4f1af63cb66a88ac4fe69085f85ee4caa2a2bb9410ef3729549d2435a69be6fa60490b2dc2cf6a8efb86a26ccf9a87503f5f1ab7707329ba7bf903a431145#npm:5.70.0"],\
             ["webpack-dev-server", "virtual:41f4f1af63cb66a88ac4fe69085f85ee4caa2a2bb9410ef3729549d2435a69be6fa60490b2dc2cf6a8efb86a26ccf9a87503f5f1ab7707329ba7bf903a431145#npm:4.7.4"],\
             ["webpack-manifest-plugin", "virtual:41f4f1af63cb66a88ac4fe69085f85ee4caa2a2bb9410ef3729549d2435a69be6fa60490b2dc2cf6a8efb86a26ccf9a87503f5f1ab7707329ba7bf903a431145#npm:4.1.1"],\
@@ -20863,6 +20865,13 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           ],\
           "linkType": "HARD"\
         }],\
+        ["npm:0.8.0", {\
+          "packageLocation": "./.yarn/cache/webextension-polyfill-npm-0.8.0-eab1744c30-56286e6216.zip/node_modules/webextension-polyfill/",\
+          "packageDependencies": [\
+            ["webextension-polyfill", "npm:0.8.0"]\
+          ],\
+          "linkType": "HARD"\
+        }],\
         ["npm:0.9.0", {\
           "packageLocation": "./.yarn/cache/webextension-polyfill-npm-0.9.0-59e5846f45-586184df6c.zip/node_modules/webextension-polyfill/",\
           "packageDependencies": [\
@@ -20877,6 +20886,14 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageDependencies": [\
             ["webextension-polyfill-ts", "npm:0.22.0"],\
             ["webextension-polyfill", "npm:0.7.0"]\
+          ],\
+          "linkType": "HARD"\
+        }],\
+        ["npm:0.26.0", {\
+          "packageLocation": "./.yarn/cache/webextension-polyfill-ts-npm-0.26.0-cb72f8a6c8-cf9e21da6b.zip/node_modules/webextension-polyfill-ts/",\
+          "packageDependencies": [\
+            ["webextension-polyfill-ts", "npm:0.26.0"],\
+            ["webextension-polyfill", "npm:0.8.0"]\
           ],\
           "linkType": "HARD"\
         }]\
