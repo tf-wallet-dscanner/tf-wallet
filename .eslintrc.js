@@ -5,43 +5,69 @@ module.exports = {
     node: true,
   },
   extends: [
+    'airbnb',
     'eslint:recommended',
     'plugin:react/recommended',
     'plugin:prettier/recommended',
-    'plugin:@typescript-eslint/recommended',
-    'airbnb-typescript',
     'prettier',
   ],
   settings: {
     react: {
       version: 'detect',
     },
+    /**
+     * @see https://medium.com/hackernoon/absolute-imports-with-create-react-app-4c6cfb66c35d
+     */
+    'import/resolver': {
+      node: {
+        paths: ['src'],
+      },
+    },
   },
-  parser: '@typescript-eslint/parser',
+  /**
+   * @see https://github.com/facebook/create-react-app/issues/12070
+   */
+  parser: '@babel/eslint-parser',
   parserOptions: {
-    project: './tsconfig.json',
+    project: './jsconfig.json',
     ecmaFeatures: {
       jsx: true,
     },
-    ecmaVersion: 13,
+    ecmaVersion: 2018,
     sourceType: 'module',
+    requireConfigFile: false,
+    babelOptions: {
+      presets: [
+        ['babel-preset-react-app', false],
+        'babel-preset-react-app/prod',
+      ],
+    },
   },
-  plugins: ['react', 'react-hooks', '@typescript-eslint', 'prettier'],
+  plugins: ['react', 'react-hooks', 'prettier'],
   rules: {
+    'react/prop-types': 'off',
     'react/react-in-jsx-scope': 'off',
+    'no-param-reassign': 'off',
+    'react/jsx-props-no-spreading': 'off',
+    'react/jsx-no-useless-fragment': 'off',
+    'react/no-array-index-key': 'off',
+    'no-restricted-exports': 'off',
+    'jsx-a11y/click-events-have-key-events': 'off',
+    'jsx-a11y/no-static-element-interactions': 'off',
     'react/prefer-stateless-function': 'off',
-    'react/jsx-filename-extension': 'off',
+    'import/prefer-default-export': 'off',
+    'import/newline-after-import': 'off',
+    'react/jsx-filename-extension': [1, { extensions: ['.js', '.jsx'] }],
     'react/jsx-one-expression-per-line': 'off',
     'no-nested-ternary': 'off',
     'import/extensions': 'off',
     'import/no-extraneous-dependencies': 'off',
-    '@typescript-eslint/no-explicit-any': 'off',
+    'global-require': 'off',
     'linebreak-style': [
       'error',
       require('os').EOL === '\r\n' ? 'windows' : 'unix',
     ],
     'prettier/prettier': ['error', { endOfLine: 'auto' }],
-    '@typescript-eslint/naming-convention': 'off',
     'no-debugger': 'off',
   },
   globals: {
@@ -50,10 +76,10 @@ module.exports = {
     Map: false,
     Promise: false,
   },
-  ignorePatterns: ['node_modules/', '*.js', 'build/', '.pnp.cjs', '.yarn/'],
+  ignorePatterns: ['node_modules/', 'build/', 'config/', '.pnp.cjs', '.yarn/'],
   overrides: [
     {
-      files: ['**/*.test.ts', '**/*.spec.ts', '**/*.test.tsx', '**/*.spec.tsx'],
+      files: ['**/*.test.js', '**/*.spec.js', '**/*.test.jsx', '**/*.spec.jsx'],
       env: {
         jest: true,
       },

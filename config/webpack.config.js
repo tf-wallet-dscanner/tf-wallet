@@ -370,8 +370,8 @@ module.exports = function (webpackEnv) {
                   compress: true,
                 },
                 parser: {
-                  syntax: 'typescript',
-                  tsx: true,
+                  syntax: 'ecmascript',
+                  tsx: false,
                   dynamicImport: true,
                   exportDefaultFrom: true,
                   decorators: true,
