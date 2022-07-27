@@ -69,6 +69,8 @@ module.exports = {
     ],
     'prettier/prettier': ['error', { endOfLine: 'auto' }],
     'no-debugger': 'off',
+    'no-underscore-dangle': 'off',
+    'class-methods-use-this': 'off',
   },
   globals: {
     React: 'writable',
