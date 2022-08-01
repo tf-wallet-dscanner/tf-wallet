@@ -201,8 +201,10 @@ module.exports = function (webpackEnv) {
     // entry: paths.appIndexJs,
     entry: {
       popup: paths.appPopupJs,
+      notification: paths.appPopupJs,
       background: paths.appBackgroundJs,
-      contentScript: paths.appContentScriptJs,
+      contentscript: paths.appContentScriptJs,
+      inpage: paths.appInpageJs,
     },
     output: {
       // The build folder.
@@ -211,7 +213,7 @@ module.exports = function (webpackEnv) {
       pathinfo: isEnvDevelopment,
       // There will be one main bundle, and one file per asynchronous chunk.
       // In development, it does not produce real files.
-      filename: 'static/js/[name].bundle.js',
+      filename: '[name].js',
       chunkFilename: 'static/js/[name].[contenthash:8].chunk.js',
       assetModuleFilename: 'static/media/[name].[hash][ext]',
       // webpack uses `publicPath` to determine where the app is being served from.
@@ -618,7 +620,35 @@ module.exports = function (webpackEnv) {
           },
           isEnvProduction
             ? {
-                excludeChunks: ['background', 'contentScript'],
+                excludeChunks: ['background', 'contentscript', 'inpage'],
+                minify: {
+                  removeComments: true,
+                  collapseWhitespace: true,
+                  removeRedundantAttributes: true,
+                  useShortDoctype: true,
+                  removeEmptyAttributes: true,
+                  removeStyleLinkTypeAttributes: true,
+                  keepClosingSlash: true,
+                  minifyJS: true,
+                  minifyCSS: true,
+                  minifyURLs: true,
+                },
+              }
+            : undefined,
+        ),
+      ),
+      new HtmlWebpackPlugin(
+        Object.assign(
+          {},
+          {
+            inject: true,
+            filename: 'notification.html',
+            template: paths.appNotificationHtml,
+            chunks: ['notification'],
+          },
+          isEnvProduction
+            ? {
+                excludeChunks: ['background', 'contentscript', 'inpage'],
                 minify: {
                   removeComments: true,
                   collapseWhitespace: true,
