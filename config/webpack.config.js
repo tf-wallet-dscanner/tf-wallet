@@ -345,6 +345,8 @@ module.exports = function (webpackEnv) {
         os: require.resolve('os-browserify/browser'),
         stream: require.resolve('stream-browserify'),
         events: require.resolve('events/'),
+        assert: require.resolve('assert'),
+        string_decoder: require.resolve('string_decoder/'),
       },
     },
     module: {
@@ -665,6 +667,13 @@ module.exports = function (webpackEnv) {
             : undefined,
         ),
       ),
+      /**
+       * @see https://github.com/ChainSafe/web3.js
+       */
+      new webpack.ProvidePlugin({
+        process: 'process/browser',
+        Buffer: ['buffer', 'Buffer'],
+      }),
       // Inlines the webpack runtime script. This script is too small to warrant
       // a network request.
       // https://github.com/facebook/create-react-app/issues/5358

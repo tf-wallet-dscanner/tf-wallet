@@ -1,6 +1,7 @@
 import browser from 'webextension-polyfill';
 
 import Controller from './controller';
+import ProviderController from './controllers/provider-controller';
 import NotificationManager from './lib/notification-manager';
 import { BackgroundMessages } from './messages';
 
@@ -16,6 +17,7 @@ async function triggerUi() {
 class Background {
   constructor() {
     this.controller = new Controller();
+    this.providerController = new ProviderController();
     this.requests = new Map();
   }
 
@@ -36,6 +38,13 @@ class Background {
     };
   }
 
+  async getEthereumAccounts() {
+    const accounts = await this.providerController.getAccounts();
+    return {
+      accounts,
+    };
+  }
+
   registerMessengerRequests() {
     this.requests.set(
       BackgroundMessages.SAY_HELLO_TO_BG,
@@ -45,6 +54,11 @@ class Background {
     this.requests.set(
       BackgroundMessages.SET_ADDRESS_TO_BG,
       this.receiveSetAddress.bind(this),
+    );
+
+    this.requests.set(
+      BackgroundMessages.GET_ACCOUNTS,
+      this.getEthereumAccounts.bind(this),
     );
   }
 
