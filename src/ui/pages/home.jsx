@@ -18,9 +18,14 @@ function Home() {
   };
 
   return (
-    <Container>
-      <div className="h-28">asd</div>
-      <span>Home page111</span>
+    <Container className="p-4">
+      <Button
+        className="mb-10"
+        prefixIcon={<FaBeer />}
+        onClick={() => navigation('/provider')}
+      >
+        Provider
+      </Button>
       <Button prefixIcon={<FaBeer />} onClick={onNextPage}>
         About
       </Button>

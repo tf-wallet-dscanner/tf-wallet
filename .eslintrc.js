@@ -72,6 +72,7 @@ module.exports = {
     'no-underscore-dangle': 'off',
     'class-methods-use-this': 'off',
     'no-else-return': 'off',
+    'no-console': 'off',
   },
   globals: {
     React: 'writable',
