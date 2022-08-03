@@ -99,7 +99,6 @@
     "@babel/eslint-parser": "^7.18.9",
     "@commitlint/cli": "^16.2.3",
     "@commitlint/config-conventional": "^16.2.1",
-    "@swc/core": "^1.2.203",
     "@tailwindcss/forms": "^0.5.2",
     "@tailwindcss/typography": "^0.5.2",
     "@testing-library/jest-dom": "^4.2.4",
@@ -138,7 +137,6 @@
     "stylelint-config-prettier": "^9.0.3",
     "stylelint-config-recommended": "^7.0.0",
     "stylelint-prettier": "^2.0.0",
-    "swc-loader": "^0.2.3",
     "tailwindcss": "^3.0.23",
     "url": "^0.11.0"
   },
