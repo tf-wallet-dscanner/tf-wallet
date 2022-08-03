@@ -43,7 +43,7 @@ module.exports = {
       ],
     },
   },
-  plugins: ['react', 'react-hooks', 'prettier'],
+  plugins: ['react', 'react-hooks', 'prettier', 'unused-imports'],
   rules: {
     'react/prop-types': 'off',
     'react/react-in-jsx-scope': 'off',
@@ -74,6 +74,17 @@ module.exports = {
     'no-else-return': 'off',
     'no-console': 'off',
     'consistent-return': 'off',
+    'no-unused-vars': 'off',
+    'unused-imports/no-unused-imports': 'error',
+    'unused-imports/no-unused-vars': [
+      'warn',
+      {
+        vars: 'all',
+        varsIgnorePattern: '^_',
+        args: 'after-used',
+        argsIgnorePattern: '^_',
+      },
+    ],
   },
   globals: {
     React: 'writable',
@@ -81,7 +92,14 @@ module.exports = {
     Map: false,
     Promise: false,
   },
-  ignorePatterns: ['node_modules/', 'build/', 'config/', '.pnp.cjs', '.yarn/'],
+  ignorePatterns: [
+    'node_modules/',
+    'build/',
+    'config/',
+    '.pnp.cjs',
+    '.yarn/',
+    'scripts/',
+  ],
   overrides: [
     {
       files: ['**/*.test.js', '**/*.spec.js', '**/*.test.jsx', '**/*.spec.jsx'],

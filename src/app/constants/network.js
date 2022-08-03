@@ -63,6 +63,7 @@ export const NETWORK_TYPE_TO_ID_MAP = {
   },
   [LOCALHOST]: {
     networkId: LOCALHOST_NETWORK_ID,
+    chainId: LOCALHOST_CHAIN_ID,
   },
 };
 
