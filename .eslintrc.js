@@ -73,6 +73,7 @@ module.exports = {
     'class-methods-use-this': 'off',
     'no-else-return': 'off',
     'no-console': 'off',
+    'consistent-return': 'off',
   },
   globals: {
     React: 'writable',
