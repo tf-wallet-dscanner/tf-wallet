@@ -1,6 +1,7 @@
 import browser from 'webextension-polyfill';
 
 import Controller from './controller';
+import KeyringController from './controllers/keyring-controller';
 import ProviderController from './controllers/provider-controller';
 import NotificationManager from './lib/notification-manager';
 import { BackgroundMessages } from './messages';
@@ -18,6 +19,7 @@ class Background {
   constructor() {
     this.controller = new Controller();
     this.providerController = new ProviderController();
+    this.keyringController = new KeyringController();
     this.requests = new Map();
   }
 
@@ -52,6 +54,24 @@ class Background {
     };
   }
 
+  // 니모닉 구문 생성
+  async receiveGenerateMnemonic() {
+    const mnemonic = await this.keyringController.generateMnemonic();
+    return mnemonic;
+  }
+
+  // 니모닉 코드 검증
+  async receiveValidateMnemonic(sender, { mnemonic }) {
+    const validate = await this.keyringController.validateMnemonic(mnemonic);
+    return validate;
+  }
+
+  // 신규 계정 생성
+  async receiveNewAccount(sender, data) {
+    const accounts = await this.keyringController.createNewAccount(data);
+    return accounts;
+  }
+
   registerMessengerRequests() {
     this.requests.set(
       BackgroundMessages.SAY_HELLO_TO_BG,
@@ -71,6 +91,24 @@ class Background {
     this.requests.set(
       BackgroundMessages.GET_NETWORK_VERSION,
       this.getNetworkVersion.bind(this),
+    );
+
+    // 니모닉 생성
+    this.requests.set(
+      BackgroundMessages.GENERATE_MNEMONIC_BG,
+      this.receiveGenerateMnemonic.bind(this),
+    );
+
+    // 니모닉 검증
+    this.requests.set(
+      BackgroundMessages.VALIDATE_MNEMONIC_BG,
+      this.receiveValidateMnemonic.bind(this),
+    );
+
+    // 신규 계정 생성
+    this.requests.set(
+      BackgroundMessages.NEW_ACCOUNT_BG,
+      this.receiveNewAccount.bind(this),
     );
   }
 

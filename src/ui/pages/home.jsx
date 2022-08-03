@@ -39,6 +39,15 @@ function Home() {
       >
         Hong
       </Button>
+      <Button
+        className="font-bold pl-5"
+        suffixIcon={<FaBeer />}
+        onClick={() => {
+          navigation('/account');
+        }}
+      >
+        Account
+      </Button>
       <div>{bears}</div>
       <Button color={THEME_COLOR.WARNING} onClick={increasePopulation}>
         Click!

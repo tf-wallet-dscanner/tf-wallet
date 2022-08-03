@@ -53,6 +53,8 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["babel-plugin-named-asset-import", "virtual:41f4f1af63cb66a88ac4fe69085f85ee4caa2a2bb9410ef3729549d2435a69be6fa60490b2dc2cf6a8efb86a26ccf9a87503f5f1ab7707329ba7bf903a431145#npm:0.3.8"],\
             ["babel-preset-react-app", "npm:10.0.1"],\
             ["bfj", "npm:7.0.2"],\
+            ["bip39", "npm:3.0.4"],\
+            ["browser-passworder", "npm:2.0.3"],\
             ["browserslist", "npm:4.20.2"],\
             ["buffer", "npm:6.0.3"],\
             ["camelcase", "npm:6.3.0"],\
@@ -75,6 +77,8 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["eslint-plugin-react", "virtual:41f4f1af63cb66a88ac4fe69085f85ee4caa2a2bb9410ef3729549d2435a69be6fa60490b2dc2cf6a8efb86a26ccf9a87503f5f1ab7707329ba7bf903a431145#npm:7.29.4"],\
             ["eslint-plugin-react-hooks", "virtual:41f4f1af63cb66a88ac4fe69085f85ee4caa2a2bb9410ef3729549d2435a69be6fa60490b2dc2cf6a8efb86a26ccf9a87503f5f1ab7707329ba7bf903a431145#npm:4.3.0"],\
             ["eslint-webpack-plugin", "virtual:41f4f1af63cb66a88ac4fe69085f85ee4caa2a2bb9410ef3729549d2435a69be6fa60490b2dc2cf6a8efb86a26ccf9a87503f5f1ab7707329ba7bf903a431145#npm:3.1.1"],\
+            ["ethereumjs-util", "npm:7.1.5"],\
+            ["ethereumjs-wallet", "npm:1.0.2"],\
             ["events", "npm:3.3.0"],\
             ["extension-port-stream", "npm:2.0.1"],\
             ["file-loader", "virtual:41f4f1af63cb66a88ac4fe69085f85ee4caa2a2bb9410ef3729549d2435a69be6fa60490b2dc2cf6a8efb86a26ccf9a87503f5f1ab7707329ba7bf903a431145#npm:6.2.0"],\
@@ -5394,6 +5398,13 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["@types/node", [\
+        ["npm:11.11.6", {\
+          "packageLocation": "./.yarn/cache/@types-node-npm-11.11.6-40abad0842-075f1c011c.zip/node_modules/@types/node/",\
+          "packageDependencies": [\
+            ["@types/node", "npm:11.11.6"]\
+          ],\
+          "linkType": "HARD"\
+        }],\
         ["npm:12.20.55", {\
           "packageLocation": "./.yarn/cache/@types-node-npm-12.20.55-88487587a4-e4f86785f4.zip/node_modules/@types/node/",\
           "packageDependencies": [\
@@ -6334,6 +6345,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["adjust-sourcemap-loader", "npm:4.0.0"],\
             ["loader-utils", "npm:2.0.2"],\
             ["regex-parser", "npm:2.2.11"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
+      ["aes-js", [\
+        ["npm:3.1.2", {\
+          "packageLocation": "./.yarn/cache/aes-js-npm-3.1.2-d7549a23a2-062154d50b.zip/node_modules/aes-js/",\
+          "packageDependencies": [\
+            ["aes-js", "npm:3.1.2"]\
           ],\
           "linkType": "HARD"\
         }]\
@@ -7400,6 +7420,19 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD"\
         }]\
       ]],\
+      ["bip39", [\
+        ["npm:3.0.4", {\
+          "packageLocation": "./.yarn/cache/bip39-npm-3.0.4-7c69c9182f-79ce1600a0.zip/node_modules/bip39/",\
+          "packageDependencies": [\
+            ["bip39", "npm:3.0.4"],\
+            ["@types/node", "npm:11.11.6"],\
+            ["create-hash", "npm:1.2.0"],\
+            ["pbkdf2", "npm:3.1.2"],\
+            ["randombytes", "npm:2.1.0"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
       ["bl", [\
         ["npm:4.1.0", {\
           "packageLocation": "./.yarn/cache/bl-npm-4.1.0-7f94cdcf3f-9e8521fa7e.zip/node_modules/bl/",\
@@ -7579,6 +7612,16 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD"\
         }]\
       ]],\
+      ["browser-passworder", [\
+        ["npm:2.0.3", {\
+          "packageLocation": "./.yarn/cache/browser-passworder-npm-2.0.3-ba40718b76-df3ec46e10.zip/node_modules/browser-passworder/",\
+          "packageDependencies": [\
+            ["browser-passworder", "npm:2.0.3"],\
+            ["browserify-unibabel", "npm:3.0.0"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
       ["browser-process-hrtime", [\
         ["npm:1.0.0", {\
           "packageLocation": "./.yarn/cache/browser-process-hrtime-npm-1.0.0-db700805c2-e30f868cdb.zip/node_modules/browser-process-hrtime/",\
@@ -7653,6 +7696,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["parse-asn1", "npm:5.1.6"],\
             ["readable-stream", "npm:3.6.0"],\
             ["safe-buffer", "npm:5.2.1"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
+      ["browserify-unibabel", [\
+        ["npm:3.0.0", {\
+          "packageLocation": "./.yarn/cache/browserify-unibabel-npm-3.0.0-c9662fecbe-fe1b502c09.zip/node_modules/browserify-unibabel/",\
+          "packageDependencies": [\
+            ["browserify-unibabel", "npm:3.0.0"]\
           ],\
           "linkType": "HARD"\
         }]\
@@ -11544,6 +11596,23 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["create-hash", "npm:1.2.0"],\
             ["ethereum-cryptography", "npm:0.1.3"],\
             ["rlp", "npm:2.2.7"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
+      ["ethereumjs-wallet", [\
+        ["npm:1.0.2", {\
+          "packageLocation": "./.yarn/cache/ethereumjs-wallet-npm-1.0.2-8a504d268d-555effe571.zip/node_modules/ethereumjs-wallet/",\
+          "packageDependencies": [\
+            ["ethereumjs-wallet", "npm:1.0.2"],\
+            ["aes-js", "npm:3.1.2"],\
+            ["bs58check", "npm:2.1.2"],\
+            ["ethereum-cryptography", "npm:0.1.3"],\
+            ["ethereumjs-util", "npm:7.1.5"],\
+            ["randombytes", "npm:2.1.0"],\
+            ["scrypt-js", "npm:3.0.1"],\
+            ["utf8", "npm:3.0.0"],\
+            ["uuid", "npm:8.3.2"]\
           ],\
           "linkType": "HARD"\
         }]\
@@ -22714,6 +22783,8 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["babel-plugin-named-asset-import", "virtual:41f4f1af63cb66a88ac4fe69085f85ee4caa2a2bb9410ef3729549d2435a69be6fa60490b2dc2cf6a8efb86a26ccf9a87503f5f1ab7707329ba7bf903a431145#npm:0.3.8"],\
             ["babel-preset-react-app", "npm:10.0.1"],\
             ["bfj", "npm:7.0.2"],\
+            ["bip39", "npm:3.0.4"],\
+            ["browser-passworder", "npm:2.0.3"],\
             ["browserslist", "npm:4.20.2"],\
             ["buffer", "npm:6.0.3"],\
             ["camelcase", "npm:6.3.0"],\
@@ -22736,6 +22807,8 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["eslint-plugin-react", "virtual:41f4f1af63cb66a88ac4fe69085f85ee4caa2a2bb9410ef3729549d2435a69be6fa60490b2dc2cf6a8efb86a26ccf9a87503f5f1ab7707329ba7bf903a431145#npm:7.29.4"],\
             ["eslint-plugin-react-hooks", "virtual:41f4f1af63cb66a88ac4fe69085f85ee4caa2a2bb9410ef3729549d2435a69be6fa60490b2dc2cf6a8efb86a26ccf9a87503f5f1ab7707329ba7bf903a431145#npm:4.3.0"],\
             ["eslint-webpack-plugin", "virtual:41f4f1af63cb66a88ac4fe69085f85ee4caa2a2bb9410ef3729549d2435a69be6fa60490b2dc2cf6a8efb86a26ccf9a87503f5f1ab7707329ba7bf903a431145#npm:3.1.1"],\
+            ["ethereumjs-util", "npm:7.1.5"],\
+            ["ethereumjs-wallet", "npm:1.0.2"],\
             ["events", "npm:3.3.0"],\
             ["extension-port-stream", "npm:2.0.1"],\
             ["file-loader", "virtual:41f4f1af63cb66a88ac4fe69085f85ee4caa2a2bb9410ef3729549d2435a69be6fa60490b2dc2cf6a8efb86a26ccf9a87503f5f1ab7707329ba7bf903a431145#npm:6.2.0"],\
