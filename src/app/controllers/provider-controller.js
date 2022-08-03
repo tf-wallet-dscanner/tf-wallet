@@ -7,6 +7,8 @@
  * 5. provider가 예상치 못한 이슈로 연결이 끊기거나 반응이 없을 시 시스템 log 및 사용자 ui에 표시(알람)를 해야 한다.
  * 6. 첫 provider 연결 이후에도 주기적으로 provider에게 통신 메시지를 날려 정상적으로 연결되어 있는지 확인을 해야한다. (ex. getVersion, getBalance …)
  */
+import { MAINNET_RPC_URL } from 'app/constants/network';
+import EthQuery from 'app/lib/eth-query';
 import EventEmitter from 'events';
 
 /**
@@ -24,17 +26,26 @@ import EventEmitter from 'events';
  */
 
 class ProviderController extends EventEmitter {
-  // eslint-disable-next-line no-unused-vars
-  constructor(opts = {}) {
+  #currentRpcUrl = new WeakMap();
+
+  constructor() {
     super();
+
+    this.#currentRpcUrl.set(this, MAINNET_RPC_URL);
   }
 
-  initalizeProvider(providerParams) {
-    // this._baseProviderParams = providerParams;
-    // const { type, rpcUrl, chainId } = this.getProviderConfig();
-    // this._configureProvider({ type, rpcUrl, chainId });
-    // this.lookupNetwork();
+  initializeProvider(providerParams) {
     this.#configureProvider(providerParams);
+  }
+
+  getLatestBlock() {
+    const ethQuery = new EthQuery(this.#currentRpcUrl.get(this));
+    return ethQuery.getLatestBlock();
+  }
+
+  getNetworkVersion() {
+    const ethQuery = new EthQuery(this.#currentRpcUrl.get(this));
+    return ethQuery.getNetworkVersion();
   }
 
   #configureProvider() {

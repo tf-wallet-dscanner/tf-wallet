@@ -360,40 +360,6 @@ module.exports = function (webpackEnv) {
           loader: require.resolve('source-map-loader'),
         },
         {
-          test: /\.(js|ts|tsx)$/,
-          exclude: /(node_modules)/,
-          use: {
-            // `.swcrc` can be used to configure swc
-            loader: 'swc-loader',
-            options: {
-              parseMap: true,
-              minify: true,
-              jsc: {
-                target: 'es5',
-                minify: {
-                  compress: true,
-                },
-                parser: {
-                  syntax: 'typescript',
-                  tsx: true,
-                  dynamicImport: true,
-                  exportDefaultFrom: true,
-                  decorators: true,
-                },
-                transform: {
-                  react: {
-                    pragma: 'React.createElement',
-                    pragmaFrag: 'React.Fragment',
-                    throwIfNamespace: true,
-                    development: false,
-                    useBuiltins: false,
-                  },
-                },
-              },
-            },
-          },
-        },
-        {
           // "oneOf" will traverse all following loaders until one will
           // match the requirements. When no loader matches it will fall
           // back to the "file" loader at the end of the loader list.

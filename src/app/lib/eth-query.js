@@ -13,6 +13,11 @@ class EthQuery {
     );
   }
 
+  /**
+   * @see https://web3js.readthedocs.io/en/v1.7.4/web3-eth.html?highlight=getBalance#getbalance
+   * @param {string} address The address to get the balance of.
+   * @returns {Promise<string>} The current balance for the given address in wei.
+   */
   async getBalance(address) {
     try {
       const balance = await this.#provider.get(this).eth.getBalance(address);
@@ -22,6 +27,11 @@ class EthQuery {
     }
   }
 
+  /**
+   * @see https://web3js.readthedocs.io/en/v1.7.4/web3-eth.html?highlight=getBalance#getblock
+   * @param {String|Number|BN|BigNumber} blockNumber: The block number or block hash. Or the string "earliest", "latest" or "pending"
+   * @returns {Promise<Block>} The block object:
+   */
   async getBlockByNumber(blockNumber) {
     try {
       const block = await this.#provider
@@ -33,6 +43,10 @@ class EthQuery {
     }
   }
 
+  /**
+   * @see https://web3js.readthedocs.io/en/v1.7.4/web3-eth.html?highlight=getBalance#getblock
+   * @returns {Promise<Block>} The block object:
+   */
   async getLatestBlock() {
     try {
       const latestBlock = await this.#provider
@@ -44,6 +58,15 @@ class EthQuery {
     }
   }
 
+  /**
+   * @see https://ethereum.org/ko/developers/docs/apis/json-rpc/#net_version
+   * @returns String - The current network id
+   * @example response {
+   *   "id":67,
+   *   "jsonrpc": "2.0",
+   *   "result": "3"
+   * }
+   */
   async getNetworkVersion() {
     try {
       const networkVersion = await this.#fetchJsonRpc(

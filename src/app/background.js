@@ -38,10 +38,17 @@ class Background {
     };
   }
 
-  async getEthereumAccounts() {
-    const accounts = await this.providerController.getAccounts();
+  async getLatestBlock() {
+    const block = await this.providerController.getLatestBlock();
     return {
-      accounts,
+      block,
+    };
+  }
+
+  async getNetworkVersion() {
+    const networkVersion = await this.providerController.getNetworkVersion();
+    return {
+      networkVersion,
     };
   }
 
@@ -57,8 +64,13 @@ class Background {
     );
 
     this.requests.set(
-      BackgroundMessages.GET_ACCOUNTS,
-      this.getEthereumAccounts.bind(this),
+      BackgroundMessages.GET_LATEST_BLOCK,
+      this.getLatestBlock.bind(this),
+    );
+
+    this.requests.set(
+      BackgroundMessages.GET_NETWORK_VERSION,
+      this.getNetworkVersion.bind(this),
     );
   }
 
