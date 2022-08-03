@@ -345,7 +345,8 @@ module.exports = function (webpackEnv) {
         os: require.resolve('os-browserify/browser'),
         stream: require.resolve('stream-browserify'),
         events: require.resolve('events/'),
-        assert: require.resolve('assert'),
+        assert: require.resolve('assert/'),
+        buffer: require.resolve('buffer'),
         string_decoder: require.resolve('string_decoder/'),
       },
     },
@@ -711,6 +712,10 @@ module.exports = function (webpackEnv) {
       new webpack.IgnorePlugin({
         resourceRegExp: /^\.\/locale$/,
         contextRegExp: /moment$/,
+      }),
+      new webpack.IgnorePlugin({
+        resourceRegExp: /^\.\/wordlists\/(?!english)/,
+        contextRegExp: /bip39\/src$/,
       }),
       // Generate a service worker script that will precache, and keep up to date,
       // the HTML & assets that are part of the webpack build.
