@@ -44,7 +44,7 @@ class ExtensionStore {
     if (!this.isSupported) {
       return undefined;
     }
-    const result = await this._get(null);
+    const result = await this.#get(null);
     if (isEmpty(result)) {
       return undefined;
     }
@@ -61,7 +61,7 @@ class ExtensionStore {
     if (!this.isSupported) {
       return undefined;
     }
-    const result = await this._get([key]);
+    const result = await this.#get([key]);
     if (isEmpty(result)) {
       return undefined;
     }
@@ -75,7 +75,7 @@ class ExtensionStore {
    * @returns {Promise<void>}
    */
   async set(state) {
-    return this._set(state);
+    return this.#set(state);
   }
 
   /**
@@ -84,7 +84,7 @@ class ExtensionStore {
    * @private
    * @returns {Object} the key-value map from local storage
    */
-  _get(key) {
+  #get(key) {
     const { local } = browser.storage;
     return new Promise((resolve, reject) => {
       // if key is null, get all storage data
@@ -106,7 +106,7 @@ class ExtensionStore {
    * @returns {Promise<void>}
    * @private
    */
-  _set(obj) {
+  #set(obj) {
     const { local } = browser.storage;
     return new Promise((resolve, reject) => {
       local.set(obj).then(() => {
