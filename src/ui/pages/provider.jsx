@@ -6,20 +6,24 @@ import { useNavigate } from 'react-router-dom';
 import Button from 'ui/components/atoms/button';
 import Card from 'ui/components/atoms/card';
 import { THEME_COLOR } from 'ui/constants/colors';
-import { useGetLatestBlock, useGetNetworkId } from 'ui/data/provider';
+import { useGetNetworkId, useSetProviderType } from 'ui/data/provider';
 
 function Provider() {
   const navigation = useNavigate();
-  const { data: block } = useGetLatestBlock();
-  const { data: networkId } = useGetNetworkId();
+  const { data: networkId, refetch } = useGetNetworkId();
+  const { mutate } = useSetProviderType({
+    onSuccess() {
+      refetch();
+    },
+  });
 
   const onNextPage = () => {
     navigation('/');
   };
 
-  const handleProviderChange = (event) => {
-    const { value } = event.target;
-    console.log('handleProviderChange value: ', value);
+  const handleProviderTypeChange = (event) => {
+    const { value: chainId } = event.target;
+    mutate(chainId);
   };
 
   const sortedNetworkList = Object.values(NETWORK_TYPE_TO_ID_MAP).sort(
@@ -31,7 +35,7 @@ function Provider() {
       <Button className="mb-6" color={THEME_COLOR.WARNING} onClick={onNextPage}>
         Home
       </Button>
-      <select name="providers" onChange={handleProviderChange}>
+      <select name="providers" onChange={handleProviderTypeChange}>
         {sortedNetworkList.map(({ chainId }, index) => (
           <option key={index} value={chainId}>
             {NETWORK_TO_NAME_MAP[chainId]}
@@ -41,7 +45,6 @@ function Provider() {
       {networkId && (
         <Card title="Network Id" content={JSON.stringify(networkId)} />
       )}
-      {block && <Card title="Block data" content={JSON.stringify(block)} />}
     </div>
   );
 }
