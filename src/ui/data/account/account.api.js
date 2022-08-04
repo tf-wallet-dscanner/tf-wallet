@@ -26,3 +26,30 @@ export async function newAccount({ password, mnemonic }) {
   );
   return accounts;
 }
+
+// 계정 복구
+export async function importAccount({ password, mnemonic }) {
+  const accounts = await Messenger.sendMessageToBackground(
+    BackgroundMessages.IMPORT_ACCOUNT_BG,
+    { password, mnemonic },
+  );
+  return accounts;
+}
+
+// privateKey 추출
+export async function exportPrivateKey({ address, password }) {
+  const privateKey = await Messenger.sendMessageToBackground(
+    BackgroundMessages.EXPORT_PRIVATE_KEY_BG,
+    { address, password },
+  );
+  return privateKey;
+}
+
+// publicKey 추출
+export async function exportPublicKey({ address, password }) {
+  const publicKey = await Messenger.sendMessageToBackground(
+    BackgroundMessages.EXPORT_PUBLIC_KEY_BG,
+    { address, password },
+  );
+  return publicKey;
+}

@@ -28,7 +28,7 @@ function NewAccount() {
   // 니모닉 검증
   const requestValidateMnemonic = async () => {
     const validate = await validateMnemonic(
-      document.getElementById('mnemonicInput').value,
+      document.getElementById('newMnemonicInput').value,
     );
     setMnemonicValidate(validate);
   };
@@ -51,7 +51,7 @@ function NewAccount() {
       <div>니모닉 코드 : {mnemonicSeed}</div>
       <br />
 
-      <textarea id="mnemonicInput" style={{ width: '100%' }} />
+      <textarea id="newMnemonicInput" style={{ width: '100%' }} />
       <Button onClick={requestValidateMnemonic}>니모닉 검증</Button>
       <div>니모닉 검증 결과 : {mnemonicValidate ? '정상' : ''}</div>
       <br />
