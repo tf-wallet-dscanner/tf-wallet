@@ -8,9 +8,9 @@ export async function getLatestBlock() {
   return block;
 }
 
-export async function getNetworkVersion() {
-  const { networkVersion } = await Messenger.sendMessageToBackground(
-    BackgroundMessages.GET_NETWORK_VERSION,
+export async function getNetworkId() {
+  const { networkId } = await Messenger.sendMessageToBackground(
+    BackgroundMessages.GET_NETWORK_ID,
   );
-  return networkVersion;
+  return networkId;
 }

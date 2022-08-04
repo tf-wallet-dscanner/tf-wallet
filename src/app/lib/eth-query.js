@@ -1,16 +1,15 @@
+import { SECOND } from 'app/constants/time';
+import getFetchWithTimeout from 'app/modules/fetch-with-timeout';
 import Web3 from 'web3';
 
 class EthQuery {
-  #network = new WeakMap();
+  #rpcUrl;
 
-  #provider = new WeakMap();
+  #web3Provider;
 
-  constructor(network) {
-    this.#network.set(this, network);
-    this.#provider.set(
-      this,
-      new Web3(new Web3.providers.HttpProvider(network)),
-    );
+  constructor(rpcUrl) {
+    this.#rpcUrl = rpcUrl;
+    this.#web3Provider = new Web3(new Web3.providers.HttpProvider(rpcUrl));
   }
 
   /**
@@ -20,7 +19,7 @@ class EthQuery {
    */
   async getBalance(address) {
     try {
-      const balance = await this.#provider.get(this).eth.getBalance(address);
+      const balance = await this.#web3Provider.eth.getBalance(address);
       return balance;
     } catch (e) {
       console.error('EthQuery - getBalance Error - ', e);
@@ -34,9 +33,7 @@ class EthQuery {
    */
   async getBlockByNumber(blockNumber) {
     try {
-      const block = await this.#provider
-        .get(this)
-        .eth.getBlock(blockNumber, false);
+      const block = await this.#web3Provider.eth.getBlock(blockNumber, false);
       return block;
     } catch (e) {
       console.error('EthQuery - getBlockByNumber Error - ', e);
@@ -49,12 +46,26 @@ class EthQuery {
    */
   async getLatestBlock() {
     try {
-      const latestBlock = await this.#provider
-        .get(this)
-        .eth.getBlock('latest', false);
+      const latestBlock = await this.#web3Provider.eth.getBlock(
+        'latest',
+        false,
+      );
       return latestBlock;
     } catch (e) {
       console.error('EthQuery - getLatestBlock Error - ', e);
+    }
+  }
+
+  /**
+   * @see https://web3js.readthedocs.io/en/v1.7.4/web3-eth.html?highlight=getBalance#getblocknumber
+   * @returns {Promise<number>} The number of the most recent block.
+   */
+  async getBlockNumber() {
+    try {
+      const blockNumber = await this.#web3Provider.eth.getBlockNumber();
+      return blockNumber;
+    } catch (e) {
+      console.error('EthQuery - getBlockNumber Error - ', e);
     }
   }
 
@@ -67,21 +78,19 @@ class EthQuery {
    *   "result": "3"
    * }
    */
-  async getNetworkVersion() {
+  async getNetworkId() {
     try {
-      const networkVersion = await this.#fetchJsonRpc(
-        this.#network.get(this),
-        'net_version',
-      );
-      return networkVersion;
+      const networkId = await this.#fetchJsonRpc(this.#rpcUrl, 'net_version');
+      return networkId;
     } catch (e) {
-      console.error('EthQuery - getNetworkVersion Error - ', e);
+      console.error('EthQuery - getNetworkId Error - ', e);
     }
   }
 
-  async #fetchJsonRpc(network, method, params) {
+  async #fetchJsonRpc(rpcUrl, method, params) {
     try {
-      const response = await fetch(network, {
+      const fetchWithTimeout = getFetchWithTimeout(SECOND * 30);
+      const response = await fetchWithTimeout(rpcUrl, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

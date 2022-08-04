@@ -1,6 +1,6 @@
 import { useQuery } from 'react-query';
 
-import { getLatestBlock, getNetworkVersion } from './provider.api';
+import { getLatestBlock, getNetworkId } from './provider.api';
 
 export function useGetLatestBlock(options) {
   return useQuery(['/provider/getLatestBlock'], getLatestBlock, {
@@ -9,8 +9,8 @@ export function useGetLatestBlock(options) {
   });
 }
 
-export function useGetNetworkVersion(options) {
-  return useQuery(['/provider/getNetworkVersion'], getNetworkVersion, {
+export function useGetNetworkId(options) {
+  return useQuery(['/provider/getNetworkId'], getNetworkId, {
     retry: 2,
     ...options,
   });
