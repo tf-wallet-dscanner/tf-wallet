@@ -72,11 +72,16 @@ class ProviderController extends EventEmitter {
     super();
 
     this.#providerStore = opts.store;
-    this.#providerStore.set({
-      ...defaultProviderConfig,
-    });
     this.#setInfuraProjectId = opts.infuraProjectId;
     this.on(NETWORK_EVENTS.NETWORK_DID_CHANGE, this.lookupNetwork);
+  }
+
+  async initializeProvider() {
+    const config = await this.providerConfig;
+    this.#setProviderConfig({
+      ...defaultProviderConfig,
+      ...config,
+    });
   }
 
   async lookupNetwork() {
@@ -106,7 +111,7 @@ class ProviderController extends EventEmitter {
       this.emit(NETWORK_EVENTS.INFURA_IS_UNBLOCKED);
     }
 
-    const networkId = await this.getNetworkId();
+    const { result: networkId } = await this.getNetworkId();
     this.#networkId = networkId;
   }
 

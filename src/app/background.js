@@ -125,6 +125,11 @@ class Background {
       this.controller.setProviderType,
     );
 
+    this.requests.set(
+      BackgroundMessages.GET_CURRENT_CHAIN_ID,
+      this.controller.getCurrentChainId,
+    );
+
     // 니모닉 생성
     this.requests.set(
       BackgroundMessages.GENERATE_MNEMONIC_BG,

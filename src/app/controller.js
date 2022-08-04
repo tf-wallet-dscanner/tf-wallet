@@ -13,6 +13,7 @@ class Controller {
       store: this.store,
       infuraProjectId: process.env.INFURA_PROJECT_ID,
     });
+    this.providerController.initializeProvider();
   }
 
   getLatestBlock = async () => {
@@ -37,6 +38,13 @@ class Controller {
 
   setProviderType = (_, { chainId }) => {
     return Promise.resolve(this.providerController.setProviderType(chainId));
+  };
+
+  getCurrentChainId = async () => {
+    const chainId = await this.providerController.getCurrentChainId();
+    return {
+      chainId,
+    };
   };
 }
 

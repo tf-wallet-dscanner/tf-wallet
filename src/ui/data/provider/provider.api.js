@@ -46,3 +46,10 @@ export async function setProviderType(chainId) {
   );
   return response;
 }
+
+export async function getCurrentChainId() {
+  const { chainId } = await Messenger.sendMessageToBackground(
+    BackgroundMessages.GET_CURRENT_CHAIN_ID,
+  );
+  return chainId;
+}

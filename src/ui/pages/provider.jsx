@@ -1,4 +1,5 @@
 import {
+  MAINNET_CHAIN_ID,
   NETWORK_TO_NAME_MAP,
   NETWORK_TYPE_TO_ID_MAP,
 } from 'app/constants/network';
@@ -6,14 +7,21 @@ import { useNavigate } from 'react-router-dom';
 import Button from 'ui/components/atoms/button';
 import Card from 'ui/components/atoms/card';
 import { THEME_COLOR } from 'ui/constants/colors';
-import { useGetNetworkId, useSetProviderType } from 'ui/data/provider';
+import {
+  useGetCurrentChainId,
+  useGetLatestBlock,
+  useSetProviderType,
+} from 'ui/data/provider';
 
 function Provider() {
   const navigation = useNavigate();
-  const { data: networkId, refetch } = useGetNetworkId();
+  const { data: block, refetch: getLatestBlock } = useGetLatestBlock();
+  const { data: currentChainId, refetch: getCurrentChainId } =
+    useGetCurrentChainId();
   const { mutate } = useSetProviderType({
     onSuccess() {
-      refetch();
+      getLatestBlock();
+      getCurrentChainId();
     },
   });
 
@@ -35,16 +43,20 @@ function Provider() {
       <Button className="mb-6" color={THEME_COLOR.WARNING} onClick={onNextPage}>
         Home
       </Button>
-      <select name="providers" onChange={handleProviderTypeChange}>
+      <select
+        name="providers"
+        onChange={handleProviderTypeChange}
+        defaultValue={MAINNET_CHAIN_ID}
+        value={currentChainId}
+      >
         {sortedNetworkList.map(({ chainId }, index) => (
           <option key={index} value={chainId}>
             {NETWORK_TO_NAME_MAP[chainId]}
           </option>
         ))}
       </select>
-      {networkId && (
-        <Card title="Network Id" content={JSON.stringify(networkId)} />
-      )}
+      {currentChainId && <Card title="Chain Id" content={currentChainId} />}
+      {block && <Card title="Block data" content={JSON.stringify(block)} />}
     </div>
   );
 }

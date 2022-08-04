@@ -1,6 +1,7 @@
 import { useMutation, useQuery } from 'react-query';
 
 import {
+  getCurrentChainId,
   getLatestBlock,
   getNetworkId,
   setProviderType,
@@ -31,6 +32,13 @@ export function useSetRpcTarget(options) {
 export function useSetProviderType(options) {
   return useMutation(['/provider/setProviderType'], setProviderType, {
     retry: false,
+    ...options,
+  });
+}
+
+export function useGetCurrentChainId(options) {
+  return useQuery(['/provider/getCurrentChainId'], getCurrentChainId, {
+    retry: 2,
     ...options,
   });
 }
