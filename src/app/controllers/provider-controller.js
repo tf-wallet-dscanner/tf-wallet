@@ -8,13 +8,21 @@
  * 6. 첫 provider 연결 이후에도 주기적으로 provider에게 통신 메시지를 날려 정상적으로 연결되어 있는지 확인을 해야한다. (ex. getId, getBalance …)
  */
 import {
+  CHAIN_ID_TO_RPC_URL_MAP,
+  CHAIN_ID_TO_TYPE_MAP,
   INFURA_PROVIDER_TYPES,
   MAINNET,
   MAINNET_CHAIN_ID,
   MAINNET_RPC_URL,
+  NETWORK_TYPE_RPC,
   NETWORK_TYPE_TO_ID_MAP,
 } from 'app/constants/network';
 import EthQuery from 'app/lib/eth-query';
+import {
+  isPrefixedFormattedHexString,
+  isSafeChainId,
+} from 'app/modules/network.utils';
+import { strict as assert } from 'assert';
 import EventEmitter from 'events';
 
 /**
@@ -41,6 +49,12 @@ export const NETWORK_EVENTS = {
   INFURA_IS_UNBLOCKED: 'infuraIsUnblocked',
 };
 
+const defaultProviderConfig = {
+  type: MAINNET,
+  rpcUrl: MAINNET_RPC_URL,
+  chainId: MAINNET_CHAIN_ID,
+};
+
 class ProviderController extends EventEmitter {
   /**
    * @see https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Classes/Private_class_fields
@@ -58,9 +72,7 @@ class ProviderController extends EventEmitter {
 
     this.#providerStore = opts.store;
     this.#providerStore.set({
-      type: MAINNET,
-      rpcUrl: MAINNET_RPC_URL,
-      chainId: MAINNET_CHAIN_ID,
+      ...defaultProviderConfig,
     });
     this.#setInfuraProjectId = opts.infuraProjectId;
     this.on(NETWORK_EVENTS.NETWORK_DID_CHANGE, this.lookupNetwork);
@@ -84,7 +96,7 @@ class ProviderController extends EventEmitter {
     }
 
     // Ping the RPC endpoint so we can confirm that it works
-    const { type, rpcUrl } = await this.getProviderConfig;
+    const { type } = await this.getProviderConfig;
     const isInfura = INFURA_PROVIDER_TYPES.includes(type);
 
     if (this.#infuraProjectId && isInfura) {
@@ -93,8 +105,7 @@ class ProviderController extends EventEmitter {
       this.emit(NETWORK_EVENTS.INFURA_IS_UNBLOCKED);
     }
 
-    const ethQuery = new EthQuery(rpcUrl);
-    const networkId = await ethQuery.getNetworkId();
+    const networkId = await this.getNetworkId();
     this.#networkId = networkId;
   }
 
@@ -112,6 +123,9 @@ class ProviderController extends EventEmitter {
     this.#infuraProjectId = projectId;
   }
 
+  /**
+   * infura network 사용 가능여부 체크
+   */
   async #checkInfuraAvailability() {
     const { rpcUrl } = await this.provideConfig;
     const ethQuery = new EthQuery(rpcUrl);
@@ -141,25 +155,76 @@ class ProviderController extends EventEmitter {
     }
   }
 
-  #switchNetwork() {
-    const isInfura = INFURA_PROVIDER_TYPES.includes('type');
-    if (isInfura) {
-      this._checkInfuraAvailability('type');
-    } else {
-      this.emit(NETWORK_EVENTS.INFURA_IS_UNBLOCKED);
-    }
-  }
-
   /**
-   * @desc set provider config
-   * @param {Object} getProviderConfig
+   * 사용자 정의 rpcUrl을 사용하는 provider 설정
+   * @param {string} rpcUrl 사용자가 설정한 rpcUrl (ex. 192.168.10.23:8484)
+   * @param {string} chainId
    */
-  set #setProviderConfig({ type, rpcUrl, chainId }) {
-    this.#providerStore.set({
-      type,
+  setRpcTarget(rpcUrl, chainId) {
+    assert.ok(
+      isPrefixedFormattedHexString(chainId),
+      `Invalid chain ID "${chainId}": invalid hex string.`,
+    );
+    assert.ok(
+      isSafeChainId(parseInt(chainId, 16)),
+      `Invalid chain ID "${chainId}": numerical value greater than max safe value.`,
+    );
+    this.#setProviderConfig({
+      type: NETWORK_TYPE_RPC,
       rpcUrl,
       chainId,
     });
+  }
+
+  /**
+   * infura, localhost provider 설정
+   * @param {string} chainId
+   */
+  setProviderType(chainId) {
+    const type = CHAIN_ID_TO_TYPE_MAP[chainId];
+
+    assert.notStrictEqual(
+      type,
+      NETWORK_TYPE_RPC,
+      `NetworkController - cannot call "setProviderType" with type "${NETWORK_TYPE_RPC}". Use "setRpcTarget"`,
+    );
+    assert.ok(
+      INFURA_PROVIDER_TYPES.includes(type),
+      `Unknown Infura provider type "${type}".`,
+    );
+
+    this.#setProviderConfig({
+      type,
+      rpcUrl: CHAIN_ID_TO_RPC_URL_MAP[chainId],
+      chainId,
+    });
+  }
+
+  async resetConnection() {
+    const providerConfig = await this.provideConfig;
+    this.#setProviderConfig(providerConfig);
+  }
+
+  /**
+   * provider 설정 변경 시 event 전파하여 다른 controller도 제어할 수 있게함
+   * @param {*} config provider config object
+   */
+  #switchNetwork(config) {
+    // Indicate to subscribers that network is about to change
+    this.emit(NETWORK_EVENTS.NETWORK_WILL_CHANGE);
+    // Notify subscribers that network has changed
+    this.emit(NETWORK_EVENTS.NETWORK_DID_CHANGE, config.type);
+  }
+
+  /**
+   * set provider config
+   * @param {Object} providerConfig
+   */
+  #setProviderConfig(config) {
+    this.#providerStore.set({
+      ...config,
+    });
+    this.#switchNetwork(config);
   }
 
   /**
@@ -170,7 +235,7 @@ class ProviderController extends EventEmitter {
   }
 
   /**
-   * @desc get network id(ex. mainnet: 1)
+   * get network id(ex. mainnet: 1)
    * @returns {string}
    */
   get networkId() {
@@ -185,12 +250,18 @@ class ProviderController extends EventEmitter {
     return NETWORK_TYPE_TO_ID_MAP[type]?.chainId || configChainId;
   }
 
+  /**
+   * @returns {Promise<Block>} Block object
+   */
   async getLatestBlock() {
     const { rpcUrl } = await this.provideConfig;
     const ethQuery = new EthQuery(rpcUrl);
     return ethQuery.getLatestBlock();
   }
 
+  /**
+   * @returns {Promise<string>} networkId
+   */
   async getNetworkId() {
     const { rpcUrl } = await this.provideConfig;
     const ethQuery = new EthQuery(rpcUrl);

@@ -17,6 +17,11 @@ function Provider() {
     navigation('/');
   };
 
+  const handleProviderChange = (event) => {
+    const { value } = event.target;
+    console.log('handleProviderChange value: ', value);
+  };
+
   const sortedNetworkList = Object.values(NETWORK_TYPE_TO_ID_MAP).sort(
     (a, b) => Number(a.networkId) - Number(b.networkId),
   );
@@ -26,7 +31,7 @@ function Provider() {
       <Button className="mb-6" color={THEME_COLOR.WARNING} onClick={onNextPage}>
         Home
       </Button>
-      <select name="providers">
+      <select name="providers" onChange={handleProviderChange}>
         {sortedNetworkList.map(({ chainId }, index) => (
           <option key={index} value={chainId}>
             {NETWORK_TO_NAME_MAP[chainId]}

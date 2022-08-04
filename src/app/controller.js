@@ -15,19 +15,27 @@ class Controller {
     });
   }
 
-  async getLatestBlock() {
+  getLatestBlock = async () => {
     const block = await this.providerController.getLatestBlock();
     return {
       block,
     };
-  }
+  };
 
-  async getNetworkId() {
+  getNetworkId = async () => {
     const networkId = await this.providerController.getNetworkId();
     return {
       networkId,
     };
-  }
+  };
+
+  setRpcTarget = (rpcUrl, chainId) => {
+    this.providerController.setRpcTarget(rpcUrl, chainId);
+  };
+
+  setProviderType = (chainId) => {
+    this.providerController.setProviderType(chainId);
+  };
 }
 
 export default Controller;
