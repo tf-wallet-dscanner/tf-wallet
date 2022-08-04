@@ -6,6 +6,7 @@ export const BackgroundMessages = {
   GET_NETWORK_ID: 'getNetworkId',
   SET_RPC_TARGET: 'setRpcTarget',
   SET_PROVIDER_TYPE: 'setProviderType',
+  GET_CURRENT_CHAIN_ID: 'getCurrentChainId',
   GENERATE_MNEMONIC_BG: 'generateMnemonic', // 니모닉 생성
   VALIDATE_MNEMONIC_BG: 'validateMnemonic', // 니모닉 검증
   NEW_ACCOUNT_BG: 'newAccount', // 새 계정 생성
