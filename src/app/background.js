@@ -1,7 +1,7 @@
 import browser from 'webextension-polyfill';
 
 import Controller from './controller';
-import ProviderController from './controllers/provider-controller';
+import KeyringController from './controllers/keyring-controller';
 import NotificationManager from './lib/notification-manager';
 import { BackgroundMessages } from './messages';
 
@@ -17,7 +17,7 @@ async function triggerUi() {
 class Background {
   constructor() {
     this.controller = new Controller();
-    this.providerController = new ProviderController();
+    this.keyringController = new KeyringController();
     this.requests = new Map();
   }
 
@@ -35,20 +35,6 @@ class Background {
     console.log('BG: get store', res);
     return {
       message: res,
-    };
-  }
-
-  async getLatestBlock() {
-    const block = await this.providerController.getLatestBlock();
-    return {
-      block,
-    };
-  }
-
-  async getNetworkVersion() {
-    const networkVersion = await this.providerController.getNetworkVersion();
-    return {
-      networkVersion,
     };
   }
 
@@ -121,12 +107,12 @@ class Background {
 
     this.requests.set(
       BackgroundMessages.GET_LATEST_BLOCK,
-      this.getLatestBlock.bind(this),
+      this.controller.getLatestBlock.bind(this.controller),
     );
 
     this.requests.set(
-      BackgroundMessages.GET_NETWORK_VERSION,
-      this.getNetworkVersion.bind(this),
+      BackgroundMessages.GET_NETWORK_ID,
+      this.controller.getNetworkId.bind(this.controller),
     );
 
     // 니모닉 생성
