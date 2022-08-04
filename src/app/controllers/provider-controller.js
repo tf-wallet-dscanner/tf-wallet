@@ -11,6 +11,7 @@ import {
   CHAIN_ID_TO_RPC_URL_MAP,
   CHAIN_ID_TO_TYPE_MAP,
   INFURA_PROVIDER_TYPES,
+  LOCALHOST,
   MAINNET,
   MAINNET_CHAIN_ID,
   MAINNET_RPC_URL,
@@ -96,7 +97,7 @@ class ProviderController extends EventEmitter {
     }
 
     // Ping the RPC endpoint so we can confirm that it works
-    const { type } = await this.getProviderConfig;
+    const { type } = await this.providerConfig;
     const isInfura = INFURA_PROVIDER_TYPES.includes(type);
 
     if (this.#infuraProjectId && isInfura) {
@@ -127,7 +128,7 @@ class ProviderController extends EventEmitter {
    * infura network 사용 가능여부 체크
    */
   async #checkInfuraAvailability() {
-    const { rpcUrl } = await this.provideConfig;
+    const { rpcUrl } = await this.providerConfig;
     const ethQuery = new EthQuery(rpcUrl);
 
     let networkChanged = false;
@@ -189,7 +190,7 @@ class ProviderController extends EventEmitter {
       `NetworkController - cannot call "setProviderType" with type "${NETWORK_TYPE_RPC}". Use "setRpcTarget"`,
     );
     assert.ok(
-      INFURA_PROVIDER_TYPES.includes(type),
+      INFURA_PROVIDER_TYPES.concat(LOCALHOST).includes(type),
       `Unknown Infura provider type "${type}".`,
     );
 
@@ -201,7 +202,7 @@ class ProviderController extends EventEmitter {
   }
 
   async resetConnection() {
-    const providerConfig = await this.provideConfig;
+    const providerConfig = await this.providerConfig;
     this.#setProviderConfig(providerConfig);
   }
 
@@ -220,8 +221,8 @@ class ProviderController extends EventEmitter {
    * set provider config
    * @param {Object} providerConfig
    */
-  #setProviderConfig(config) {
-    this.#providerStore.set({
+  async #setProviderConfig(config) {
+    await this.#providerStore.set({
       ...config,
     });
     this.#switchNetwork(config);
@@ -230,7 +231,7 @@ class ProviderController extends EventEmitter {
   /**
    * @returns {Promise<any>}
    */
-  get provideConfig() {
+  get providerConfig() {
     return this.#providerStore.getAll();
   }
 
@@ -246,7 +247,7 @@ class ProviderController extends EventEmitter {
    * @returns {Promise<string>} chainId
    */
   async getCurrentChainId() {
-    const { type, chainId: configChainId } = await this.getProviderConfig;
+    const { type, chainId: configChainId } = await this.providerConfig;
     return NETWORK_TYPE_TO_ID_MAP[type]?.chainId || configChainId;
   }
 
@@ -254,7 +255,7 @@ class ProviderController extends EventEmitter {
    * @returns {Promise<Block>} Block object
    */
   async getLatestBlock() {
-    const { rpcUrl } = await this.provideConfig;
+    const { rpcUrl } = await this.providerConfig;
     const ethQuery = new EthQuery(rpcUrl);
     return ethQuery.getLatestBlock();
   }
@@ -263,7 +264,7 @@ class ProviderController extends EventEmitter {
    * @returns {Promise<string>} networkId
    */
   async getNetworkId() {
-    const { rpcUrl } = await this.provideConfig;
+    const { rpcUrl } = await this.providerConfig;
     const ethQuery = new EthQuery(rpcUrl);
     return ethQuery.getNetworkId();
   }

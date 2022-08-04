@@ -29,12 +29,14 @@ class Controller {
     };
   };
 
-  setRpcTarget = (rpcUrl, chainId) => {
-    this.providerController.setRpcTarget(rpcUrl, chainId);
+  setRpcTarget = (_, { rpcUrl, chainId }) => {
+    return Promise.resolve(
+      this.providerController.setRpcTarget(rpcUrl, chainId),
+    );
   };
 
-  setProviderType = (chainId) => {
-    this.providerController.setProviderType(chainId);
+  setProviderType = (_, { chainId }) => {
+    return Promise.resolve(this.providerController.setProviderType(chainId));
   };
 }
 
