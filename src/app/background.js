@@ -107,12 +107,22 @@ class Background {
 
     this.requests.set(
       BackgroundMessages.GET_LATEST_BLOCK,
-      this.controller.getLatestBlock.bind(this.controller),
+      this.controller.getLatestBlock,
     );
 
     this.requests.set(
       BackgroundMessages.GET_NETWORK_ID,
-      this.controller.getNetworkId.bind(this.controller),
+      this.controller.getNetworkId,
+    );
+
+    this.requests.set(
+      BackgroundMessages.SET_RPC_TARGET,
+      this.controller.setRpcTarget,
+    );
+
+    this.requests.set(
+      BackgroundMessages.SET_PROVIDER_TYPE,
+      this.controller.setProviderType,
     );
 
     // 니모닉 생성
