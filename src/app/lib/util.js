@@ -78,6 +78,14 @@ const addHexPrefix = (str) => {
   return `0x${str}`;
 };
 
+// address 앞에 0x로 시작하면 2자리 자르기
+function stripHexPrefix(address) {
+  if (address.startsWith('0x')) {
+    return address.slice(2);
+  }
+  return address;
+}
+
 // 정규화
 function normalize(input) {
   if (!input) {
@@ -95,4 +103,4 @@ function normalize(input) {
   return addHexPrefix(input.toLowerCase());
 }
 
-export { getEnvironmentType, checkForError, normalize };
+export { getEnvironmentType, checkForError, normalize, stripHexPrefix };

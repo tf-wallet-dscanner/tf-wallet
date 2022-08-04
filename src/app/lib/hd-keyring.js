@@ -35,13 +35,8 @@ class HdKeyring extends SimpleKeyring {
     this.hdPath = opts.hdPath || hdPathString;
 
     if (opts.mnemonic) {
-      this.initFromMnemonic(opts.mnemonic);
+      this.initFromAccount(this.initFromMnemonic(opts.mnemonic));
     }
-
-    if (opts.numberOfAccounts) {
-      return this.addAccounts(opts.numberOfAccounts);
-    }
-
     return Promise.resolve([]);
   }
 

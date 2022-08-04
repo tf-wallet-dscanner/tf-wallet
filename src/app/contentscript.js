@@ -23,7 +23,7 @@ function initialize() {
   console.warn('content script initialize');
 
   // post message를 받는 이벤트 리스너
-  window.addEventListener('message', function (event) {
+  window.addEventListener('message', (event) => {
     // We only accept messages from ourselves
     if (event.source !== window) return;
 

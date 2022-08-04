@@ -40,13 +40,24 @@ function Home() {
         Hong
       </Button>
       <Button
-        className="font-bold pl-5"
+        color={THEME_COLOR.INFO}
+        className="my-5"
         suffixIcon={<FaBeer />}
         onClick={() => {
-          navigation('/account');
+          navigation('/new-account');
         }}
       >
-        Account
+        New Account
+      </Button>
+      <Button
+        color={THEME_COLOR.SUCCESS}
+        className="my-5"
+        suffixIcon={<FaBeer />}
+        onClick={() => {
+          navigation('/import-account');
+        }}
+      >
+        Import Account
       </Button>
       <div>{bears}</div>
       <Button color={THEME_COLOR.WARNING} onClick={increasePopulation}>

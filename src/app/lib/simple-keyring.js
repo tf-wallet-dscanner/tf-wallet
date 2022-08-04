@@ -1,4 +1,4 @@
-import ethUtil from 'ethereumjs-util';
+import { bufferToHex, keccak, stripHexPrefix } from 'ethereumjs-util';
 import Wallet from 'ethereumjs-wallet';
 import EventEmitter from 'events';
 
@@ -24,7 +24,7 @@ class SimpleKeyring extends EventEmitter {
     return new Promise((resolve, reject) => {
       try {
         this.wallets = privateKeys.map((privateKey) => {
-          const stripped = ethUtil.stripHexPrefix(privateKey);
+          const stripped = stripHexPrefix(privateKey);
           const buffer = Buffer.from(stripped, 'hex');
           const wallet = Wallet.fromPrivateKey(buffer);
           return wallet;
@@ -42,34 +42,34 @@ class SimpleKeyring extends EventEmitter {
       newWallets.push(Wallet.generate());
     }
     this.wallets = this.wallets.concat(newWallets);
-    const hexWallets = newWallets.map((w) =>
-      ethUtil.bufferToHex(w.getAddress()),
-    );
+    const hexWallets = newWallets.map((w) => bufferToHex(w.getAddress()));
     return Promise.resolve(hexWallets);
   }
 
   getAccounts() {
     return Promise.resolve(
-      this.wallets.map((w) => ethUtil.bufferToHex(w.getAddress())),
+      this.wallets.map((w) => bufferToHex(w.getAddress())),
     );
   }
 
-  getPrivateKeyFor(address, opts = {}) {
+  // 개인키/공개키 반환
+  async exportKey({ address, keyType }, opts = {}) {
     if (!address) {
       throw new Error('Must specify address.');
     }
-    const wallet = this._getWalletForAccount(address, opts);
-    const privKey = ethUtil.toBuffer(wallet.getPrivateKey());
-    return privKey;
+    const wallet = this.#getWalletForAccount(address, opts);
+    const methodName = keyType === 'private' ? 'getPrivateKey' : 'getPublicKey';
+    const keyValue = await wallet[methodName]().toString('hex');
+    return keyValue;
   }
 
   /**
    * @private
    */
-  _getWalletForAccount(account, opts = {}) {
+  #getWalletForAccount(account, opts = {}) {
     const address = normalize(account);
     let wallet = this.wallets.find(
-      (w) => ethUtil.bufferToHex(w.getAddress()) === address,
+      (w) => bufferToHex(w.getAddress()) === address,
     );
     if (!wallet) {
       throw new Error('Simple Keyring - Unable to find matching address.');
@@ -79,7 +79,7 @@ class SimpleKeyring extends EventEmitter {
       const privKey = wallet.getPrivateKey();
       const appKeyOriginBuffer = Buffer.from(opts.withAppKeyOrigin, 'utf8');
       const appKeyBuffer = Buffer.concat([privKey, appKeyOriginBuffer]);
-      const appKeyPrivKey = ethUtil.keccak(appKeyBuffer, 256);
+      const appKeyPrivKey = keccak(appKeyBuffer, 256);
       wallet = Wallet.fromPrivateKey(appKeyPrivKey);
     }
 

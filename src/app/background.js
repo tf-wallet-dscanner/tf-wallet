@@ -1,7 +1,6 @@
 import browser from 'webextension-polyfill';
 
 import Controller from './controller';
-import KeyringController from './controllers/keyring-controller';
 import ProviderController from './controllers/provider-controller';
 import NotificationManager from './lib/notification-manager';
 import { BackgroundMessages } from './messages';
@@ -19,7 +18,6 @@ class Background {
   constructor() {
     this.controller = new Controller();
     this.providerController = new ProviderController();
-    this.keyringController = new KeyringController();
     this.requests = new Map();
   }
 
@@ -56,20 +54,58 @@ class Background {
 
   // 니모닉 구문 생성
   async receiveGenerateMnemonic() {
-    const mnemonic = await this.keyringController.generateMnemonic();
+    const mnemonic = await this.controller.keyringController.generateMnemonic();
     return mnemonic;
   }
 
   // 니모닉 코드 검증
   async receiveValidateMnemonic(sender, { mnemonic }) {
-    const validate = await this.keyringController.validateMnemonic(mnemonic);
+    const validate = await this.controller.keyringController.validateMnemonic(
+      mnemonic,
+    );
     return validate;
   }
 
   // 신규 계정 생성
   async receiveNewAccount(sender, data) {
-    const accounts = await this.keyringController.createNewAccount(data);
+    const accounts = await this.controller.keyringController.createNewAccount(
+      data,
+    );
     return accounts;
+  }
+
+  // 계정 복구
+  async receiveImportAccount(sender, { password, mnemonic }) {
+    const { vault, accounts } =
+      await this.controller.keyringController.createNewVaultAndRestore({
+        password,
+        mnemonic,
+      });
+    // private Key 추출할때 패스워드 검증위해 vault 일단 저장 시켜놈
+    await this.controller.store.set({ vault });
+    return accounts;
+  }
+
+  // 비공개키 추출
+  async receiveExportPrivateKey(sender, { address, password }) {
+    // 비밀번호 검증
+    await this.controller.keyringController.verifyPassword(password);
+    const privateKey = await this.controller.keyringController.exportKey({
+      keyType: 'private',
+      address,
+    });
+    return privateKey;
+  }
+
+  // 공개키 추출
+  async receiveExportPublicKey(sender, { address, password }) {
+    // 비밀번호 검증
+    await this.controller.keyringController.verifyPassword(password);
+    const publicKey = await this.controller.keyringController.exportKey({
+      keyType: 'public',
+      address,
+    });
+    return publicKey;
   }
 
   registerMessengerRequests() {
@@ -110,6 +146,24 @@ class Background {
       BackgroundMessages.NEW_ACCOUNT_BG,
       this.receiveNewAccount.bind(this),
     );
+
+    // 계정 복구
+    this.requests.set(
+      BackgroundMessages.IMPORT_ACCOUNT_BG,
+      this.receiveImportAccount.bind(this),
+    );
+
+    // 비공개키 추출
+    this.requests.set(
+      BackgroundMessages.EXPORT_PRIVATE_KEY_BG,
+      this.receiveExportPrivateKey.bind(this),
+    );
+
+    // 공개키 추출
+    this.requests.set(
+      BackgroundMessages.EXPORT_PUBLIC_KEY_BG,
+      this.receiveExportPublicKey.bind(this),
+    );
   }
 
   listenForMessages() {
@@ -144,6 +198,8 @@ class Background {
 }
 
 const initApp = async (remotePort) => {
+  // extension close -> re-open 시 event 중복 제거 위해서 추가함
+  browser.runtime.onConnect.removeListener(initApp);
   console.log('remotePort: ', remotePort);
   new Background().init();
 };
