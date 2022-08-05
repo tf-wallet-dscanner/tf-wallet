@@ -14,7 +14,6 @@ import './text-field.scss';
 function TextField({
   password,
   className,
-  model,
   onChange,
   prefixIcon,
   suffixIcon,

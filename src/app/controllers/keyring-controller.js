@@ -72,10 +72,10 @@ class KeyringController {
     this.keyrings.push(keyring);
 
     const vault = await this.persistAllKeyrings(password);
-    return {
-      accounts,
-      vault,
-    };
+
+    // private Key 추출할때 패스워드 검증위해 vault 저장
+    await this.store.set({ vault });
+    return accounts;
   }
 
   // 키링 배열을 직렬화하고 사용자가 입력한 password로 암호화하여 저장소에 저장

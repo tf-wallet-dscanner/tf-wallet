@@ -19,62 +19,6 @@ class Background {
     this.requests = new Map();
   }
 
-  // 니모닉 구문 생성
-  async receiveGenerateMnemonic() {
-    const mnemonic = await this.controller.keyringController.generateMnemonic();
-    return mnemonic;
-  }
-
-  // 니모닉 코드 검증
-  async receiveValidateMnemonic(sender, { mnemonic }) {
-    const validate = await this.controller.keyringController.validateMnemonic(
-      mnemonic,
-    );
-    return validate;
-  }
-
-  // 신규 계정 생성
-  async receiveNewAccount(sender, data) {
-    const accounts = await this.controller.keyringController.createNewAccount(
-      data,
-    );
-    return accounts;
-  }
-
-  // 계정 복구
-  async receiveImportAccount(sender, { password, mnemonic }) {
-    const { vault, accounts } =
-      await this.controller.keyringController.createNewVaultAndRestore({
-        password,
-        mnemonic,
-      });
-    // private Key 추출할때 패스워드 검증위해 vault 일단 저장 시켜놈
-    await this.controller.store.set({ vault });
-    return accounts;
-  }
-
-  // 비공개키 추출
-  async receiveExportPrivateKey(sender, { address, password }) {
-    // 비밀번호 검증
-    await this.controller.keyringController.verifyPassword(password);
-    const privateKey = await this.controller.keyringController.exportKey({
-      keyType: 'private',
-      address,
-    });
-    return privateKey;
-  }
-
-  // 공개키 추출
-  async receiveExportPublicKey(sender, { address, password }) {
-    // 비밀번호 검증
-    await this.controller.keyringController.verifyPassword(password);
-    const publicKey = await this.controller.keyringController.exportKey({
-      keyType: 'public',
-      address,
-    });
-    return publicKey;
-  }
-
   registerMessengerRequests() {
     this.requests.set(
       BackgroundMessages.GET_LATEST_BLOCK,
@@ -104,37 +48,37 @@ class Background {
     // 니모닉 생성
     this.requests.set(
       BackgroundMessages.GENERATE_MNEMONIC_BG,
-      this.receiveGenerateMnemonic.bind(this),
+      this.controller.generateMnemonic,
     );
 
     // 니모닉 검증
     this.requests.set(
       BackgroundMessages.VALIDATE_MNEMONIC_BG,
-      this.receiveValidateMnemonic.bind(this),
+      this.controller.validateMnemonic,
     );
 
     // 신규 계정 생성
     this.requests.set(
       BackgroundMessages.NEW_ACCOUNT_BG,
-      this.receiveNewAccount.bind(this),
+      this.controller.newAccount,
     );
 
     // 계정 복구
     this.requests.set(
       BackgroundMessages.IMPORT_ACCOUNT_BG,
-      this.receiveImportAccount.bind(this),
+      this.controller.importAccount,
     );
 
     // 비공개키 추출
     this.requests.set(
       BackgroundMessages.EXPORT_PRIVATE_KEY_BG,
-      this.receiveExportPrivateKey.bind(this),
+      this.controller.exportPrivateKey,
     );
 
     // 공개키 추출
     this.requests.set(
       BackgroundMessages.EXPORT_PUBLIC_KEY_BG,
-      this.receiveExportPublicKey.bind(this),
+      this.controller.exportPublicKey,
     );
   }
 

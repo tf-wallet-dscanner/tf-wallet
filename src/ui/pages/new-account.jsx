@@ -59,7 +59,6 @@ function NewAccount() {
       <TextField
         password
         placeholder="비밀번호 입력"
-        model={password}
         onChange={(e) => {
           setPassword(e.target.value);
         }}
