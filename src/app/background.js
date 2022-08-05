@@ -1,7 +1,6 @@
 import browser from 'webextension-polyfill';
 
 import Controller from './controller';
-import KeyringController from './controllers/keyring-controller';
 import NotificationManager from './lib/notification-manager';
 import { BackgroundMessages } from './messages';
 
@@ -17,25 +16,7 @@ async function triggerUi() {
 class Background {
   constructor() {
     this.controller = new Controller();
-    this.keyringController = new KeyringController();
     this.requests = new Map();
-  }
-
-  async receiveHello(sender, data) {
-    console.log('BG: receiveHello: ', sender, data);
-    return {
-      message: 'Hey there!!!',
-    };
-  }
-
-  async receiveSetAddress(sender, data) {
-    console.log('BG: receiveSetAddress: ', sender, data);
-    await this.controller.store.set({ address: data.message });
-    const res = await this.controller.store.get('address');
-    console.log('BG: get store', res);
-    return {
-      message: res,
-    };
   }
 
   // 니모닉 구문 생성
@@ -95,16 +76,6 @@ class Background {
   }
 
   registerMessengerRequests() {
-    this.requests.set(
-      BackgroundMessages.SAY_HELLO_TO_BG,
-      this.receiveHello.bind(this),
-    );
-
-    this.requests.set(
-      BackgroundMessages.SET_ADDRESS_TO_BG,
-      this.receiveSetAddress.bind(this),
-    );
-
     this.requests.set(
       BackgroundMessages.GET_LATEST_BLOCK,
       this.controller.getLatestBlock,
@@ -186,15 +157,6 @@ class Background {
 
     // 2. Listen for messages from background and run the listener from the map
     this.listenForMessages();
-
-    // Send message to content script of active tab after 10000 ms
-    setInterval(() => {
-      browser.tabs.query({ active: true, currentWindow: true }).then((tabs) => {
-        tabs.forEach((tab) => {
-          console.log('tab.id:', tab.id);
-        });
-      });
-    }, 10000);
   }
 }
 

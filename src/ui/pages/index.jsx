@@ -14,12 +14,14 @@ const queryClient = new QueryClient();
 
 browser.runtime.connect({ name: 'popup' });
 
+const devtool = process.env.DEVTOOL;
+
 root.render(
   <React.StrictMode>
     <HashRouter>
       <QueryClientProvider client={queryClient}>
         <Routing />
-        <ReactQueryDevtools initialIsOpen={false} />
+        {devtool && <ReactQueryDevtools initialIsOpen={false} />}
       </QueryClientProvider>
     </HashRouter>
   </React.StrictMode>,
