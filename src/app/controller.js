@@ -46,6 +46,56 @@ class Controller {
       chainId,
     };
   };
+
+  // 니모닉 구문 생성
+  generateMnemonic = async () => {
+    return Promise.resolve(this.keyringController.generateMnemonic());
+  };
+
+  // 니모닉 코드 검증
+  validateMnemonic = async (_, { mnemonic }) => {
+    return Promise.resolve(this.keyringController.validateMnemonic(mnemonic));
+  };
+
+  // 신규 계정 생성
+  newAccount = async (_, { password, mnemonic }) => {
+    const accounts = await this.keyringController.createNewAccount({
+      password,
+      mnemonic,
+    });
+    return accounts;
+  };
+
+  // 계정 복구
+  importAccount = async (_, { password, mnemonic }) => {
+    const accounts = await this.keyringController.createNewVaultAndRestore({
+      password,
+      mnemonic,
+    });
+    return accounts;
+  };
+
+  // 비공개키 추출
+  exportPrivateKey = async (_, { address, password }) => {
+    // 비밀번호 검증
+    await this.keyringController.verifyPassword(password);
+    const privateKey = await this.keyringController.exportKey({
+      keyType: 'private',
+      address,
+    });
+    return privateKey;
+  };
+
+  // 공개키 추출
+  exportPublicKey = async (_, { address, password }) => {
+    // 비밀번호 검증
+    await this.keyringController.verifyPassword(password);
+    const publicKey = await this.keyringController.exportKey({
+      keyType: 'public',
+      address,
+    });
+    return publicKey;
+  };
 }
 
 export default Controller;
