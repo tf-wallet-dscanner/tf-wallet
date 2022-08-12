@@ -53,3 +53,12 @@ export async function exportPublicKey({ address, password }) {
   );
   return publicKey;
 }
+
+// keystore v3 추출
+export async function exportKeystoreV3({ privateKey, password }) {
+  const keystoreV3 = await Messenger.sendMessageToBackground(
+    BackgroundMessages.EXPORT_KEYSTORE_V3_BG,
+    { privateKey, password },
+  );
+  return keystoreV3;
+}

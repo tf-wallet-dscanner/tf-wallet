@@ -80,6 +80,12 @@ class Background {
       BackgroundMessages.EXPORT_PUBLIC_KEY_BG,
       this.controller.exportPublicKey,
     );
+
+    // 키스토어 v3 추출
+    this.requests.set(
+      BackgroundMessages.EXPORT_KEYSTORE_V3_BG,
+      this.controller.exportKeystoreV3,
+    );
   }
 
   listenForMessages() {
