@@ -1,4 +1,5 @@
 import encryptor from 'browser-passworder';
+import Web3 from 'web3';
 
 import HdKeyring from '../lib/hd-keyring';
 import { normalize, stripHexPrefix } from '../lib/util';
@@ -11,11 +12,15 @@ const KEYRINGS_TYPE_MAP = {
 };
 
 class KeyringController {
+  #web3Provider;
+
   constructor(opts = {}) {
     this.hdKeyring = new HdKeyring();
     this.keyrings = [];
     this.password = '';
     this.store = opts.store || {};
+
+    this.#web3Provider = new Web3(new Web3.providers.HttpProvider());
   }
 
   // 니모닉 생성
@@ -218,6 +223,15 @@ class KeyringController {
         `No keyring found for the requested account. Error info: ${errorInfo}`,
       );
     });
+  }
+
+  // keystoreV3 return
+  async exportKeystoreV3({ privateKey, password }) {
+    const keystoreV3 = await this.#web3Provider.eth.accounts.encrypt(
+      privateKey,
+      password,
+    );
+    return keystoreV3;
   }
 }
 

@@ -96,6 +96,15 @@ class Controller {
     });
     return publicKey;
   };
+
+  // 키스토어 v3 추출
+  exportKeystoreV3 = async (_, { privateKey, password }) => {
+    const keystoreV3 = await this.keyringController.exportKeystoreV3({
+      privateKey,
+      password,
+    });
+    return keystoreV3;
+  };
 }
 
 export default Controller;

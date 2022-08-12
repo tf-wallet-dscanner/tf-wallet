@@ -4,6 +4,7 @@ import { APP_STAGE } from 'ui/constants/environment';
 
 import Home from './home';
 import ImportAccount from './import-account';
+import JsonFile from './json-file';
 import NewAccount from './new-account';
 import Provider from './provider';
 
@@ -18,6 +19,7 @@ function Routing() {
       <Route path="/provider" element={<Provider />} />
       <Route path="/new-account" element={<NewAccount />} />
       <Route path="/import-account" element={<ImportAccount />} />
+      <Route path="/json-file" element={<JsonFile />} />
     </Routes>
   );
 }
