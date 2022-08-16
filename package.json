@@ -182,7 +182,7 @@
       "!<rootDir>/node_modules/"
     ],
     "coveragePathIgnorePatterns": [
-      "src/index.tsx"
+      "src/index.jsx"
     ],
     "setupFiles": [
       "react-app-polyfill/jsdom"
@@ -205,7 +205,9 @@
       "^.+\\.module\\.(css|sass|scss)$"
     ],
     "moduleNameMapper": {
-      "\\.(css|less|scss|sss|styl)$": "<rootDir>/node_modules/jest-css-modules"
+      "\\.(css|less|scss|sss|styl)$": "<rootDir>/node_modules/jest-css-modules",
+      "^app/(.*)$": "<rootDir>/src/app/$1",
+      "^ui/(.*)$": "<rootDir>/src/ui/$1"
     },
     "moduleFileExtensions": [
       "web.js",

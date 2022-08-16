@@ -1,6 +1,5 @@
 import ethUtil from 'ethereumjs-util';
 import { memoize } from 'lodash';
-import browser from 'webextension-polyfill';
 
 import {
   ENVIRONMENT_TYPE_BACKGROUND,
@@ -36,25 +35,6 @@ const getEnvironmentTypeMemo = memoize((url) => {
  */
 const getEnvironmentType = (url = window.location.href) =>
   getEnvironmentTypeMemo(url);
-
-/**
- * Returns an Error if extension.runtime.lastError is present
- * this is a workaround for the non-standard error object that's used
- *
- * @returns {Error|undefined}
- */
-function checkForError() {
-  const { lastError } = browser.runtime;
-  if (!lastError) {
-    return undefined;
-  }
-  // if it quacks like an Error, its an Error
-  if (lastError.stack && lastError.message) {
-    return lastError;
-  }
-  // repair incomplete error object (eg chromium v77)
-  return new Error(lastError.message);
-}
 
 /**
  * Prefixes a hex string with '0x' or '-0x' and returns it. Idempotent.
@@ -103,4 +83,4 @@ function normalize(input) {
   return addHexPrefix(input.toLowerCase());
 }
 
-export { getEnvironmentType, checkForError, normalize, stripHexPrefix };
+export { getEnvironmentType, normalize, stripHexPrefix };
