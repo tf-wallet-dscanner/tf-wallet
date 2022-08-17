@@ -6,14 +6,15 @@ class Controller {
   constructor() {
     this.store = new ExtensionStore();
 
-    this.keyringController = new KeyringController({
-      store: this.store,
-    });
     this.providerController = new ProviderController({
       store: this.store,
       infuraProjectId: process.env.INFURA_PROJECT_ID,
     });
     this.providerController.initializeProvider();
+
+    this.keyringController = new KeyringController({
+      store: this.store,
+    });
   }
 
   getLatestBlock = async () => {

@@ -1,8 +1,7 @@
+import EthQuery from 'app/lib/eth-query';
+import HdKeyring from 'app/lib/hd-keyring';
+import { normalize, stripHexPrefix } from 'app/lib/util';
 import encryptor from 'browser-passworder';
-import Web3 from 'web3';
-
-import HdKeyring from '../lib/hd-keyring';
-import { normalize, stripHexPrefix } from '../lib/util';
 
 const bip39 = require('bip39');
 
@@ -12,15 +11,20 @@ const KEYRINGS_TYPE_MAP = {
 };
 
 class KeyringController {
-  #web3Provider;
+  #keyringStore;
 
   constructor(opts = {}) {
     this.hdKeyring = new HdKeyring();
     this.keyrings = [];
     this.password = '';
-    this.store = opts.store || {};
+    this.#keyringStore = opts.store;
+  }
 
-    this.#web3Provider = new Web3(new Web3.providers.HttpProvider());
+  /**
+   * @returns {Promise<any>}
+   */
+  get keyringConfig() {
+    return this.#keyringStore.getAll();
   }
 
   // 니모닉 생성
@@ -30,15 +34,15 @@ class KeyringController {
   }
 
   // 니모닉 검증
-  async validateMnemonic(mnemonic) {
-    const validate = await this.hdKeyring.validateMnemonic(mnemonic);
+  validateMnemonic(mnemonic) {
+    const validate = this.hdKeyring.validateMnemonic(mnemonic);
     return validate;
   }
 
   // 신규 계정 생성
-  async createNewAccount({ password, mnemonic }) {
+  createNewAccount({ password, mnemonic }) {
     this.password = password;
-    const isValid = await this.hdKeyring.validateMnemonic(mnemonic);
+    const isValid = this.hdKeyring.validateMnemonic(mnemonic);
 
     if (isValid) {
       const accounts = this.hdKeyring.initFromAccount(mnemonic);
@@ -79,12 +83,12 @@ class KeyringController {
     const vault = await this.persistAllKeyrings(password);
 
     // private Key 추출할때 패스워드 검증위해 vault 저장
-    await this.store.set({ vault });
+    await this.#keyringStore.set({ vault });
     return accounts;
   }
 
   // 키링 배열을 직렬화하고 사용자가 입력한 password로 암호화하여 저장소에 저장
-  persistAllKeyrings(password) {
+  async persistAllKeyrings(password) {
     if (typeof password !== 'string') {
       return Promise.reject(
         new Error('KeyringController - password is not a string'),
@@ -92,34 +96,30 @@ class KeyringController {
     }
 
     this.password = password;
-    return Promise.all(
-      this.keyrings.map((keyring) => {
-        return Promise.all([keyring.type, keyring.serialize()]).then(
-          (serializedKeyringArray) => {
-            // Label the output values on each serialized Keyring:
-            return {
-              type: serializedKeyringArray[0],
-              data: serializedKeyringArray[1],
-            };
-          },
-        );
+    const serializedKeyrings = await Promise.all(
+      this.keyrings.map(async (keyring) => {
+        const serializedKeyringArray = await Promise.all([
+          keyring.type,
+          keyring.serialize(),
+        ]);
+        return {
+          type: serializedKeyringArray[0],
+          data: serializedKeyringArray[1],
+        };
       }),
-    )
-      .then((serializedKeyrings) => {
-        return encryptor.encrypt(this.password, serializedKeyrings);
-      })
-      .then((encryptedString) => {
-        return encryptedString;
-      });
+    );
+    const encryptedString = await encryptor.encrypt(
+      this.password,
+      serializedKeyrings,
+    );
+    return encryptedString;
   }
 
   // 키링 clear
   async clearKeyrings() {
     // clear keyrings from memory
     this.keyrings = [];
-    // this.memStore.updateState({
-    //   keyrings: [],
-    // });
+    // #keyringStore clear keyring
   }
 
   async getAccounts() {
@@ -135,36 +135,34 @@ class KeyringController {
   }
 
   // 중복체크
-  checkForDuplicate(type, newAccountArray) {
-    return this.getAccounts().then((accounts) => {
-      switch (type) {
-        case KEYRINGS_TYPE_MAP.SIMPLE_KEYRING: {
-          const isIncluded = Boolean(
-            accounts.find(
-              (key) =>
-                key === newAccountArray[0] ||
-                key === stripHexPrefix(newAccountArray[0]),
-            ),
-          );
-          return isIncluded
-            ? Promise.reject(
-                new Error(
-                  "The account you're are trying to import is a duplicate",
-                ),
-              )
-            : Promise.resolve(newAccountArray);
-        }
-        default: {
-          return Promise.resolve(newAccountArray);
-        }
+  async checkForDuplicate(type, newAccountArray) {
+    const accounts = await this.getAccounts();
+    switch (type) {
+      case KEYRINGS_TYPE_MAP.SIMPLE_KEYRING: {
+        const isIncluded = Boolean(
+          accounts.find(
+            (key) =>
+              key === newAccountArray[0] ||
+              key === stripHexPrefix(newAccountArray[0]),
+          ),
+        );
+        return isIncluded
+          ? Promise.reject(
+              new Error(
+                "The account you're are trying to import is a duplicate",
+              ),
+            )
+          : Promise.resolve(newAccountArray);
       }
-    });
+      default: {
+        return Promise.resolve(newAccountArray);
+      }
+    }
   }
 
   // 비밀번호 검증 (vault)
   async verifyPassword(password) {
-    const { vault: encryptedVault } = await this.store.get('vault');
-    console.warn('vault => ', encryptedVault);
+    const { vault: encryptedVault } = await this.#keyringStore.get('vault');
     if (!encryptedVault) {
       throw new Error('Cannot unlock without a previous vault.');
     }
@@ -194,44 +192,45 @@ class KeyringController {
    * @param {string} address - An account address.
    * @returns {Promise<Keyring>} The keyring of the account, if it exists.
    */
-  getKeyringForAccount(address) {
+  async getKeyringForAccount(address) {
     const hexed = normalize(address);
 
-    return Promise.all(
+    const candidates = await Promise.all(
       this.keyrings.map((keyring) => {
         return Promise.all([keyring, keyring.getAccounts()]);
       }),
-    ).then((candidates) => {
-      const winners = candidates.filter((candidate) => {
-        const accounts = candidate[1].map(normalize);
-        return accounts.includes(hexed);
-      });
-      if (winners && winners.length > 0) {
-        return winners[0][0];
-      }
-
-      // Adding more info to the error
-      let errorInfo = '';
-      if (!address) {
-        errorInfo = 'The address passed in is invalid/empty';
-      } else if (!candidates || !candidates.length) {
-        errorInfo = 'There are no keyrings';
-      } else if (!winners || !winners.length) {
-        errorInfo = 'There are keyrings, but none match the address';
-      }
-      throw new Error(
-        `No keyring found for the requested account. Error info: ${errorInfo}`,
-      );
+    );
+    const winners = candidates.filter((candidate) => {
+      const accounts = candidate[1].map(normalize);
+      return accounts.includes(hexed);
     });
+    if (winners && winners.length > 0) {
+      return winners[0][0];
+    }
+    // Adding more info to the error
+    let errorInfo = '';
+    if (!address) {
+      errorInfo = 'The address passed in is invalid/empty';
+    } else if (!candidates || !candidates.length) {
+      errorInfo = 'There are no keyrings';
+    } else if (!winners || !winners.length) {
+      errorInfo = 'There are keyrings, but none match the address';
+    }
+    throw new Error(
+      `No keyring found for the requested account. Error info: ${errorInfo}`,
+    );
   }
 
-  // keystoreV3 return
+  /**
+   * store에 저장된 rpcUrl 가져와서 EthQuery를 통해 web3.eth 접근
+   * @param {string} privateKey 사용자가 설정한 비공개키
+   * @param {string} password 사용자 패스워드
+   * @returns {Object} keystore v3 JSON
+   */
   async exportKeystoreV3({ privateKey, password }) {
-    const keystoreV3 = await this.#web3Provider.eth.accounts.encrypt(
-      privateKey,
-      password,
-    );
-    return keystoreV3;
+    const { rpcUrl } = await this.keyringConfig;
+    const ethQuery = new EthQuery(rpcUrl);
+    return ethQuery.getAccountsEncrypt({ privateKey, password });
   }
 }
 

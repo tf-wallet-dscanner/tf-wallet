@@ -113,6 +113,24 @@ class EthQuery {
       console.error('EthQuery - fetchJsonRpc Error - ', e);
     }
   }
+
+  /**
+   * @see https://web3js.readthedocs.io/en/v1.7.5/web3-eth-accounts.html#encrypt
+   * @param {String} privateKey - The private key to encrypt.
+   * @param {String} password - The password used for encryption.
+   * @returns {Object} The encrypted keystore v3 JSON
+   */
+  getAccountsEncrypt({ privateKey, password }) {
+    try {
+      const keystoreV3 = this.#web3Provider.eth.accounts.encrypt(
+        privateKey,
+        password,
+      );
+      return keystoreV3;
+    } catch (e) {
+      console.error('EthQuery - web3.eth.accounts.encrypt Error - ', e);
+    }
+  }
 }
 
 export default EthQuery;
