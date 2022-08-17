@@ -1,7 +1,8 @@
+import { checkForError } from 'app/lib/localstore';
 import browser from 'webextension-polyfill';
 
 import { ENVIRONMENT_TYPE_BACKGROUND } from '../constants/app';
-import { checkForError, getEnvironmentType } from '../lib/util';
+import { getEnvironmentType } from '../lib/util';
 
 export default class ExtensionPlatform {
   //

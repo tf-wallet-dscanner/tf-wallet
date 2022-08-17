@@ -7,7 +7,7 @@ import browser from 'webextension-polyfill';
  *
  * @returns {Error|undefined}
  */
-function checkForError() {
+export function checkForError() {
   const { lastError } = browser.runtime;
   if (!lastError) {
     return undefined;
