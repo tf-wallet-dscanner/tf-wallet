@@ -106,6 +106,17 @@ class Controller {
     });
     return keystoreV3;
   };
+
+  sendRawTransaction = async (_, { from, to, decimalValue }) => {
+    const txResult = await this.providerController.sendRawTransaction(
+      from,
+      to,
+      decimalValue,
+    );
+    return {
+      txResult,
+    };
+  };
 }
 
 export default Controller;
