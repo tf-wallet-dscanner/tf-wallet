@@ -12,4 +12,5 @@ export const BackgroundMessages = {
   EXPORT_PRIVATE_KEY_BG: 'exportPrivateKey', // 비공개키 추출
   EXPORT_PUBLIC_KEY_BG: 'exportPublicKey', // 공개키 추출
   EXPORT_KEYSTORE_V3_BG: 'exportKeystoreV3', // 키스토어 V3 추출
+  SEND_RAW_TRANSACTION: 'sendRawTransaction',
 };

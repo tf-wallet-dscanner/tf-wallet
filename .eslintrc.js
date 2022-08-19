@@ -85,6 +85,7 @@ module.exports = {
         argsIgnorePattern: '^_',
       },
     ],
+    'jsx-a11y/label-has-associated-control': 'off',
   },
   globals: {
     React: 'writable',

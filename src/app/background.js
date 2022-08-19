@@ -86,6 +86,11 @@ class Background {
       BackgroundMessages.EXPORT_KEYSTORE_V3_BG,
       this.controller.exportKeystoreV3,
     );
+
+    this.requests.set(
+      BackgroundMessages.SEND_RAW_TRANSACTION,
+      this.controller.sendRawTransaction,
+    );
   }
 
   listenForMessages() {
