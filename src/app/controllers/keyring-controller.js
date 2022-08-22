@@ -1,5 +1,7 @@
+import accountImporter from 'app/lib/account-importer';
 import EthQuery from 'app/lib/eth-query';
 import HdKeyring from 'app/lib/hd-keyring';
+import SimpleKeyring from 'app/lib/simple-keyring';
 import { normalize, stripHexPrefix } from 'app/lib/util';
 import encryptor from 'browser-passworder';
 
@@ -88,7 +90,7 @@ class KeyringController {
   }
 
   // 키링 배열을 직렬화하고 사용자가 입력한 password로 암호화하여 저장소에 저장
-  async persistAllKeyrings(password) {
+  async persistAllKeyrings(password = this.password) {
     if (typeof password !== 'string') {
       return Promise.reject(
         new Error('KeyringController - password is not a string'),
@@ -231,6 +233,41 @@ class KeyringController {
     const { rpcUrl } = await this.keyringConfig;
     const ethQuery = new EthQuery(rpcUrl);
     return ethQuery.getAccountsEncrypt({ privateKey, password });
+  }
+
+  /**
+   * 계정 가져오기
+   * @param {string} strategy - import 유형 (Private Key, JSON File)
+   * @param {Object} args - { password: 비밀번호, privateKey || fileContents: 타입에 따라 비공개 키 or JSON File }
+   * @returns {string} accounts[0] - 계정 address 주소
+   */
+  async importAccountStrategy({ strategy, args }) {
+    this.password = args.password;
+    const privateKey = await accountImporter.importAccount(strategy, args);
+
+    const keyring = new SimpleKeyring([privateKey]);
+    return keyring
+      .getAccounts()
+      .then((accounts) => {
+        return this.checkForDuplicate(
+          KEYRINGS_TYPE_MAP.SIMPLE_KEYRING,
+          accounts,
+        );
+      })
+      .then(() => {
+        this.keyrings.push(keyring);
+        return this.persistAllKeyrings();
+      })
+      .then(async () => {
+        const accounts = await keyring.getAccounts();
+        return accounts[0];
+
+        // update accounts in preferences controller
+        // const allAccounts = await this.getAccounts();
+        // this.preferencesController.setAddresses(allAccounts);
+        // set new account as selected
+        // await this.preferencesController.setSelectedAddress(accounts[0]);
+      });
   }
 }
 

@@ -16102,7 +16102,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"prop-types@npm:^15.8.1":
+"prop-types@npm:^15.5.7, prop-types@npm:^15.8.1":
   version: 15.8.1
   resolution: "prop-types@npm:15.8.1"
   dependencies:
@@ -16609,6 +16609,17 @@ __metadata:
   bin:
     react-scripts: bin/react-scripts.js
   checksum: 92afa2f245c7092ccc97d5609dc7a2130616262e34da7f15072d9442e2d2e1d4909a91022abd1faac1336eb17c5525a10d9bd43e1ae374c7ec941ca20addca68
+  languageName: node
+  linkType: hard
+
+"react-simple-file-input@npm:^2.1.0":
+  version: 2.1.0
+  resolution: "react-simple-file-input@npm:2.1.0"
+  dependencies:
+    prop-types: ^15.5.7
+  peerDependencies:
+    react: ">= 0.14.9"
+  checksum: e4999623f838ff2a3ce65963f3f727732a2914bd6056de40e8ae6b22ff9b5de6b5d095897183ab79c374c56407aabc7cea2c93d38f27ea89e5a8328cb416fda7
   languageName: node
   linkType: hard
 
@@ -18863,6 +18874,7 @@ __metadata:
     react-refresh: ^0.11.0
     react-router-dom: ^6.3.0
     react-scripts: latest
+    react-simple-file-input: ^2.1.0
     regenerator-runtime: ^0.13.9
     resolve: ^1.20.0
     resolve-url-loader: ^4.0.0

@@ -62,3 +62,12 @@ export async function exportKeystoreV3({ privateKey, password }) {
   );
   return keystoreV3;
 }
+
+// 계정 가져오기 (privKey, json 파일) - v3
+export async function importAccountStrategy({ strategy, args }) {
+  const selectedAddress = await Messenger.sendMessageToBackground(
+    BackgroundMessages.IMPORT_ACCOUNT_STRATEGY_BG,
+    { strategy, args },
+  );
+  return selectedAddress;
+}
