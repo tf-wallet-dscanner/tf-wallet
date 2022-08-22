@@ -87,6 +87,12 @@ class Background {
       this.controller.exportKeystoreV3,
     );
 
+    // 계정 가져오기 (비공개 키 or json 파일)
+    this.requests.set(
+      BackgroundMessages.IMPORT_ACCOUNT_STRATEGY_BG,
+      this.controller.importAccountStrategy,
+    );
+
     this.requests.set(
       BackgroundMessages.SEND_RAW_TRANSACTION,
       this.controller.sendRawTransaction,

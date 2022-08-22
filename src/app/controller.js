@@ -107,6 +107,15 @@ class Controller {
     return keystoreV3;
   };
 
+  // 계정 가져오기 (비공개 키 or json 파일)
+  importAccountStrategy = async (_, { strategy, args }) => {
+    const selectedAddress = await this.keyringController.importAccountStrategy({
+      strategy,
+      args,
+    });
+    return selectedAddress;
+  };
+
   sendRawTransaction = async (_, { from, to, decimalValue }) => {
     const txResult = await this.providerController.sendRawTransaction(
       from,
