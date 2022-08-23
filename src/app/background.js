@@ -93,6 +93,18 @@ class Background {
       this.controller.importAccountStrategy,
     );
 
+    // store get accounts
+    this.requests.set(
+      BackgroundMessages.GET_STORE_ACCOUNTS,
+      this.controller.getStoreAccounts,
+    );
+
+    // store set selected address
+    this.requests.set(
+      BackgroundMessages.SET_STORE_SELECTED_ADDRESS,
+      this.controller.setStoreSelectedAddress,
+    );
+
     this.requests.set(
       BackgroundMessages.SEND_RAW_TRANSACTION,
       this.controller.sendRawTransaction,
