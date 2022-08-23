@@ -71,3 +71,20 @@ export async function importAccountStrategy({ strategy, args }) {
   );
   return selectedAddress;
 }
+
+// store에서 accounts 정보 Get
+export async function getStoreAccounts() {
+  const accounts = await Messenger.sendMessageToBackground(
+    BackgroundMessages.GET_STORE_ACCOUNTS,
+  );
+  return accounts;
+}
+
+// store에서 accounts selectedAddress 정보 set
+export async function setStoreSelectedAddress(selectedAddress) {
+  const response = await Messenger.sendMessageToBackground(
+    BackgroundMessages.SET_STORE_SELECTED_ADDRESS,
+    { selectedAddress },
+  );
+  return response;
+}

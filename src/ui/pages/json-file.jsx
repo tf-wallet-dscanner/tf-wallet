@@ -97,7 +97,7 @@ function JsonFile() {
       </Button>
 
       <div>계정 가져오기 : {selectedAddress}</div>
-      <select name="providers" onChange={handleTypeChange} value={currentType}>
+      <select name="importType" onChange={handleTypeChange} value={currentType}>
         {importTypeList.map(({ type, name }, index) => (
           <option key={index} value={type}>
             {name}

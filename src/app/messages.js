@@ -13,5 +13,7 @@ export const BackgroundMessages = {
   EXPORT_PUBLIC_KEY_BG: 'exportPublicKey', // 공개키 추출
   EXPORT_KEYSTORE_V3_BG: 'exportKeystoreV3', // 키스토어 V3 추출
   IMPORT_ACCOUNT_STRATEGY_BG: 'importAccountStrategy', // 계정 가져오기(비공개키 or json 파일)
+  GET_STORE_ACCOUNTS: 'getStoreAccounts', // Store에서 Accounts 데이터 get
+  SET_STORE_SELECTED_ADDRESS: 'setStoreSelectedAddress', // Store에서 Accounts SelectedAddress 값 set
   SEND_RAW_TRANSACTION: 'sendRawTransaction',
 };

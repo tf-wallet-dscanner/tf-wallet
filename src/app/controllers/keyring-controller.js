@@ -13,12 +13,13 @@ const KEYRINGS_TYPE_MAP = {
 };
 
 class KeyringController {
-  #keyringStore;
+  #keyringStore; // store
+
+  #password; // password 정보
 
   constructor(opts = {}) {
     this.hdKeyring = new HdKeyring();
     this.keyrings = [];
-    this.password = '';
     this.#keyringStore = opts.store;
   }
 
@@ -27,6 +28,16 @@ class KeyringController {
    */
   get keyringConfig() {
     return this.#keyringStore.getAll();
+  }
+
+  /**
+   * set keyring config
+   * @param {Object} keyringConfig
+   */
+  async #setKeyringConfig(config) {
+    await this.#keyringStore.set({
+      ...config,
+    });
   }
 
   // 니모닉 생성
@@ -42,14 +53,15 @@ class KeyringController {
   }
 
   // 신규 계정 생성
-  createNewAccount({ password, mnemonic }) {
-    this.password = password;
+  async createNewAccount({ password, mnemonic }) {
+    this.#password = password;
     const isValid = this.hdKeyring.validateMnemonic(mnemonic);
 
     if (isValid) {
-      const accounts = this.hdKeyring.initFromAccount(mnemonic);
+      const accounts = await this.hdKeyring.initFromAccount(mnemonic);
       this.keyrings.push(this.hdKeyring);
       this.persistAllKeyrings(password);
+      await this.addStoreAccounts(accounts[0]);
       return accounts;
     }
 
@@ -85,19 +97,20 @@ class KeyringController {
     const vault = await this.persistAllKeyrings(password);
 
     // private Key 추출할때 패스워드 검증위해 vault 저장
-    await this.#keyringStore.set({ vault });
+    this.#setKeyringConfig({ vault });
+    await this.addStoreAccounts(accounts[0]);
     return accounts;
   }
 
   // 키링 배열을 직렬화하고 사용자가 입력한 password로 암호화하여 저장소에 저장
-  async persistAllKeyrings(password = this.password) {
+  async persistAllKeyrings(password = this.#password) {
     if (typeof password !== 'string') {
       return Promise.reject(
         new Error('KeyringController - password is not a string'),
       );
     }
 
-    this.password = password;
+    this.#password = password;
     const serializedKeyrings = await Promise.all(
       this.keyrings.map(async (keyring) => {
         const serializedKeyringArray = await Promise.all([
@@ -242,7 +255,7 @@ class KeyringController {
    * @returns {string} accounts[0] - 계정 address 주소
    */
   async importAccountStrategy({ strategy, args }) {
-    this.password = args.password;
+    this.#password = args.password;
     const privateKey = await accountImporter.importAccount(strategy, args);
 
     const keyring = new SimpleKeyring([privateKey]);
@@ -260,6 +273,9 @@ class KeyringController {
       })
       .then(async () => {
         const accounts = await keyring.getAccounts();
+
+        // store에 account address 추가
+        await this.addStoreAccounts(accounts[0]);
         return accounts[0];
 
         // update accounts in preferences controller
@@ -268,6 +284,66 @@ class KeyringController {
         // set new account as selected
         // await this.preferencesController.setSelectedAddress(accounts[0]);
       });
+  }
+
+  // store에서 accounts 정보 가져오기
+  async getStoreAccounts() {
+    const storeAccounts = await this.#keyringStore.get('accounts');
+    return storeAccounts?.accounts ?? null;
+  }
+
+  // store add address
+  async addStoreAccounts(address) {
+    const accounts = await this.getStoreAccounts();
+
+    // skip if already exists
+    if (
+      accounts &&
+      accounts.identities.find((account) => account.address === address)
+    ) {
+      console.log('skip if already exists');
+      return;
+    }
+
+    const identities = !accounts ? [] : accounts.identities;
+
+    // getBalance
+    const { rpcUrl } = await this.keyringConfig;
+    const ethQuery = new EthQuery(rpcUrl);
+    const currentBalance = await ethQuery.getBalance(address);
+
+    // add address data
+    identities.push({
+      address,
+      name: `Account ${identities.length + 1}`,
+      balance: currentBalance ?? '0x0',
+      lastSelected: new Date().getTime(),
+    });
+
+    this.#setKeyringConfig({
+      accounts: {
+        identities,
+        selectedAddress: address,
+      },
+    });
+  }
+
+  // store update selectedAddress
+  async updateStoreSelectedAddress(selectedAddress) {
+    const accounts = await this.getStoreAccounts();
+
+    // lastSelected time update
+    const selectedIdx = accounts.identities.findIndex(
+      (identy) => identy.address === selectedAddress,
+    );
+    accounts.identities[selectedIdx].lastSelected = new Date().getTime();
+
+    this.#setKeyringConfig({
+      accounts: {
+        identities: accounts.identities,
+        selectedAddress,
+      },
+    });
   }
 }
 
