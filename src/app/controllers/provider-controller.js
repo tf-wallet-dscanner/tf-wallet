@@ -293,7 +293,7 @@ class ProviderController extends EventEmitter {
     const decimalChainId = CHAIN_ID_TO_NETWORK_ID_MAP[chainId];
 
     const common = isInfura
-      ? new Common({ chain: decimalChainId })
+      ? new Common({ chain: Number(decimalChainId) })
       : Common.custom({ chainId: decimalChainId });
 
     const txParams = {
