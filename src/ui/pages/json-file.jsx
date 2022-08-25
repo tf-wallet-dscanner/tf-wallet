@@ -69,7 +69,6 @@ function JsonFile() {
           : { fileContents: importFileInput }),
       },
     });
-    console.log('resAddress => ', resAddress);
     setSelectedAddress(resAddress);
   }, [importPrivKey, importPassword, currentType, importFileInput]);
 

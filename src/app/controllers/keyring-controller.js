@@ -7,6 +7,8 @@ import encryptor from 'browser-passworder';
 
 const bip39 = require('bip39');
 
+const keyringTypes = [SimpleKeyring, HdKeyring];
+
 const KEYRINGS_TYPE_MAP = {
   HD_KEYRING: 'HD Key Tree',
   SIMPLE_KEYRING: 'Simple Key Pair',
@@ -18,7 +20,7 @@ class KeyringController {
   #password; // password 정보
 
   constructor(opts = {}) {
-    this.hdKeyring = new HdKeyring();
+    this.encryptor = opts.encryptor || encryptor;
     this.keyrings = [];
     this.#keyringStore = opts.store;
   }
@@ -40,14 +42,22 @@ class KeyringController {
     });
   }
 
+  // store vault update
+  async storeUpdateVault() {
+    const vault = await this.persistAllKeyrings();
+    this.#setKeyringConfig({ vault });
+  }
+
   // 니모닉 생성
   async generateMnemonic() {
+    this.hdKeyring = new HdKeyring();
     const mnemonic = await this.hdKeyring.generateRandomMnemonic();
     return mnemonic;
   }
 
   // 니모닉 검증
   validateMnemonic(mnemonic) {
+    this.hdKeyring = new HdKeyring();
     const validate = this.hdKeyring.validateMnemonic(mnemonic);
     return validate;
   }
@@ -55,12 +65,14 @@ class KeyringController {
   // 신규 계정 생성
   async createNewAccount({ password, mnemonic }) {
     this.#password = password;
+
+    this.hdKeyring = new HdKeyring();
     const isValid = this.hdKeyring.validateMnemonic(mnemonic);
 
     if (isValid) {
       const accounts = await this.hdKeyring.initFromAccount(mnemonic);
       this.keyrings.push(this.hdKeyring);
-      this.persistAllKeyrings(password);
+      await this.storeUpdateVault();
       await this.addStoreAccounts(accounts[0]);
       return accounts;
     }
@@ -70,6 +82,8 @@ class KeyringController {
 
   // 계정 복구
   async createNewVaultAndRestore({ password, mnemonic }) {
+    this.#password = password;
+
     // 니모닉 단어 리스트 검증
     const wordlists = Object.values(bip39.wordlists);
     if (
@@ -79,7 +93,7 @@ class KeyringController {
     }
 
     this.clearKeyrings();
-    await this.persistAllKeyrings(password);
+    await this.persistAllKeyrings();
 
     // add new keyring
     const keyring = new HdKeyring({
@@ -93,11 +107,7 @@ class KeyringController {
       throw new Error('KeyringController - First Account not found.');
 
     this.keyrings.push(keyring);
-
-    const vault = await this.persistAllKeyrings(password);
-
-    // private Key 추출할때 패스워드 검증위해 vault 저장
-    this.#setKeyringConfig({ vault });
+    await this.storeUpdateVault();
     await this.addStoreAccounts(accounts[0]);
     return accounts;
   }
@@ -123,8 +133,8 @@ class KeyringController {
         };
       }),
     );
-    const encryptedString = await encryptor.encrypt(
-      this.password,
+    const encryptedString = await this.encryptor.encrypt(
+      this.#password,
       serializedKeyrings,
     );
     return encryptedString;
@@ -181,7 +191,7 @@ class KeyringController {
     if (!encryptedVault) {
       throw new Error('Cannot unlock without a previous vault.');
     }
-    const verifyResult = await encryptor.decrypt(password, encryptedVault);
+    const verifyResult = await this.encryptor.decrypt(password, encryptedVault);
     return verifyResult;
   }
 
@@ -269,7 +279,7 @@ class KeyringController {
       })
       .then(() => {
         this.keyrings.push(keyring);
-        return this.persistAllKeyrings();
+        return this.storeUpdateVault();
       })
       .then(async () => {
         const accounts = await keyring.getAccounts();
@@ -277,18 +287,14 @@ class KeyringController {
         // store에 account address 추가
         await this.addStoreAccounts(accounts[0]);
         return accounts[0];
-
-        // update accounts in preferences controller
-        // const allAccounts = await this.getAccounts();
-        // this.preferencesController.setAddresses(allAccounts);
-        // set new account as selected
-        // await this.preferencesController.setSelectedAddress(accounts[0]);
       });
   }
 
   // store에서 accounts 정보 가져오기
   async getStoreAccounts() {
     const storeAccounts = await this.#keyringStore.get('accounts');
+
+    // storeAccounts 그대로 return하면 undefined 형태인데 undefined 형태로 return하면 ui에서 properties 관련 오류로 인해 null로 return 처리함
     return storeAccounts?.accounts ?? null;
   }
 
@@ -344,6 +350,67 @@ class KeyringController {
         selectedAddress,
       },
     });
+  }
+
+  /**
+   * Get Keyring Class For Type
+   *
+   * Searches the current `keyringTypes` array
+   * for a Keyring class whose unique `type` property
+   * matches the provided `type`,
+   * returning it if it exists.
+   *
+   * @param {string} type - The type whose class to get.
+   * @returns {Keyring|undefined} The class, if it exists.
+   */
+  getKeyringClassForType(type) {
+    return keyringTypes.find((kr) => kr.type === type);
+  }
+
+  //
+  // SIGNING METHODS
+  //
+
+  /**
+   * Sign Ethereum Transaction
+   *
+   * Signs an Ethereum transaction object.
+   *
+   * @param {Object} ethTx - The transaction to sign.
+   * @param {string} _fromAddress - The transaction 'from' address.
+   * @param {Object} opts - Signing options.
+   * @returns {Promise<Object>} The signed transaction object.
+   */
+  async signTransaction(ethTx, _fromAddress, opts = {}) {
+    const fromAddress = normalize(_fromAddress);
+    const keyring = await this.getKeyringForAccount(fromAddress);
+    return keyring.signTransaction(fromAddress, ethTx, opts);
+  }
+
+  // unlock keyrings
+  async unlockKeyrings(password) {
+    const { vault: encryptedVault } = await this.#keyringStore.get('vault');
+
+    if (!encryptedVault) {
+      throw new Error('Cannot unlock without a previous vault.');
+    }
+
+    await this.clearKeyrings();
+    const vault = await this.encryptor.decrypt(password, encryptedVault);
+    this.#password = password;
+    await Promise.all(vault.map(this._restoreKeyring.bind(this)));
+  }
+
+  // restore keyring
+  async _restoreKeyring(serialized) {
+    const { type, data } = serialized;
+    const Keyring = this.getKeyringClassForType(type);
+    const keyring = new Keyring();
+    await keyring.deserialize(data);
+    // getAccounts also validates the accounts for some keyrings
+    await keyring.getAccounts();
+    this.keyrings.push(keyring);
+    return keyring;
   }
 }
 

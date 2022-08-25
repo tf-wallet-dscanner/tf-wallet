@@ -83,11 +83,8 @@ class HdKeyring extends SimpleKeyring {
     }
 
     const seed = bip39.mnemonicToSeedSync(mnemonic);
-    console.log('HD Keyring : ', seed);
     this.hdWallet = hdkey.fromMasterSeed(seed);
-    console.log('HD Keyring hdWallet : ', this.hdWallet);
     this.root = this.hdWallet.derivePath(this.hdPath);
-    console.log('HD Keyring root : ', this.root);
 
     // 계정 추가
     const accounts = await this.addAccounts();

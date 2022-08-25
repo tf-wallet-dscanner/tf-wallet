@@ -1,5 +1,6 @@
 import KeyringController from './controllers/keyring-controller';
 import ProviderController from './controllers/provider-controller';
+import TransactionController from './controllers/transaction-controller';
 import ExtensionStore from './lib/localstore';
 
 class Controller {
@@ -14,6 +15,17 @@ class Controller {
 
     this.keyringController = new KeyringController({
       store: this.store,
+    });
+
+    this.txController = new TransactionController({
+      store: this.store,
+      infuraProjectId: process.env.INFURA_PROJECT_ID,
+      unlockKeyrings: this.keyringController.unlockKeyrings.bind(
+        this.keyringController,
+      ),
+      signTransaction: this.keyringController.signTransaction.bind(
+        this.keyringController,
+      ),
     });
   }
 
@@ -129,9 +141,10 @@ class Controller {
     );
   };
 
-  sendRawTransaction = async (_, { from, to, decimalValue }) => {
-    const txResult = await this.providerController.sendRawTransaction(
-      from,
+  // transaction send test
+  sendRawTransaction = async (_, { password, to, decimalValue }) => {
+    const txResult = await this.txController.sendRawTransaction(
+      password,
       to,
       decimalValue,
     );
