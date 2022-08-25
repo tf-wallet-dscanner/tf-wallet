@@ -85,6 +85,14 @@ class SimpleKeyring extends EventEmitter {
 
     return wallet;
   }
+
+  // tx is an instance of the ethereumjs-transaction class.
+  async signTransaction(address, tx, opts = {}) {
+    const privKey = await this.exportKey({ address, keyType: 'private' }, opts);
+    const signedTx = tx.sign(Buffer.from(privKey, 'hex'));
+    // Newer versions of Ethereumjs-tx are immutable and return a new tx object
+    return Promise.resolve(signedTx === undefined ? tx : signedTx);
+  }
 }
 
 SimpleKeyring.type = type;

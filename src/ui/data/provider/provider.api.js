@@ -53,15 +53,3 @@ export async function getCurrentChainId() {
   );
   return chainId;
 }
-
-export async function sendRawTransaction({ from, to, decimalValue }) {
-  const { txResult } = await Messenger.sendMessageToBackground(
-    BackgroundMessages.SEND_RAW_TRANSACTION,
-    {
-      from,
-      to,
-      decimalValue,
-    },
-  );
-  return txResult;
-}

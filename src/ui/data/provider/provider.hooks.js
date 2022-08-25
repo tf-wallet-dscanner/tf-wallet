@@ -4,7 +4,6 @@ import {
   getCurrentChainId,
   getLatestBlock,
   getNetworkId,
-  sendRawTransaction,
   setProviderType,
   setRpcTarget,
 } from './provider.api';
@@ -39,13 +38,6 @@ export function useSetProviderType(options) {
 
 export function useGetCurrentChainId(options) {
   return useQuery(['/provider/getCurrentChainId'], getCurrentChainId, {
-    retry: 2,
-    ...options,
-  });
-}
-
-export function useSendRawTransaction(options) {
-  return useMutation(['/provider/sendRawTransaction'], sendRawTransaction, {
     retry: 2,
     ...options,
   });

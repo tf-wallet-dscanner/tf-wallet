@@ -12,13 +12,13 @@ import { THEME_COLOR } from 'ui/constants/colors';
 import {
   useGetCurrentChainId,
   useGetLatestBlock,
-  useSendRawTransaction,
   useSetProviderType,
 } from 'ui/data/provider';
+import { useSendRawTransaction } from 'ui/data/transaction';
 
 function Provider() {
   const navigation = useNavigate();
-  const [from, setFrom] = useState();
+  const [password, setPassword] = useState();
   const [to, setTo] = useState();
   const [decimalValue, setDecimalValue] = useState(
     100000000000000000 /** 0.1ETH */,
@@ -49,7 +49,7 @@ function Provider() {
 
   const handleSendTransactionButtonClick = () => {
     console.log('handleSendTransactionButtonClick');
-    sendTransaction({ from, to, decimalValue });
+    sendTransaction({ password, to, decimalValue });
   };
 
   const sortedNetworkList = Object.values(NETWORK_TYPE_TO_ID_MAP).sort(
@@ -74,12 +74,12 @@ function Provider() {
         ))}
       </select>
       <br />
-      <label htmlFor="from">보내는사람</label>
+      <label htmlFor="password">패스워드</label>
       <TextField
-        type="text"
-        name="from"
-        value={from}
-        onChange={(event) => setFrom(event.target.value)}
+        password
+        name="password"
+        value={password}
+        onChange={(event) => setPassword(event.target.value)}
       />
       <label htmlFor="to">받는사람</label>
       <TextField

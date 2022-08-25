@@ -7,10 +7,7 @@
  * 5. provider가 예상치 못한 이슈로 연결이 끊기거나 반응이 없을 시 시스템 log 및 사용자 ui에 표시(알람)를 해야 한다.
  * 6. 첫 provider 연결 이후에도 주기적으로 provider에게 통신 메시지를 날려 정상적으로 연결되어 있는지 확인을 해야한다. (ex. getId, getBalance …)
  */
-import Common from '@ethereumjs/common';
-import { Transaction } from '@ethereumjs/tx';
 import {
-  CHAIN_ID_TO_NETWORK_ID_MAP,
   CHAIN_ID_TO_RPC_URL_MAP,
   CHAIN_ID_TO_TYPE_MAP,
   INFURA_PROVIDER_TYPES,
@@ -22,18 +19,13 @@ import {
   NETWORK_TYPE_RPC,
   NETWORK_TYPE_TO_ID_MAP,
 } from 'app/constants/network';
-import createInfuraClient from 'app/lib/createInfuraClient';
-import createJsonRpcClient from 'app/lib/createJsonRpcClient';
 import EthQuery from 'app/lib/eth-query';
 import {
   isPrefixedFormattedHexString,
   isSafeChainId,
 } from 'app/modules/network.utils';
 import { strict as assert } from 'assert';
-import { providerFromEngine } from 'eth-json-rpc-middleware';
-import EthQueryLib from 'ethjs-query';
 import EventEmitter from 'events';
-import { JsonRpcEngine } from 'json-rpc-engine';
 
 /**
  * 1. 사용자가 provider를 선택할 수 있다
@@ -275,64 +267,6 @@ class ProviderController extends EventEmitter {
     const ethQuery = new EthQuery(rpcUrl);
     // ethjs-query와 web3 라이브러리가 충돌이 나는것 같음...
     return ethQuery.getLatestBlock();
-  }
-
-  // sendTransaction test code...
-  async sendRawTransaction(from, to, decimalValue) {
-    const { type: network, rpcUrl, chainId } = await this.providerConfig;
-    const networkClient = this.#getMiddlewareClient(network, rpcUrl, chainId);
-    const engine = new JsonRpcEngine();
-    engine.push(networkClient);
-
-    const provider = providerFromEngine(engine);
-    const ethQuery = new EthQueryLib(provider);
-
-    const txnCount = await ethQuery.getTransactionCount(from, 'latest');
-
-    const isInfura = INFURA_PROVIDER_TYPES.includes(network);
-    const decimalChainId = CHAIN_ID_TO_NETWORK_ID_MAP[chainId];
-
-    const common = isInfura
-      ? new Common({ chain: Number(decimalChainId) })
-      : Common.custom({ chainId: decimalChainId });
-
-    const txParams = {
-      nonce: txnCount,
-      gasPrice: '0x9184e72a000',
-      gasLimit: '0x5208',
-      to,
-      value: `0x${parseInt(decimalValue, 10).toString(16)}`,
-    };
-
-    const tx = Transaction.fromTxData(txParams, { common });
-    const privKey = Buffer.from(process.env.PRIVATE_KEY, 'hex');
-    const signedTransaction = tx.sign(privKey);
-    const serializedTx = signedTransaction.serialize();
-    const rawTxHex = `0x${serializedTx.toString('hex')}`;
-
-    const txResult = await ethQuery.sendRawTransaction(rawTxHex);
-    console.log('txResult: ', txResult);
-
-    return txResult;
-  }
-
-  #getMiddlewareClient(network, rpcUrl, chainId) {
-    const projectId = this.#infuraProjectId;
-    const isInfura = INFURA_PROVIDER_TYPES.includes(network);
-
-    if (isInfura) {
-      const { networkMiddleware } = createInfuraClient({
-        network,
-        projectId,
-      });
-      return networkMiddleware;
-    }
-
-    const { networkMiddleware } = createJsonRpcClient({
-      rpcUrl,
-      chainId,
-    });
-    return networkMiddleware;
   }
 
   /**
