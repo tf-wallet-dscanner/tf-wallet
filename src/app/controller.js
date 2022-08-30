@@ -15,11 +15,16 @@ class Controller {
 
     this.keyringController = new KeyringController({
       store: this.store,
+      getProvider: this.providerController.getProvider.bind(
+        this.providerController,
+      ),
     });
 
     this.txController = new TransactionController({
       store: this.store,
-      infuraProjectId: process.env.INFURA_PROJECT_ID,
+      getProvider: this.providerController.getProvider.bind(
+        this.providerController,
+      ),
       unlockKeyrings: this.keyringController.unlockKeyrings.bind(
         this.keyringController,
       ),

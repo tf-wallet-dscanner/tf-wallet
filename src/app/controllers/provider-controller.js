@@ -19,13 +19,17 @@ import {
   NETWORK_TYPE_RPC,
   NETWORK_TYPE_TO_ID_MAP,
 } from 'app/constants/network';
-import EthQuery from 'app/lib/eth-query';
+import createInfuraClient from 'app/lib/createInfuraClient';
+import createJsonRpcClient from 'app/lib/createJsonRpcClient';
 import {
   isPrefixedFormattedHexString,
   isSafeChainId,
 } from 'app/modules/network.utils';
 import { strict as assert } from 'assert';
+import { providerFromEngine } from 'eth-json-rpc-middleware';
+import EthQuery from 'ethjs-query';
 import EventEmitter from 'events';
+import { JsonRpcEngine } from 'json-rpc-engine';
 
 /**
  * 1. 사용자가 provider를 선택할 수 있다
@@ -69,6 +73,8 @@ class ProviderController extends EventEmitter {
 
   #networkId;
 
+  #provider;
+
   constructor(opts = {}) {
     super();
 
@@ -94,7 +100,8 @@ class ProviderController extends EventEmitter {
       return;
     }
 
-    const chainId = await this.getCurrentChainId();
+    const { type: network, rpcUrl, chainId } = await this.providerConfig;
+
     if (!chainId) {
       console.warn(
         'NetworkController - lookupNetwork aborted due to missing chainId',
@@ -106,13 +113,16 @@ class ProviderController extends EventEmitter {
     const { type } = await this.providerConfig;
     const isInfura = INFURA_PROVIDER_TYPES.includes(type);
 
+    const networkClient = this.#getMiddlewareClient(network, rpcUrl, chainId);
+    this.#provider = this.#createProviderRpcEngine(networkClient);
+
     if (this.#infuraProjectId && isInfura) {
       this.#checkInfuraAvailability();
     } else {
       this.emit(NETWORK_EVENTS.INFURA_IS_UNBLOCKED);
     }
 
-    const { result: networkId } = await this.getNetworkId();
+    const networkId = await this.getNetworkId();
     this.#networkId = networkId;
   }
 
@@ -134,8 +144,7 @@ class ProviderController extends EventEmitter {
    * infura network 사용 가능여부 체크
    */
   async #checkInfuraAvailability() {
-    const { rpcUrl } = await this.providerConfig;
-    const ethQuery = new EthQuery(rpcUrl);
+    const ethQuery = new EthQuery(this.#provider);
 
     let networkChanged = false;
     this.once(NETWORK_EVENTS.NETWORK_DID_CHANGE, () => {
@@ -143,7 +152,7 @@ class ProviderController extends EventEmitter {
     });
 
     try {
-      const response = await ethQuery.getBlockNumber();
+      const response = await ethQuery.blockNumber();
 
       if (networkChanged) {
         return;
@@ -263,19 +272,50 @@ class ProviderController extends EventEmitter {
    * @returns {Promise<Block>} Block object
    */
   async getLatestBlock() {
-    const { rpcUrl } = await this.providerConfig;
-    const ethQuery = new EthQuery(rpcUrl);
-    // ethjs-query와 web3 라이브러리가 충돌이 나는것 같음...
-    return ethQuery.getLatestBlock();
+    const ethQuery = new EthQuery(this.#provider);
+    const latestBlock = await ethQuery.getBlockByNumber('latest', false);
+    return latestBlock;
   }
 
   /**
    * @returns {Promise<string>} networkId
    */
   async getNetworkId() {
-    const { rpcUrl } = await this.providerConfig;
-    const ethQuery = new EthQuery(rpcUrl);
-    return ethQuery.getNetworkId();
+    const ethQuery = new EthQuery(this.#provider);
+    const networkId = await ethQuery.net_version();
+    return networkId;
+  }
+
+  #getMiddlewareClient(network, rpcUrl, chainId) {
+    const projectId = this.#infuraProjectId;
+    const isInfura = INFURA_PROVIDER_TYPES.includes(network);
+
+    if (isInfura) {
+      const { networkMiddleware } = createInfuraClient({
+        network,
+        projectId,
+      });
+      return networkMiddleware;
+    }
+
+    const { networkMiddleware } = createJsonRpcClient({
+      rpcUrl,
+      chainId,
+    });
+    return networkMiddleware;
+  }
+
+  #createProviderRpcEngine(networkClient) {
+    const engine = new JsonRpcEngine();
+    engine.push(networkClient);
+
+    const provider = providerFromEngine(engine);
+
+    return provider;
+  }
+
+  getProvider() {
+    return this.#provider;
   }
 }
 

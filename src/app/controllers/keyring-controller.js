@@ -1,9 +1,10 @@
 import accountImporter from 'app/lib/account-importer';
-import EthQuery from 'app/lib/eth-query';
 import HdKeyring from 'app/lib/hd-keyring';
 import SimpleKeyring from 'app/lib/simple-keyring';
 import { normalize, stripHexPrefix } from 'app/lib/util';
+import Web3Query from 'app/lib/web3-query';
 import encryptor from 'browser-passworder';
+import EthQuery from 'ethjs-query';
 
 const bip39 = require('bip39');
 
@@ -23,6 +24,7 @@ class KeyringController {
     this.encryptor = opts.encryptor || encryptor;
     this.keyrings = [];
     this.#keyringStore = opts.store;
+    this.getProvider = opts.getProvider;
   }
 
   /**
@@ -247,15 +249,15 @@ class KeyringController {
   }
 
   /**
-   * store에 저장된 rpcUrl 가져와서 EthQuery를 통해 web3.eth 접근
+   * store에 저장된 rpcUrl 가져와서 Web3Query를 통해 web3.eth 접근
    * @param {string} privateKey 사용자가 설정한 비공개키
    * @param {string} password 사용자 패스워드
    * @returns {Object} keystore v3 JSON
    */
   async exportKeystoreV3({ privateKey, password }) {
     const { rpcUrl } = await this.keyringConfig;
-    const ethQuery = new EthQuery(rpcUrl);
-    return ethQuery.getAccountsEncrypt({ privateKey, password });
+    const web3Query = new Web3Query(rpcUrl);
+    return web3Query.getAccountsEncrypt({ privateKey, password });
   }
 
   /**
@@ -314,15 +316,15 @@ class KeyringController {
     const identities = !accounts ? [] : accounts.identities;
 
     // getBalance
-    const { rpcUrl } = await this.keyringConfig;
-    const ethQuery = new EthQuery(rpcUrl);
+    const provider = this.getProvider();
+    const ethQuery = new EthQuery(provider);
     const currentBalance = await ethQuery.getBalance(address);
 
     // add address data
     identities.push({
       address,
       name: `Account ${identities.length + 1}`,
-      balance: currentBalance ?? '0x0',
+      balance: `0x${currentBalance.toString(16)}` ?? '0x0',
       lastSelected: new Date().getTime(),
     });
 
