@@ -4,25 +4,19 @@ import {
   CHAIN_ID_TO_NETWORK_ID_MAP,
   INFURA_PROVIDER_TYPES,
 } from 'app/constants/network';
-import createInfuraClient from 'app/lib/createInfuraClient';
-import createJsonRpcClient from 'app/lib/createJsonRpcClient';
-import { providerFromEngine } from 'eth-json-rpc-middleware';
-import EthQueryLib from 'ethjs-query';
+import EthQuery from 'ethjs-query';
 import EventEmitter from 'events';
-import { JsonRpcEngine } from 'json-rpc-engine';
 
 class TransactionController extends EventEmitter {
   #txStore;
-
-  #infuraProjectId;
 
   constructor(opts = {}) {
     super();
 
     this.#txStore = opts.store;
-    this.#setInfuraProjectId = opts.infuraProjectId;
     this.unlockKeyrings = opts.unlockKeyrings;
     this.signEthTx = opts.signTransaction;
+    this.getProvider = opts.getProvider;
   }
 
   // approveTransaction 형태로 수정하면 sendRawTransaction을 refactor 필요함
@@ -39,7 +33,7 @@ class TransactionController extends EventEmitter {
 
   // sendTransaction
   async sendRawTransaction(password, to, decimalValue) {
-    const { type: network, rpcUrl, chainId, accounts } = await this.txConfig;
+    const { type: network, chainId, accounts } = await this.txConfig;
 
     if (!accounts) {
       throw new Error('accounts store data not exist.');
@@ -48,12 +42,8 @@ class TransactionController extends EventEmitter {
     // keyring restore
     await this.unlockKeyrings(password);
 
-    const networkClient = this.#getMiddlewareClient(network, rpcUrl, chainId);
-    const engine = new JsonRpcEngine();
-    engine.push(networkClient);
-
-    const provider = providerFromEngine(engine);
-    const ethQuery = new EthQueryLib(provider);
+    const provider = this.getProvider();
+    const ethQuery = new EthQuery(provider);
 
     const txnCount = await ethQuery.getTransactionCount(
       accounts.selectedAddress,
@@ -90,44 +80,11 @@ class TransactionController extends EventEmitter {
     return txResult;
   }
 
-  #getMiddlewareClient(network, rpcUrl, chainId) {
-    const projectId = this.#infuraProjectId;
-    const isInfura = INFURA_PROVIDER_TYPES.includes(network);
-
-    if (isInfura) {
-      const { networkMiddleware } = createInfuraClient({
-        network,
-        projectId,
-      });
-      return networkMiddleware;
-    }
-
-    const { networkMiddleware } = createJsonRpcClient({
-      rpcUrl,
-      chainId,
-    });
-    return networkMiddleware;
-  }
-
   /**
    * @returns {Promise<any>}
    */
   get txConfig() {
     return this.#txStore.getAll();
-  }
-
-  /**
-   * Sets the Infura project ID
-   *
-   * @param {string} projectId - The Infura project ID
-   * @throws {Error} If the project ID is not a valid string.
-   */
-  set #setInfuraProjectId(projectId) {
-    if (!projectId || typeof projectId !== 'string') {
-      throw new Error('Invalid Infura project ID');
-    }
-
-    this.#infuraProjectId = projectId;
   }
 }
 

@@ -48,7 +48,6 @@ function Provider() {
   };
 
   const handleSendTransactionButtonClick = () => {
-    console.log('handleSendTransactionButtonClick');
     sendTransaction({ password, to, decimalValue });
   };
 

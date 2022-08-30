@@ -2,7 +2,7 @@ import { SECOND } from 'app/constants/time';
 import getFetchWithTimeout from 'app/modules/fetch-with-timeout';
 import Web3 from 'web3';
 
-class EthQuery {
+class Web3Query {
   #rpcUrl;
 
   #web3Provider;
@@ -22,7 +22,7 @@ class EthQuery {
       const balance = await this.#web3Provider.eth.getBalance(address);
       return balance;
     } catch (e) {
-      console.error('EthQuery - getBalance Error - ', e);
+      console.error('Web3Query - getBalance Error - ', e);
     }
   }
 
@@ -36,7 +36,7 @@ class EthQuery {
       const block = await this.#web3Provider.eth.getBlock(blockNumber, false);
       return block;
     } catch (e) {
-      console.error('EthQuery - getBlockByNumber Error - ', e);
+      console.error('Web3Query - getBlockByNumber Error - ', e);
     }
   }
 
@@ -52,7 +52,7 @@ class EthQuery {
       );
       return latestBlock;
     } catch (e) {
-      console.error('EthQuery - getLatestBlock Error - ', e);
+      console.error('Web3Query - getLatestBlock Error - ', e);
     }
   }
 
@@ -65,7 +65,7 @@ class EthQuery {
       const blockNumber = await this.#web3Provider.eth.getBlockNumber();
       return blockNumber;
     } catch (e) {
-      console.error('EthQuery - getBlockNumber Error - ', e);
+      console.error('Web3Query - getBlockNumber Error - ', e);
     }
   }
 
@@ -83,7 +83,7 @@ class EthQuery {
       const networkId = await this.#fetchJsonRpc(this.#rpcUrl, 'net_version');
       return networkId;
     } catch (e) {
-      console.error('EthQuery - getNetworkId Error - ', e);
+      console.error('Web3Query - getNetworkId Error - ', e);
     }
   }
 
@@ -110,7 +110,7 @@ class EthQuery {
 
       return response;
     } catch (e) {
-      console.error('EthQuery - fetchJsonRpc Error - ', e);
+      console.error('Web3Query - fetchJsonRpc Error - ', e);
     }
   }
 
@@ -128,9 +128,9 @@ class EthQuery {
       );
       return keystoreV3;
     } catch (e) {
-      console.error('EthQuery - web3.eth.accounts.encrypt Error - ', e);
+      console.error('Web3Query - web3.eth.accounts.encrypt Error - ', e);
     }
   }
 }
 
-export default EthQuery;
+export default Web3Query;
