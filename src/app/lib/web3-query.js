@@ -1,6 +1,7 @@
 import { SECOND } from 'app/constants/time';
 import getFetchWithTimeout from 'app/modules/fetch-with-timeout';
 import Web3 from 'web3';
+import Accounts from 'web3-eth-accounts';
 
 class Web3Query {
   #rpcUrl;
@@ -122,10 +123,10 @@ class Web3Query {
    */
   getAccountsEncrypt({ privateKey, password }) {
     try {
-      const keystoreV3 = this.#web3Provider.eth.accounts.encrypt(
-        privateKey,
-        password,
-      );
+      const acct = new Accounts();
+      console.log('acct: ', acct);
+
+      const keystoreV3 = acct.encrypt(privateKey, password);
       return keystoreV3;
     } catch (e) {
       console.error('Web3Query - web3.eth.accounts.encrypt Error - ', e);

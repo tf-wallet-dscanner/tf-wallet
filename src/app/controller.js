@@ -1,6 +1,6 @@
 import KeyringController from './controllers/keyring-controller';
 import ProviderController from './controllers/provider-controller';
-import TransactionController from './controllers/transaction-controller';
+import TransactionController from './controllers/transactions/transaction-controller';
 import ExtensionStore from './lib/localstore';
 
 class Controller {

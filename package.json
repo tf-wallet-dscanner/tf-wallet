@@ -32,6 +32,7 @@
     "@babel/core": "^7.16.0",
     "@ethereumjs/common": "^2.6.5",
     "@ethereumjs/tx": "^3.5.2",
+    "@metamask/obs-store": "^7.0.0",
     "@pmmmwh/react-refresh-webpack-plugin": "^0.5.3",
     "@svgr/webpack": "^5.5.0",
     "assert": "^2.0.0",
