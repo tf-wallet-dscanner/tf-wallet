@@ -7,6 +7,7 @@
  * 5. provider가 예상치 못한 이슈로 연결이 끊기거나 반응이 없을 시 시스템 log 및 사용자 ui에 표시(알람)를 해야 한다.
  * 6. 첫 provider 연결 이후에도 주기적으로 provider에게 통신 메시지를 날려 정상적으로 연결되어 있는지 확인을 해야한다. (ex. getId, getBalance …)
  */
+import { ComposedStore, ObservableStore } from '@metamask/obs-store';
 import {
   CHAIN_ID_TO_RPC_URL_MAP,
   CHAIN_ID_TO_TYPE_MAP,
@@ -61,6 +62,10 @@ const defaultProviderConfig = {
   chainId: MAINNET_CHAIN_ID,
 };
 
+const defaultNetworkDetailsState = {
+  EIPS: { 1559: undefined },
+};
+
 class ProviderController extends EventEmitter {
   /**
    * @see https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Classes/Private_class_fields
@@ -75,11 +80,25 @@ class ProviderController extends EventEmitter {
 
   #provider;
 
+  #networkDetails;
+
   constructor(opts = {}) {
     super();
 
     this.#providerStore = opts.store;
     this.#setInfuraProjectId = opts.infuraProjectId;
+
+    this.#networkDetails = new ObservableStore({
+      ...defaultNetworkDetailsState,
+    });
+
+    this.store = new ComposedStore({
+      // provider: this.providerStore,
+      // previousProviderStore: this.previousProviderStore,
+      // network: this.networkStore,
+      networkDetails: this.#networkDetails,
+    });
+
     this.on(NETWORK_EVENTS.NETWORK_DID_CHANGE, this.lookupNetwork);
   }
 
@@ -316,6 +335,45 @@ class ProviderController extends EventEmitter {
 
   getProvider() {
     return this.#provider;
+  }
+
+  /**
+   * Method to check if the block header contains fields that indicate EIP 1559
+   * support (baseFeePerGas).
+   *
+   * @returns {Promise<boolean>} true if current network supports EIP 1559
+   */
+  async getEIP1559Compatibility() {
+    const { EIPS } = this.#networkDetails.getState();
+    if (EIPS[1559] !== undefined) {
+      return EIPS[1559];
+    }
+    const latestBlock = await this.getLatestBlock();
+    const supportsEIP1559 =
+      latestBlock && latestBlock.baseFeePerGas !== undefined;
+    this.#setNetworkEIPSupport(1559, supportsEIP1559);
+    return supportsEIP1559;
+  }
+
+  /**
+   * Set EIP support indication in the networkDetails store
+   *
+   * @param {number} EIPNumber - The number of the EIP to mark support for
+   * @param {boolean} isSupported - True if the EIP is supported
+   */
+  #setNetworkEIPSupport(EIPNumber, isSupported) {
+    this.#networkDetails.updateState({
+      EIPS: {
+        [EIPNumber]: isSupported,
+      },
+    });
+  }
+
+  /**
+   * Reset EIP support to default (no support)
+   */
+  #clearNetworkDetails() {
+    this.#networkDetails.putState({ ...defaultNetworkDetailsState });
   }
 }
 
