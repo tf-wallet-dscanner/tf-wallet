@@ -3,24 +3,17 @@ import {
   NETWORK_TO_NAME_MAP,
   NETWORK_TYPE_TO_ID_MAP,
 } from 'app/constants/network';
-import { useNavigate } from 'react-router-dom';
+import { Outlet, useNavigate } from 'react-router-dom';
 import Button from 'ui/components/atoms/button';
-import Card from 'ui/components/atoms/card';
 import { THEME_COLOR } from 'ui/constants/colors';
-import {
-  useGetCurrentChainId,
-  useGetLatestBlock,
-  useSetProviderType,
-} from 'ui/data/provider';
+import { useGetCurrentChainId, useSetProviderType } from 'ui/data/provider';
 
-function Provider() {
+function Transaction() {
   const navigation = useNavigate();
-  const { data: block, refetch: getLatestBlock } = useGetLatestBlock();
   const { data: currentChainId, refetch: getCurrentChainId } =
     useGetCurrentChainId();
   const { mutate } = useSetProviderType({
     onSuccess() {
-      getLatestBlock();
       getCurrentChainId();
     },
   });
@@ -56,10 +49,9 @@ function Provider() {
         ))}
       </select>
       <br />
-      {currentChainId && <Card title="Chain Id" content={currentChainId} />}
-      {block && <Card title="Block data" content={JSON.stringify(block)} />}
+      <Outlet />
     </div>
   );
 }
 
-export default Provider;
+export default Transaction;

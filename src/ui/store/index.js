@@ -1,1 +1,1 @@
-export { default as useCounterStore } from './counter';
+export { default as useTransactionStore } from './transaction';
