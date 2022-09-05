@@ -1,5 +1,6 @@
 const { isHexString } = require('ethereumjs-util');
 
+// gas station: https://gas-api.metaswap.codefi.network/networks/1/suggestedGasFees
 export class GasFeeController {
   /**
    * `@ethereumjs/tx` uses `@ethereumjs/common` as a configuration tool for
