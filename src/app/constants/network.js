@@ -1,3 +1,8 @@
+export const HARDFORKS = {
+  BERLIN: 'berlin',
+  LONDON: 'london',
+};
+
 export const ROPSTEN = 'ropsten';
 export const RINKEBY = 'rinkeby';
 export const KOVAN = 'kovan';

@@ -2,7 +2,8 @@ import Common from '@ethereumjs/common';
 import { Transaction } from '@ethereumjs/tx';
 import {
   CHAIN_ID_TO_NETWORK_ID_MAP,
-  INFURA_PROVIDER_TYPES,
+  HARDFORKS,
+  NETWORK_TYPE_RPC,
 } from 'app/constants/network';
 import EthQuery from 'ethjs-query';
 import EventEmitter from 'events';
@@ -17,6 +18,7 @@ class TransactionController extends EventEmitter {
     this.unlockKeyrings = opts.unlockKeyrings;
     this.signEthTx = opts.signTransaction;
     this.getProvider = opts.getProvider;
+    this.getEIP1559Compatibility = opts.getEIP1559Compatibility;
   }
 
   // approveTransaction 형태로 수정하면 sendRawTransaction을 refactor 필요함
@@ -31,9 +33,43 @@ class TransactionController extends EventEmitter {
   //   // release lock
   // }
 
+  /**
+   * `@ethereumjs/tx` uses `@ethereumjs/common` as a configuration tool for
+   * specifying which chain, network, hardfork and EIPs to support for
+   * a transaction. By referencing this configuration, and analyzing the fields
+   * specified in txParams, `@ethereumjs/tx` is able to determine which EIP-2718
+   * transaction type to use.
+   *
+   * @returns {Common} common configuration object
+   */
+  async getCommonConfiguration() {
+    const { type: network, chainId } = await this.txConfig;
+
+    const supportsEIP1559 = await this.getEIP1559Compatibility();
+    // This logic below will have to be updated each time a hardfork happens
+    // that carries with it a new Transaction type. It is inconsequential for
+    // hardforks that do not include new types.
+    const hardfork = supportsEIP1559 ? HARDFORKS.LONDON : HARDFORKS.BERLIN;
+    // type will be one of our default network names or 'rpc'. the default
+    // network names are sufficient configuration, simply pass the name as the
+    // chain argument in the constructor.
+    if (network !== NETWORK_TYPE_RPC) {
+      return new Common({
+        chain: network,
+        hardfork,
+      });
+    }
+    // For 'rpc' we need to use the same basic configuration as mainnet,
+    // since we only support EVM compatible chains, and then override the
+    // name, chainId and networkId properties. This is done using the
+    // `forCustomChain` static method on the Common class.
+    const decimalChainId = parseInt(CHAIN_ID_TO_NETWORK_ID_MAP[chainId], 10);
+    return Common.custom({ chainId: decimalChainId });
+  }
+
   // sendTransaction
   async sendRawTransaction(password, to, decimalValue) {
-    const { type: network, chainId, accounts } = await this.txConfig;
+    const { accounts } = await this.txConfig;
 
     if (!accounts) {
       throw new Error('accounts store data not exist.');
@@ -50,12 +86,7 @@ class TransactionController extends EventEmitter {
       'latest',
     );
 
-    const isInfura = INFURA_PROVIDER_TYPES.includes(network);
-    const decimalChainId = CHAIN_ID_TO_NETWORK_ID_MAP[chainId];
-
-    const common = isInfura
-      ? new Common({ chain: Number(decimalChainId) })
-      : Common.custom({ chainId: decimalChainId });
+    const common = await this.getCommonConfiguration();
 
     const txParams = {
       nonce: txnCount,

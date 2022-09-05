@@ -1,4 +1,5 @@
-import { addHexPrefix, bufferToHex, toBuffer } from 'ethereumjs-util';
+import { BN, addHexPrefix, bufferToHex, toBuffer } from 'ethereumjs-util';
+import { fromWei, toWei } from 'ethjs-unit';
 import { memoize } from 'lodash';
 
 import {
@@ -10,7 +11,7 @@ import {
 /**
  * @see {@link getEnvironmentType}
  */
-const getEnvironmentTypeMemo = memoize((url) => {
+export const getEnvironmentTypeMemo = memoize((url) => {
   const parsedUrl = new URL(url);
   if (parsedUrl.pathname === '/popup.html') {
     return ENVIRONMENT_TYPE_POPUP;
@@ -33,11 +34,11 @@ const getEnvironmentTypeMemo = memoize((url) => {
  * @param {string} [url] - the URL of the window
  * @returns {string} the environment ENUM
  */
-const getEnvironmentType = (url = window.location.href) =>
+export const getEnvironmentType = (url = window.location.href) =>
   getEnvironmentTypeMemo(url);
 
 // address 앞에 0x로 시작하면 2자리 자르기
-function stripHexPrefix(address) {
+export function stripHexPrefix(address) {
   if (address.startsWith('0x')) {
     return address.slice(2);
   }
@@ -45,7 +46,7 @@ function stripHexPrefix(address) {
 }
 
 // 정규화
-function normalize(input) {
+export function normalize(input) {
   if (!input) {
     return undefined;
   }
@@ -61,4 +62,49 @@ function normalize(input) {
   return addHexPrefix(input.toLowerCase());
 }
 
-export { getEnvironmentType, normalize, stripHexPrefix };
+/**
+ * Used to convert a base-10 number from GWEI to WEI. Can handle numbers with decimal parts.
+ *
+ * @param {number | string}n - The base 10 number to convert to WEI.
+ * @returns The number in WEI, as a BN.
+ */
+export function gweiDecToWEIBN(n) {
+  if (Number.isNaN(n)) {
+    return new BN(0);
+  }
+
+  const parts = n.toString().split('.');
+  const wholePart = parts[0] || '0';
+  let decimalPart = parts[1] || '';
+
+  if (!decimalPart) {
+    return toWei(wholePart, 'gwei');
+  }
+
+  if (decimalPart.length <= 9) {
+    return toWei(`${wholePart}.${decimalPart}`, 'gwei');
+  }
+
+  const decimalPartToRemove = decimalPart.slice(9);
+  const decimalRoundingDigit = decimalPartToRemove[0];
+
+  decimalPart = decimalPart.slice(0, 9);
+  let wei = toWei(`${wholePart}.${decimalPart}`, 'gwei');
+
+  if (Number(decimalRoundingDigit) >= 5) {
+    wei = wei.add(new BN(1));
+  }
+
+  return wei;
+}
+
+/**
+ * Used to convert values from wei hex format to dec gwei format.
+ *
+ * @param {string}hex - The value in hex wei.
+ * @returns The value in dec gwei as string.
+ */
+export function weiHexToGweiDec(hex) {
+  const hexWei = new BN(stripHexPrefix(hex), 16);
+  return fromWei(hexWei, 'gwei').toString(10);
+}

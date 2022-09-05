@@ -9199,7 +9199,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"ethjs-unit@npm:0.1.6":
+"ethjs-unit@npm:0.1.6, ethjs-unit@npm:^0.1.6":
   version: 0.1.6
   resolution: "ethjs-unit@npm:0.1.6"
   dependencies:
@@ -18845,6 +18845,7 @@ __metadata:
     ethereumjs-util: ^7.0.10
     ethereumjs-wallet: ^1.0.2
     ethjs-query: ^0.3.8
+    ethjs-unit: ^0.1.6
     events: ^3.3.0
     extension-port-stream: ^2.0.1
     file-loader: ^6.2.0
