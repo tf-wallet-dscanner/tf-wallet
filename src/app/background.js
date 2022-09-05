@@ -115,6 +115,12 @@ class Background {
       BackgroundMessages.SEND_RAW_TGET_GAS_FEE_ESTIMATE_START_POLLING,
       this.controller.getGasFeeEstimatesAndStartPolling,
     );
+
+    // get tokens for selected address
+    this.requests.set(BackgroundMessages.GET_TOKENS, this.controller.getTokens);
+
+    // store set add tokens
+    this.requests.set(BackgroundMessages.ADD_TOKEN, this.controller.addToken);
   }
 
   listenForMessages() {

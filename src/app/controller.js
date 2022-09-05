@@ -7,6 +7,7 @@ import KeyringController from './controllers/keyring-controller';
 import ProviderController, {
   NETWORK_EVENTS,
 } from './controllers/provider-controller';
+import TokenController from './controllers/token-controller';
 import TransactionController from './controllers/transactions/transaction-controller';
 import ExtensionStore from './lib/localstore';
 
@@ -67,6 +68,13 @@ class Controller extends EventEmitter {
         ),
       getEIP1559GasFeeEstimates:
         this.gasFeeController.fetchGasFeeEstimates.bind(this.gasFeeController),
+    });
+
+    this.tokenController = new TokenController({
+      store: this.store,
+      getProvider: this.providerController.getProvider.bind(
+        this.providerController,
+      ),
     });
   }
 
@@ -242,6 +250,22 @@ class Controller extends EventEmitter {
         reject(e);
       }
     });
+  };
+
+  // get tokens for selected address
+  getTokens = () => {
+    return this.tokenController.getTokens;
+  };
+
+  // store set add tokens
+  addToken = async (_, { address, symbol, decimals, image }) => {
+    const tokenResult = this.tokenController.addToken(
+      address,
+      symbol,
+      decimals,
+      image,
+    );
+    return tokenResult;
   };
 }
 
