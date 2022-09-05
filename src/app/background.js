@@ -109,6 +109,12 @@ class Background {
       BackgroundMessages.SEND_RAW_TRANSACTION,
       this.controller.sendRawTransaction,
     );
+
+    // get tokens for selected address
+    this.requests.set(BackgroundMessages.GET_TOKENS, this.controller.getTokens);
+
+    // store set add tokens
+    this.requests.set(BackgroundMessages.ADD_TOKEN, this.controller.addToken);
   }
 
   listenForMessages() {

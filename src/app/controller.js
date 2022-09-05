@@ -1,5 +1,6 @@
 import KeyringController from './controllers/keyring-controller';
 import ProviderController from './controllers/provider-controller';
+import TokenController from './controllers/token-controller';
 import TransactionController from './controllers/transactions/transaction-controller';
 import ExtensionStore from './lib/localstore';
 
@@ -30,6 +31,13 @@ class Controller {
       ),
       signTransaction: this.keyringController.signTransaction.bind(
         this.keyringController,
+      ),
+    });
+
+    this.tokenController = new TokenController({
+      store: this.store,
+      getProvider: this.providerController.getProvider.bind(
+        this.providerController,
       ),
     });
   }
@@ -156,6 +164,22 @@ class Controller {
     return {
       txResult,
     };
+  };
+
+  // get tokens for selected address
+  getTokens = () => {
+    return this.tokenController.getTokens;
+  };
+
+  // store set add tokens
+  addToken = async (_, { address, symbol, decimals, image }) => {
+    const tokenResult = this.tokenController.addToken(
+      address,
+      symbol,
+      decimals,
+      image,
+    );
+    return tokenResult;
   };
 }
 
