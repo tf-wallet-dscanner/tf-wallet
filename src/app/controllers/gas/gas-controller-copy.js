@@ -1,56 +1,8 @@
 const { isHexString } = require('ethereumjs-util');
 
+// legacy gas station: https://gas-api.metaswap.codefi.network/networks/1/gasPrices
 // gas station: https://gas-api.metaswap.codefi.network/networks/1/suggestedGasFees
 export class GasFeeController {
-  /**
-   * `@ethereumjs/tx` uses `@ethereumjs/common` as a configuration tool for
-   * specifying which chain, network, hardfork and EIPs to support for
-   * a transaction. By referencing this configuration, and analyzing the fields
-   * specified in txParams, `@ethereumjs/tx` is able to determine which EIP-2718
-   * transaction type to use.
-   *
-   * @param fromAddress
-   * @returns {Common} common configuration object
-   */
-  async getCommonConfiguration(fromAddress) {
-    //   const { type, nickname: name } = this.getProviderConfig();
-    //   const supportsEIP1559 = await this.getEIP1559Compatibility(fromAddress);
-    //   // This logic below will have to be updated each time a hardfork happens
-    //   // that carries with it a new Transaction type. It is inconsequential for
-    //   // hardforks that do not include new types.
-    //   const hardfork = supportsEIP1559 ? HARDFORKS.LONDON : HARDFORKS.BERLIN;
-    //   // type will be one of our default network names or 'rpc'. the default
-    //   // network names are sufficient configuration, simply pass the name as the
-    //   // chain argument in the constructor.
-    //   if (type !== NETWORK_TYPE_RPC) {
-    //     return new Common({
-    //       chain: type,
-    //       hardfork,
-    //     });
-    //   }
-    //   // For 'rpc' we need to use the same basic configuration as mainnet,
-    //   // since we only support EVM compatible chains, and then override the
-    //   // name, chainId and networkId properties. This is done using the
-    //   // `forCustomChain` static method on the Common class.
-    //   const chainId = parseInt(this._getCurrentChainId(), 16);
-    //   const networkId = this.networkStore.getState();
-    //   const customChainParams = {
-    //     name,
-    //     chainId,
-    //     // It is improbable for a transaction to be signed while the network
-    //     // is loading for two reasons.
-    //     // 1. Pending, unconfirmed transactions are wiped on network change
-    //     // 2. The UI is unusable (loading indicator) when network is loading.
-    //     // setting the networkId to 0 is for type safety and to explicity lead
-    //     // the transaction to failing if a user is able to get to this branch
-    //     // on a custom network that requires valid network id. I have not ran
-    //     // into this limitation on any network I have attempted, even when
-    //     // hardcoding networkId to 'loading'.
-    //     networkId: networkId === 'loading' ? 0 : parseInt(networkId, 10),
-    //   };
-    //   return Common.forCustomChain(MAINNET, customChainParams, hardfork);
-  }
-
   /**
    * Adds the tx gas defaults: gas && gasPrice
    *
@@ -310,7 +262,7 @@ export class GasFeeController {
    * Determines if the maxFeePerGas and maxPriorityFeePerGas fields are supplied
    * and valid inputs. This will return false for non hex string inputs.
    *
-   * @param {import("../constants/transaction").TransactionMeta} transaction -
+   * @param {import("../../constants/transaction").TransactionMeta} transaction -
    *  the transaction to check
    * @returns {boolean} true if transaction uses valid EIP1559 fields
    */
@@ -326,7 +278,7 @@ export class GasFeeController {
    * supplied and that the gasPrice field is valid if it is provided. This will
    * return false if gasPrice is a non hex string.
    *
-   * @param {import("../constants/transaction").TransactionMeta} transaction -
+   * @param {import("../../constants/transaction").TransactionMeta} transaction -
    *  the transaction to check
    * @returns {boolean} true if transaction uses valid Legacy fields OR lacks
    *  EIP1559 fields

@@ -31,6 +31,10 @@ class Controller {
       signTransaction: this.keyringController.signTransaction.bind(
         this.keyringController,
       ),
+      getEIP1559Compatibility:
+        this.providerController.getEIP1559Compatibility.bind(
+          this.providerController,
+        ),
     });
   }
 
