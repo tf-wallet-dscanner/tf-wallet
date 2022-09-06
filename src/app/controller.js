@@ -258,14 +258,14 @@ class Controller extends EventEmitter {
   };
 
   // store set add tokens
-  addToken = async (_, { address, symbol, decimals, image }) => {
-    const tokenResult = this.tokenController.addToken(
-      address,
+  addToken = async (_, { tokenAddress, symbol, decimals, image }) => {
+    const tokenResult = await this.tokenController.addToken(
+      tokenAddress,
       symbol,
       decimals,
       image,
     );
-    return tokenResult;
+    return { tokenResult };
   };
 }
 

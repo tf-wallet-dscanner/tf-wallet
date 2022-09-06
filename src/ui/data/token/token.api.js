@@ -2,15 +2,20 @@ import { BackgroundMessages } from 'app/messages';
 import Messenger from 'app/messenger';
 
 export async function getTokens() {
-  const { block } = await Messenger.sendMessageToBackground(
+  const { tokens } = await Messenger.sendMessageToBackground(
     BackgroundMessages.GET_TOKENS,
   );
-  return block;
+  return tokens;
 }
 
-export async function addToken() {
-  const { networkId } = await Messenger.sendMessageToBackground(
+export async function addToken({ tokenAddress, symbol, decimals }) {
+  const { token } = await Messenger.sendMessageToBackground(
     BackgroundMessages.ADD_TOKEN,
+    {
+      tokenAddress,
+      symbol,
+      decimals,
+    },
   );
-  return networkId;
+  return token;
 }

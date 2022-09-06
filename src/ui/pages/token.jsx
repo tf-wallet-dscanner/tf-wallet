@@ -14,15 +14,13 @@ import {
   useGetLatestBlock,
   useSetProviderType,
 } from 'ui/data/provider';
-import { useSendRawTransaction } from 'ui/data/transaction';
+import { useAddToken } from 'ui/data/token';
 
-function Provider() {
+function Token() {
   const navigation = useNavigate();
-  const [password, setPassword] = useState();
-  const [to, setTo] = useState();
-  const [decimalValue, setDecimalValue] = useState(
-    100000000000000000 /** 0.1ETH */,
-  );
+  const [tokenAddress, setTokenAddress] = useState();
+  const [symbol, setSymbol] = useState();
+  const [decimals, setDecimals] = useState(18 /** 1ETH */);
   const { data: block, refetch: getLatestBlock } = useGetLatestBlock();
   const { data: currentChainId, refetch: getCurrentChainId } =
     useGetCurrentChainId();
@@ -32,9 +30,9 @@ function Provider() {
       getCurrentChainId();
     },
   });
-  const { mutate: sendTransaction } = useSendRawTransaction({
-    onSuccess(txResult) {
-      alert(`txHash: ${txResult}`);
+  const { mutate: addToken } = useAddToken({
+    onSuccess(tokenResult) {
+      alert(`add token result: ${tokenResult}`);
     },
   });
 
@@ -47,8 +45,8 @@ function Provider() {
     mutate(chainId);
   };
 
-  const handleSendTransactionButtonClick = () => {
-    sendTransaction({ password, to, decimalValue });
+  const handleAddTokenButtonClick = () => {
+    addToken({ tokenAddress, symbol, decimals });
   };
 
   const sortedNetworkList = Object.values(NETWORK_TYPE_TO_ID_MAP).sort(
@@ -73,33 +71,33 @@ function Provider() {
         ))}
       </select>
       <br />
-      <label htmlFor="password">패스워드</label>
-      <TextField
-        password
-        name="password"
-        value={password}
-        onChange={(event) => setPassword(event.target.value)}
-      />
-      <label htmlFor="to">받는사람</label>
+      <label htmlFor="tokenAddress">token contract address</label>
       <TextField
         type="text"
-        name="to"
-        value={to}
-        onChange={(event) => setTo(event.target.value)}
+        name="tokenAddress"
+        value={tokenAddress}
+        onChange={(event) => setTokenAddress(event.target.value)}
       />
-      <label htmlFor="decimalValue">금액(wei or ston)</label>
+      <label htmlFor="symbol">symbol</label>
       <TextField
         type="text"
-        name="decimalValue"
-        value={decimalValue}
-        onChange={(event) => setDecimalValue(Number(event.target.value))}
+        name="symbol"
+        value={symbol}
+        onChange={(event) => setSymbol(event.target.value)}
+      />
+      <label htmlFor="decimals">decimals</label>
+      <TextField
+        type="text"
+        name="decimals"
+        value={decimals}
+        onChange={(event) => setDecimals(Number(event.target.value))}
       />
       <Button
         className="mb-6"
         color={THEME_COLOR.SUCCESS}
-        onClick={handleSendTransactionButtonClick}
+        onClick={handleAddTokenButtonClick}
       >
-        송금하기
+        토큰 추가하기
       </Button>
       {currentChainId && <Card title="Chain Id" content={currentChainId} />}
       {block && <Card title="Block data" content={JSON.stringify(block)} />}
@@ -107,4 +105,4 @@ function Provider() {
   );
 }
 
-export default Provider;
+export default Token;
