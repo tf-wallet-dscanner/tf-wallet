@@ -1,4 +1,4 @@
-import { useQuery } from 'react-query';
+import { useMutation, useQuery } from 'react-query';
 
 import { addToken, getTokens } from './token.api';
 
@@ -10,7 +10,7 @@ export function useGetTokens(options) {
 }
 
 export function useAddToken(options) {
-  return useQuery(['/token/addToken'], addToken, {
+  return useMutation(['/token/addToken'], addToken, {
     retry: 2,
     ...options,
   });
