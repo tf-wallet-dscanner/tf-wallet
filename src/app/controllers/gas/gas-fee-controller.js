@@ -30,13 +30,32 @@ export class GasFeeController {
 
   #ethQuery;
 
-  constructor({ interval = SECOND * 10, getChainId, getProvider }) {
+  #getCurrentNetworkEIP1559Compatibility;
+
+  #getCurrentNetworkLegacyGasAPICompatibility;
+
+  #getCurrentAccountEIP1559Compatibility;
+
+  constructor({
+    interval = SECOND * 10,
+    getChainId,
+    getProvider,
+    getCurrentNetworkEIP1559Compatibility,
+    getCurrentNetworkLegacyGasAPICompatibility,
+    getCurrentAccountEIP1559Compatibility,
+  }) {
     this.#intervalDelay = interval;
     this.#getChainId = getChainId;
     this.#legacyAPIEndpoint = getLegacyGasAPIEndPoint(getChainId());
     this.#EIP1559APIEndpoint = getEIP1559GasAPIEndpoint(getChainId());
     this.#getProvider = getProvider;
     this.#ethQuery = new EthQuery(getProvider());
+    this.#getCurrentNetworkEIP1559Compatibility =
+      getCurrentNetworkEIP1559Compatibility;
+    this.#getCurrentNetworkLegacyGasAPICompatibility =
+      getCurrentNetworkLegacyGasAPICompatibility;
+    this.#getCurrentAccountEIP1559Compatibility =
+      getCurrentAccountEIP1559Compatibility;
 
     this.#gasFeeStore = new ObservableStore({
       ...defaultState,
@@ -60,7 +79,7 @@ export class GasFeeController {
     const { shouldUpdateState = true } = options;
     let isEIP1559Compatible;
     const isLegacyGasAPICompatible =
-      this.getCurrentNetworkLegacyGasAPICompatibility();
+      this.#getCurrentNetworkLegacyGasAPICompatibility();
 
     let chainId = this.#getChainId();
     if (typeof chainId === 'string' && isHexString(chainId)) {
@@ -68,7 +87,7 @@ export class GasFeeController {
     }
 
     try {
-      isEIP1559Compatible = await this.getEIP1559Compatibility();
+      isEIP1559Compatible = await this.#getEIP1559Compatibility();
     } catch (e) {
       console.error(e);
       isEIP1559Compatible = false;
@@ -93,5 +112,16 @@ export class GasFeeController {
     }
 
     return gasFeeCalculations;
+  }
+
+  async #getEIP1559Compatibility() {
+    const currentNetworkIsEIP1559Compatible =
+      await this.#getCurrentNetworkEIP1559Compatibility();
+    const currentAccountIsEIP1559Compatible =
+      this.#getCurrentAccountEIP1559Compatibility?.() ?? true;
+
+    return (
+      currentNetworkIsEIP1559Compatible && currentAccountIsEIP1559Compatible
+    );
   }
 }
