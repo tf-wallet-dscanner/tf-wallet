@@ -4,13 +4,41 @@ import abiERC20 from '../contracts/ERC20.json';
 // import abiERC721 from '../contracts/ERC721.json';
 
 class TokenController {
+  #store; // extension store object
+
+  /**
+   * @info #tokenStore 데이터 구조
+   *
+   * store: {
+   *   tokens: {
+   *     "<address_1>": [...ca]
+   *     "<address_2>": [...ca]
+   *     ...
+   *   }
+   * }
+   */
   #tokenStore; // keyrings eoa들의 모든 token list
 
-  #tokens; // state에서 사용할 eoa 별 token list
-
   constructor(opts = {}) {
-    this.#tokenStore = opts.store.tokens;
+    this.#store = opts.store;
     this.getProvider = opts.getProvider;
+    this.#tokenStore = this.#store.tokens;
+    this.tokens = []; // state에서 사용할 eoa 별 token list
+  }
+
+  /**
+   * @returns {Promise<any>}
+   */
+  get getStoreAll() {
+    return this.#store.getAll();
+  }
+
+  /**
+   * @returns {Promise<any>}
+   */
+  async getTokenStore() {
+    const res = await this.#store.get('tokens');
+    return res;
   }
 
   /**
@@ -18,13 +46,17 @@ class TokenController {
    * @param {Object} tokenConfig
    */
   async #setTokenList(config) {
-    await this.#tokenStore.set({
+    await this.#store.set({
       ...config,
     });
   }
 
   getTokens() {
-    return this.#tokens;
+    /**
+     * @TODO tokenStore 내에서 store.accounts.selectAddress 와 매칭된 주소의 token 저장
+     */
+    // return this.tokens;
+    return this.getTokenStore();
   }
 
   /**
@@ -44,10 +76,20 @@ class TokenController {
    * @returns Current token list.
    */
   async addToken(address, symbol, decimals, image) {
+    const { accounts } = await this.getStoreAll;
+    this.#tokenStore = await this.getTokenStore();
+    console.log('this.#tokenStore', this.#tokenStore);
+
+    if (!accounts) {
+      throw new Error('accounts store data not exist.');
+    }
+
     const newEntry = { address, symbol, decimals, image };
+
     const previousEntry = this.tokens.find(
       (token) => token.address.toLowerCase() === address.toLowerCase(),
     );
+    console.log('previousEntry', previousEntry);
     if (previousEntry) {
       const previousIndex = this.tokens.indexOf(previousEntry);
       this.tokens[previousIndex] = newEntry;
@@ -55,13 +97,13 @@ class TokenController {
       this.tokens.push(newEntry);
       this.#setTokenList({
         tokens: {
-          [`${this.selectedAddress}`]: {
-            ...newEntry,
-          },
+          [`${accounts.selectedAddress}`]: this.tokens,
         },
       });
+
+      console.log('tokens', await this.getTokens());
     }
-    return this.tokens;
+    return newEntry;
   }
 
   /**
