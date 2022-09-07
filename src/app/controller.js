@@ -1,4 +1,7 @@
+import EventEmitter from 'events';
+
 import { MAINNET_CHAIN_ID } from './constants/network';
+import { SECOND } from './constants/time';
 import { GasFeeController } from './controllers/gas/gas-fee-controller';
 import KeyringController from './controllers/keyring-controller';
 import ProviderController, {
@@ -7,45 +10,44 @@ import ProviderController, {
 import TransactionController from './controllers/transactions/transaction-controller';
 import ExtensionStore from './lib/localstore';
 
-class Controller {
+class Controller extends EventEmitter {
   constructor() {
+    super();
     this.store = new ExtensionStore();
 
     this.providerController = new ProviderController({
       store: this.store,
       infuraProjectId: process.env.INFURA_PROJECT_ID,
     });
-    this.providerController.initializeProvider();
+    this.providerController.initializeProvider().then(() => {
+      this.gasFeeController = new GasFeeController({
+        interval: SECOND * 10,
+        getProvider: this.providerController.getProvider.bind(
+          this.providerController,
+        ),
+        onNetworkStateChange: this.providerController.on.bind(
+          this.providerController,
+          NETWORK_EVENTS.NETWORK_DID_CHANGE,
+        ),
+        getCurrentNetworkEIP1559Compatibility:
+          this.providerController.getEIP1559Compatibility.bind(
+            this.providerController,
+          ),
+        getCurrentNetworkLegacyGasAPICompatibility: () => {
+          const chainId = this.providerController.getCurrentChainId();
+          return chainId === MAINNET_CHAIN_ID;
+        },
+        getChainId: () => {
+          return this.providerController.getCurrentChainId();
+        },
+      });
+    });
 
     this.keyringController = new KeyringController({
       store: this.store,
       getProvider: this.providerController.getProvider.bind(
         this.providerController,
       ),
-    });
-
-    this.gasFeeController = new GasFeeController({
-      interval: 10000,
-      getProvider: this.providerController.getProvider.bind(
-        this.providerController,
-      ),
-      onNetworkStateChange: this.providerController.on.bind(
-        this.providerController,
-        NETWORK_EVENTS.NETWORK_DID_CHANGE,
-      ),
-      getCurrentNetworkEIP1559Compatibility:
-        this.providerController.getEIP1559Compatibility.bind(
-          this.providerController,
-        ),
-      getCurrentNetworkLegacyGasAPICompatibility: () => {
-        const chainId = this.providerController.getCurrentChainId();
-        return process.env.IN_TEST || chainId === MAINNET_CHAIN_ID;
-      },
-      getChainId: () => {
-        return process.env.IN_TEST
-          ? MAINNET_CHAIN_ID
-          : this.providerController.getCurrentChainId();
-      },
     });
 
     this.txController = new TransactionController({

@@ -1,8 +1,10 @@
 import { ObservableStore } from '@metamask/obs-store';
 import { GAS_ESTIMATE_TYPES } from 'app/constants/gas';
 import { SECOND } from 'app/constants/time';
+import { safelyExecute } from 'app/lib/util';
 import { isHexString } from 'ethereumjs-util';
 import EthQuery from 'ethjs-query';
+import { v1 as random } from 'uuid';
 
 import determineGasFeeCalculations from './determineGasFeeCalculations';
 import { getEIP1559GasAPIEndpoint, getLegacyGasAPIEndPoint } from './gas-util';
@@ -18,6 +20,8 @@ export class GasFeeController {
 
   #intervalDelay;
 
+  #pollTokens;
+
   #legacyAPIEndpoint;
 
   #EIP1559APIEndpoint;
@@ -26,7 +30,7 @@ export class GasFeeController {
 
   #getChainId;
 
-  #getProvider;
+  #currentChainId;
 
   #ethQuery;
 
@@ -43,13 +47,16 @@ export class GasFeeController {
     getCurrentNetworkEIP1559Compatibility,
     getCurrentNetworkLegacyGasAPICompatibility,
     getCurrentAccountEIP1559Compatibility,
+    onNetworkStateChange,
   }) {
     this.#intervalDelay = interval;
+    this.#pollTokens = new Set();
     this.#getChainId = getChainId;
+    this.#currentChainId = this.#getChainId();
     this.#legacyAPIEndpoint = getLegacyGasAPIEndPoint(getChainId());
     this.#EIP1559APIEndpoint = getEIP1559GasAPIEndpoint(getChainId());
-    this.#getProvider = getProvider;
-    this.#ethQuery = new EthQuery(getProvider());
+    const provider = getProvider();
+    this.#ethQuery = new EthQuery(provider);
     this.#getCurrentNetworkEIP1559Compatibility =
       getCurrentNetworkEIP1559Compatibility;
     this.#getCurrentNetworkLegacyGasAPICompatibility =
@@ -59,6 +66,16 @@ export class GasFeeController {
 
     this.#gasFeeStore = new ObservableStore({
       ...defaultState,
+    });
+
+    onNetworkStateChange(async () => {
+      const newProvider = getProvider();
+      const newChainId = this.#getChainId();
+      this.#ethQuery = new EthQuery(newProvider);
+      if (this.#currentChainId !== newChainId) {
+        this.#currentChainId = newChainId;
+        await this.resetPolling();
+      }
     });
   }
 
@@ -123,5 +140,63 @@ export class GasFeeController {
     return (
       currentNetworkIsEIP1559Compatible && currentAccountIsEIP1559Compatible
     );
+  }
+
+  async resetPolling() {
+    if (this.#pollTokens.size !== 0) {
+      const tokens = Array.from(this.#pollTokens);
+      this.stopPolling();
+      await this.getGasFeeEstimatesAndStartPolling(tokens[0]);
+      tokens.slice(1).forEach((token) => {
+        this.#pollTokens.add(token);
+      });
+    }
+  }
+
+  async getGasFeeEstimatesAndStartPolling(pollToken) {
+    const _pollToken = pollToken || random();
+
+    this.#pollTokens.add(_pollToken);
+
+    if (this.#pollTokens.size === 1) {
+      await this.#fetchGasFeeEstimateData();
+      this.#poll();
+    }
+
+    return _pollToken;
+  }
+
+  #poll() {
+    if (this.#intervalId) {
+      clearInterval(this.#intervalId);
+    }
+
+    this.#intervalId = setInterval(async () => {
+      await safelyExecute(() => this.#fetchGasFeeEstimateData());
+    }, this.#intervalDelay);
+  }
+
+  /**
+   * Remove the poll token, and stop polling if the set of poll tokens is empty.
+   *
+   * @param {string} pollToken - The poll token to disconnect.
+   */
+  disconnectPoller(pollToken) {
+    this.#pollTokens.delete(pollToken);
+    if (this.#pollTokens.size === 0) {
+      this.stopPolling();
+    }
+  }
+
+  stopPolling() {
+    if (this.#intervalId) {
+      clearInterval(this.#intervalId);
+    }
+    this.#pollTokens.clear();
+    this.#resetState();
+  }
+
+  #resetState() {
+    this.#gasFeeStore.putState({ ...defaultState });
   }
 }
