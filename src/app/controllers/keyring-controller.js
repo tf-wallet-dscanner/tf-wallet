@@ -316,15 +316,18 @@ class KeyringController {
     const identities = !accounts ? [] : accounts.identities;
 
     // getBalance
-    const provider = this.getProvider();
-    const ethQuery = new EthQuery(provider);
-    const currentBalance = await ethQuery.getBalance(address);
+    const provider = this.getProvider ? this.getProvider() : null;
+    let currentBalance = '0';
+    if (provider) {
+      const ethQuery = new EthQuery(provider);
+      currentBalance = await ethQuery.getBalance(address);
+    }
 
     // add address data
     identities.push({
       address,
       name: `Account ${identities.length + 1}`,
-      balance: `0x${currentBalance.toString(16)}` ?? '0x0',
+      balance: `0x${currentBalance.toString(16)}`,
       lastSelected: new Date().getTime(),
     });
 
@@ -367,6 +370,18 @@ class KeyringController {
    */
   getKeyringClassForType(type) {
     return keyringTypes.find((kr) => kr.type === type);
+  }
+
+  /**
+   * Get Keyrings by Type
+   *
+   * Gets all keyrings of the given type.
+   *
+   * @param {string} type - The keyring types to retrieve.
+   * @returns {Array<Keyring>} The keyrings.
+   */
+  getKeyringsByType(type) {
+    return this.keyrings.filter((keyring) => keyring.type === type);
   }
 
   //
