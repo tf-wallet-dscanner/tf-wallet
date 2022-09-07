@@ -108,6 +108,13 @@ class ProviderController extends EventEmitter {
       ...defaultProviderConfig,
       ...config,
     });
+
+    const networkClient = this.#getMiddlewareClient(
+      config.type,
+      config.rpcUrl,
+      config.chainId,
+    );
+    this.#provider = this.#createProviderRpcEngine(networkClient);
   }
 
   async lookupNetwork() {
@@ -125,6 +132,7 @@ class ProviderController extends EventEmitter {
       console.warn(
         'NetworkController - lookupNetwork aborted due to missing chainId',
       );
+      this.#clearNetworkDetails();
       return;
     }
 
@@ -249,6 +257,8 @@ class ProviderController extends EventEmitter {
   #switchNetwork(config) {
     // Indicate to subscribers that network is about to change
     this.emit(NETWORK_EVENTS.NETWORK_WILL_CHANGE);
+    // Reset network state
+    this.#clearNetworkDetails();
     // Notify subscribers that network has changed
     this.emit(NETWORK_EVENTS.NETWORK_DID_CHANGE, config.type);
   }

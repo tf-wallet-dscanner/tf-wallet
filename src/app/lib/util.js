@@ -108,3 +108,54 @@ export function weiHexToGweiDec(hex) {
   const hexWei = new BN(stripHexPrefix(hex), 16);
   return fromWei(hexWei, 'gwei').toString(10);
 }
+
+/**
+ * Execute and return an asynchronous operation without throwing errors.
+ *
+ * @param {() => Promise<any>} operation - Function returning a Promise.
+ * @param {boolean} logError - Determines if the error should be logged.
+ * @returns Promise resolving to the result of the async operation.
+ */
+export async function safelyExecute(operation, logError = false) {
+  try {
+    return await operation();
+  } catch (error) {
+    /* istanbul ignore next */
+    if (logError) {
+      console.error(error);
+    }
+    return undefined;
+  }
+}
+
+/**
+ * Execute and return an asynchronous operation with a timeout.
+ *
+ * @param {() => Promise<any>} operation - Function returning a Promise.
+ * @param {boolean} logError - Determines if the error should be logged.
+ * @param {number} timeout - Timeout to fail the operation.
+ * @returns Promise resolving to the result of the async operation.
+ */
+export async function safelyExecuteWithTimeout(
+  operation,
+  logError = false,
+  timeout = 500,
+) {
+  try {
+    return await Promise.race([
+      operation(),
+      new Promise((_, reject) =>
+        // eslint-disable-next-line no-promise-executor-return
+        setTimeout(() => {
+          reject(new Error('timeout'));
+        }, timeout),
+      ),
+    ]);
+  } catch (error) {
+    /* istanbul ignore next */
+    if (logError) {
+      console.error(error);
+    }
+    return undefined;
+  }
+}
