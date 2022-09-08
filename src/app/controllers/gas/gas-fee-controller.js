@@ -7,7 +7,11 @@ import EthQuery from 'ethjs-query';
 import { v1 as random } from 'uuid';
 
 import determineGasFeeCalculations from './determineGasFeeCalculations';
-import { getEIP1559GasAPIEndpoint, getLegacyGasAPIEndPoint } from './gas-util';
+import {
+  calculateTimeEstimate,
+  getEIP1559GasAPIEndpoint,
+  getLegacyGasAPIEndPoint,
+} from './gas-util';
 
 const defaultState = {
   gasFeeEstimates: {},
@@ -21,10 +25,6 @@ export class GasFeeController {
   #intervalDelay;
 
   #pollTokens;
-
-  #legacyAPIEndpoint;
-
-  #EIP1559APIEndpoint;
 
   #gasFeeStore;
 
@@ -52,9 +52,9 @@ export class GasFeeController {
     this.#intervalDelay = interval;
     this.#pollTokens = new Set();
     this.#getChainId = getChainId;
-    this.#currentChainId = this.#getChainId();
-    this.#legacyAPIEndpoint = getLegacyGasAPIEndPoint(getChainId());
-    this.#EIP1559APIEndpoint = getEIP1559GasAPIEndpoint(getChainId());
+    this.#getChainId().then((chainId) => {
+      this.#currentChainId = chainId;
+    });
     const provider = getProvider();
     this.#ethQuery = new EthQuery(provider);
     this.#getCurrentNetworkEIP1559Compatibility =
@@ -70,7 +70,7 @@ export class GasFeeController {
 
     onNetworkStateChange(async () => {
       const newProvider = getProvider();
-      const newChainId = this.#getChainId();
+      const newChainId = await this.#getChainId();
       this.#ethQuery = new EthQuery(newProvider);
       if (this.#currentChainId !== newChainId) {
         this.#currentChainId = newChainId;
@@ -98,10 +98,13 @@ export class GasFeeController {
     const isLegacyGasAPICompatible =
       this.#getCurrentNetworkLegacyGasAPICompatibility();
 
-    let chainId = this.#getChainId();
+    let chainId = await this.#getChainId();
+
     if (typeof chainId === 'string' && isHexString(chainId)) {
       chainId = parseInt(chainId, 16);
     }
+    const fetchGasEstimatesUrl = getEIP1559GasAPIEndpoint(chainId);
+    const fetchLegacyGasPriceEstimatesUrl = getLegacyGasAPIEndPoint(chainId);
 
     try {
       isEIP1559Compatible = await this.#getEIP1559Compatibility();
@@ -113,8 +116,8 @@ export class GasFeeController {
     const gasFeeCalculations = await determineGasFeeCalculations({
       isEIP1559Compatible,
       isLegacyGasAPICompatible,
-      fetchGasEstimatesUrl: this.#EIP1559APIEndpoint,
-      fetchLegacyGasPriceEstimatesUrl: this.#legacyAPIEndpoint,
+      fetchGasEstimatesUrl,
+      fetchLegacyGasPriceEstimatesUrl,
       ethQuery: this.#ethQuery,
     });
 
@@ -198,5 +201,18 @@ export class GasFeeController {
 
   #resetState() {
     this.#gasFeeStore.putState({ ...defaultState });
+  }
+
+  // 트랜잭션이 수행되는데 걸리는 시간을 추정하는 함수
+  getTimeEstimate(maxPriorityFeePerGas, maxFeePerGas) {
+    const { gasFeeEstimates, gasEstimateType } = this.#gasFeeStore.getState();
+    if (!gasFeeEstimates || gasEstimateType !== GAS_ESTIMATE_TYPES.FEE_MARKET) {
+      return {};
+    }
+    return calculateTimeEstimate(
+      maxPriorityFeePerGas,
+      maxFeePerGas,
+      gasFeeEstimates,
+    );
   }
 }

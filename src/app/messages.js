@@ -16,4 +16,5 @@ export const BackgroundMessages = {
   GET_STORE_ACCOUNTS: 'getStoreAccounts', // Store에서 Accounts 데이터 get
   SET_STORE_SELECTED_ADDRESS: 'setStoreSelectedAddress', // Store에서 Accounts SelectedAddress 값 set
   SEND_RAW_TRANSACTION: 'sendRawTransaction',
+  GET_GAS_FEE_ESTIMATE_START_POLLING: 'getGasFeeEstimatesAndStartPolling',
 };

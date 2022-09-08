@@ -1,4 +1,4 @@
-import { addHexPrefix } from 'ethereumjs-util';
+import { BN, addHexPrefix, stripHexPrefix } from 'ethereumjs-util';
 
 export const normalizers = {
   from: addHexPrefix,
@@ -34,4 +34,28 @@ export function normalizeTxParams(txParams, lowerCase = true) {
     }
   }
   return normalizedTxParams;
+}
+
+/**
+ * Converts a hex string to a BN object
+ *
+ * @param {string} inputHex - A number represented as a hex string
+ * @returns {Object} A BN object
+ */
+export function hexToBn(inputHex) {
+  return new BN(stripHexPrefix(inputHex), 16);
+}
+
+/**
+ * Used to multiply a BN by a fraction
+ *
+ * @param {BN} targetBN - The number to multiply by a fraction
+ * @param {number|string} numerator - The numerator of the fraction multiplier
+ * @param {number|string} denominator - The denominator of the fraction multiplier
+ * @returns {BN} The product of the multiplication
+ */
+export function BnMultiplyByFraction(targetBN, numerator, denominator) {
+  const numBN = new BN(numerator);
+  const denomBN = new BN(denominator);
+  return targetBN.mul(numBN).div(denomBN);
 }

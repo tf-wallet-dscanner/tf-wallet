@@ -11,6 +11,13 @@ import Routing from './routing';
 
 const root = ReactDOM.createRoot(document.getElementById('popup'));
 const queryClient = new QueryClient();
+queryClient.setDefaultOptions({
+  queries: {
+    staleTime: Infinity,
+    cacheTime: 0,
+    refetchOnWindowFocus: false,
+  },
+});
 
 browser.runtime.connect({ name: 'popup' });
 

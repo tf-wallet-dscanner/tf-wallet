@@ -109,6 +109,12 @@ class Background {
       BackgroundMessages.SEND_RAW_TRANSACTION,
       this.controller.sendRawTransaction,
     );
+
+    // gas fee estimate setInterval(polling)
+    this.requests.set(
+      BackgroundMessages.SEND_RAW_TGET_GAS_FEE_ESTIMATE_START_POLLING,
+      this.controller.getGasFeeEstimatesAndStartPolling,
+    );
   }
 
   listenForMessages() {

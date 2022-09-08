@@ -12,3 +12,10 @@ export async function sendRawTransaction({ password, to, decimalValue }) {
   );
   return txResult;
 }
+
+export async function getGasFeeEstimatesAndStartPolling() {
+  const { pollToken } = await Messenger.sendMessageToBackground(
+    BackgroundMessages.SEND_RAW_TGET_GAS_FEE_ESTIMATE_START_POLLING,
+  );
+  return pollToken;
+}

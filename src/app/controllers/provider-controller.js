@@ -91,7 +91,7 @@ class ProviderController extends EventEmitter {
     this.#networkDetails = new ObservableStore({
       ...defaultNetworkDetailsState,
     });
-
+    this.#configureProvider(defaultProviderConfig);
     this.store = new ComposedStore({
       // provider: this.providerStore,
       // previousProviderStore: this.previousProviderStore,
@@ -108,13 +108,6 @@ class ProviderController extends EventEmitter {
       ...defaultProviderConfig,
       ...config,
     });
-
-    const networkClient = this.#getMiddlewareClient(
-      config.type,
-      config.rpcUrl,
-      config.chainId,
-    );
-    this.#provider = this.#createProviderRpcEngine(networkClient);
   }
 
   async lookupNetwork() {
@@ -126,7 +119,7 @@ class ProviderController extends EventEmitter {
       return;
     }
 
-    const { type: network, rpcUrl, chainId } = await this.providerConfig;
+    const { chainId } = await this.providerConfig;
 
     if (!chainId) {
       console.warn(
@@ -139,9 +132,6 @@ class ProviderController extends EventEmitter {
     // Ping the RPC endpoint so we can confirm that it works
     const { type } = await this.providerConfig;
     const isInfura = INFURA_PROVIDER_TYPES.includes(type);
-
-    const networkClient = this.#getMiddlewareClient(network, rpcUrl, chainId);
-    this.#provider = this.#createProviderRpcEngine(networkClient);
 
     if (this.#infuraProjectId && isInfura) {
       this.#checkInfuraAvailability();
@@ -259,8 +249,22 @@ class ProviderController extends EventEmitter {
     this.emit(NETWORK_EVENTS.NETWORK_WILL_CHANGE);
     // Reset network state
     this.#clearNetworkDetails();
+    this.#configureProvider(config);
     // Notify subscribers that network has changed
     this.emit(NETWORK_EVENTS.NETWORK_DID_CHANGE, config.type);
+  }
+
+  /**
+   * configure rpc engine
+   * @param {typeof defaultProviderConfig} config
+   */
+  #configureProvider(config) {
+    const networkClient = this.#getMiddlewareClient(
+      config.type,
+      config.rpcUrl,
+      config.chainId,
+    );
+    this.#provider = this.#createProviderRpcEngine(networkClient);
   }
 
   /**

@@ -1,10 +1,23 @@
-import { useMutation } from 'react-query';
+import { useMutation, useQuery } from 'react-query';
 
-import { sendRawTransaction } from './transaction.api';
+import {
+  getGasFeeEstimatesAndStartPolling,
+  sendRawTransaction,
+} from './transaction.api';
 
 export function useSendRawTransaction(options) {
   return useMutation(['/transaction/sendRawTransaction'], sendRawTransaction, {
-    retry: 2,
     ...options,
   });
+}
+
+export function useGetGasFeeEstimatesAndStartPolling(options) {
+  return useQuery(
+    ['/transaction/getGasFeeEstimatesAndStartPolling'],
+    getGasFeeEstimatesAndStartPolling,
+    {
+      retry: 2,
+      ...options,
+    },
+  );
 }

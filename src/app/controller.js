@@ -19,35 +19,35 @@ class Controller extends EventEmitter {
       store: this.store,
       infuraProjectId: process.env.INFURA_PROJECT_ID,
     });
-    this.providerController.initializeProvider().then(() => {
-      this.gasFeeController = new GasFeeController({
-        interval: SECOND * 10,
-        getProvider: this.providerController.getProvider.bind(
-          this.providerController,
-        ),
-        onNetworkStateChange: this.providerController.on.bind(
-          this.providerController,
-          NETWORK_EVENTS.NETWORK_DID_CHANGE,
-        ),
-        getCurrentNetworkEIP1559Compatibility:
-          this.providerController.getEIP1559Compatibility.bind(
-            this.providerController,
-          ),
-        getCurrentNetworkLegacyGasAPICompatibility: () => {
-          const chainId = this.providerController.getCurrentChainId();
-          return chainId === MAINNET_CHAIN_ID;
-        },
-        getChainId: () => {
-          return this.providerController.getCurrentChainId();
-        },
-      });
-    });
+    this.providerController.initializeProvider();
 
     this.keyringController = new KeyringController({
       store: this.store,
       getProvider: this.providerController.getProvider.bind(
         this.providerController,
       ),
+    });
+
+    this.gasFeeController = new GasFeeController({
+      interval: SECOND * 10,
+      getProvider: this.providerController.getProvider.bind(
+        this.providerController,
+      ),
+      onNetworkStateChange: this.providerController.on.bind(
+        this.providerController,
+        NETWORK_EVENTS.NETWORK_DID_CHANGE,
+      ),
+      getCurrentNetworkEIP1559Compatibility:
+        this.providerController.getEIP1559Compatibility.bind(
+          this.providerController,
+        ),
+      getCurrentNetworkLegacyGasAPICompatibility: () => {
+        const chainId = this.providerController.getCurrentChainId();
+        return chainId === MAINNET_CHAIN_ID;
+      },
+      getChainId: () => {
+        return this.providerController.getCurrentChainId();
+      },
     });
 
     this.txController = new TransactionController({
@@ -65,6 +65,8 @@ class Controller extends EventEmitter {
         this.providerController.getEIP1559Compatibility.bind(
           this.providerController,
         ),
+      getEIP1559GasFeeEstimates:
+        this.gasFeeController.fetchGasFeeEstimates.bind(this.gasFeeController),
     });
   }
 
@@ -190,6 +192,56 @@ class Controller extends EventEmitter {
     return {
       txResult,
     };
+  };
+
+  // 가스비를 polling하면서 가져오는 함수
+  getGasFeeEstimatesAndStartPolling = async () => {
+    const pollToken =
+      await this.gasFeeController.getGasFeeEstimatesAndStartPolling();
+    return {
+      pollToken,
+    };
+  };
+
+  // 특정 task 삭제
+  disconnectPoller = (pollToken) => {
+    return new Promise((resolve, reject) => {
+      try {
+        this.gasFeeController.disconnectPoller(pollToken);
+        resolve(true);
+      } catch (e) {
+        reject(e);
+      }
+    });
+  };
+
+  // polling stop
+  stopPolling = () => {
+    return new Promise((resolve, reject) => {
+      try {
+        this.gasFeeController.stopPolling();
+        resolve(true);
+      } catch (e) {
+        reject(e);
+      }
+    });
+  };
+
+  // polling stop
+  getGasFeeTimeEstimate = (maxPriorityFeePerGas, maxFeePerGas) => {
+    return new Promise((resolve, reject) => {
+      try {
+        const timeEstimates = this.gasFeeController.getTimeEstimate(
+          maxPriorityFeePerGas,
+          maxFeePerGas,
+        );
+        resolve({
+          ...timeEstimates,
+        });
+      } catch (e) {
+        reject(e);
+      }
+    });
   };
 }
 

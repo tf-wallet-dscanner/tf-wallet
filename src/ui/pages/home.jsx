@@ -88,6 +88,16 @@ function Home() {
       >
         Json File
       </Button>
+      <Button
+        color={THEME_COLOR.ERROR}
+        className="my-5"
+        suffixIcon={<FaBeer />}
+        onClick={() => {
+          navigation('/transaction');
+        }}
+      >
+        Transaction
+      </Button>
     </Container>
   );
 }

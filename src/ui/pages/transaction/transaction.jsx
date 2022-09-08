@@ -7,9 +7,11 @@ import { Outlet, useNavigate } from 'react-router-dom';
 import Button from 'ui/components/atoms/button';
 import { THEME_COLOR } from 'ui/constants/colors';
 import { useGetCurrentChainId, useSetProviderType } from 'ui/data/provider';
+import { useGetGasFeeEstimatesAndStartPolling } from 'ui/data/transaction';
 
 function Transaction() {
   const navigation = useNavigate();
+  const { data } = useGetGasFeeEstimatesAndStartPolling();
   const { data: currentChainId, refetch: getCurrentChainId } =
     useGetCurrentChainId();
   const { mutate } = useSetProviderType({
@@ -17,6 +19,8 @@ function Transaction() {
       getCurrentChainId();
     },
   });
+
+  console.log('data: ', data);
 
   const onNextPage = () => {
     navigation('/');
