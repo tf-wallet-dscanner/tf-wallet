@@ -40,6 +40,7 @@ class Controller {
         this.providerController,
       ),
     });
+    this.tokenController.initializeTokens();
   }
 
   getLatestBlock = async () => {
@@ -167,8 +168,9 @@ class Controller {
   };
 
   // get tokens for selected address
-  getTokens = () => {
-    return this.tokenController.getTokens;
+  getTokens = async () => {
+    const tokens = await this.tokenController.getTokens();
+    return { tokens };
   };
 
   // store set add tokens
@@ -180,6 +182,12 @@ class Controller {
       image,
     );
     return { tokenResult };
+  };
+
+  // swith main accounts
+  switchAccounts = async () => {
+    const address = await this.tokenController.switchAccounts();
+    return { address };
   };
 }
 

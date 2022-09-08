@@ -115,6 +115,12 @@ class Background {
 
     // store set add tokens
     this.requests.set(BackgroundMessages.ADD_TOKEN, this.controller.addToken);
+
+    // swith main accounts
+    this.requests.set(
+      BackgroundMessages.SWITCH_ACCOUNTS,
+      this.controller.switchAccounts,
+    );
   }
 
   listenForMessages() {

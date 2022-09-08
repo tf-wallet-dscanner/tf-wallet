@@ -9,30 +9,30 @@ import Button from 'ui/components/atoms/button';
 import Card from 'ui/components/atoms/card';
 import TextField from 'ui/components/atoms/text-field';
 import { THEME_COLOR } from 'ui/constants/colors';
-import {
-  useGetCurrentChainId,
-  useGetLatestBlock,
-  useSetProviderType,
-} from 'ui/data/provider';
-import { useAddToken } from 'ui/data/token';
+import { useGetCurrentChainId, useSetProviderType } from 'ui/data/provider';
+import { useAddToken, useGetTokens, useSwitchAccounts } from 'ui/data/token';
 
 function Token() {
   const navigation = useNavigate();
   const [tokenAddress, setTokenAddress] = useState();
   const [symbol, setSymbol] = useState();
   const [decimals, setDecimals] = useState(18 /** 1ETH */);
-  const { data: block, refetch: getLatestBlock } = useGetLatestBlock();
   const { data: currentChainId, refetch: getCurrentChainId } =
     useGetCurrentChainId();
+  const { data: accountTokenList, refetch: getAccountTokenList } =
+    useGetTokens();
+  const { data: currentAccounts, refetch: getSwitchAccounts } =
+    useSwitchAccounts();
   const { mutate } = useSetProviderType({
     onSuccess() {
-      getLatestBlock();
       getCurrentChainId();
     },
   });
   const { mutate: addToken } = useAddToken({
     onSuccess(tokenResult) {
       alert(`add token result: ${tokenResult}`);
+      getAccountTokenList();
+      getSwitchAccounts();
     },
   });
 
@@ -99,8 +99,14 @@ function Token() {
       >
         토큰 추가하기
       </Button>
+      {currentAccounts && <Card title="EOA" content={currentAccounts} />}
+      {accountTokenList && (
+        <Card
+          title="EOA Token List"
+          content={JSON.stringify(accountTokenList)}
+        />
+      )}
       {currentChainId && <Card title="Chain Id" content={currentChainId} />}
-      {block && <Card title="Block data" content={JSON.stringify(block)} />}
     </div>
   );
 }
