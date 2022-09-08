@@ -14,3 +14,5 @@ export const GAS_ESTIMATE_TYPES = {
 export const GAS_API_BASE_URL = 'https://gas-api.metaswap.codefi.network';
 export const GAS_DEV_API_BASE_URL =
   'https://gas-api.metaswap-dev.codefi.network';
+
+export const GWEI = 'gwei';

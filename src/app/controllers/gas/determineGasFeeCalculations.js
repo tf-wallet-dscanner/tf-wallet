@@ -1,5 +1,6 @@
 import { GAS_ESTIMATE_TYPES } from 'app/constants/gas';
 
+import fetchGasEstimatesViaEthFeeHistory from './fetchGasEstimatesViaEthFeeHistory';
 import {
   calculateTimeEstimate,
   fetchEthGasPriceEstimate,
@@ -37,7 +38,7 @@ export default async function determineGasFeeCalculations({
       try {
         estimates = await fetchGasEstimates(fetchGasEstimatesUrl);
       } catch (e) {
-        console.error('fetchGasEstimates error: ', e);
+        estimates = await fetchGasEstimatesViaEthFeeHistory(ethQuery);
       }
       const { suggestedMaxPriorityFeePerGas, suggestedMaxFeePerGas } =
         estimates.medium;

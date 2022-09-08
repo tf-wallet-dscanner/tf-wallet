@@ -1,6 +1,8 @@
 import { GAS_API_BASE_URL, GAS_DEV_API_BASE_URL } from 'app/constants/gas';
 import { gweiDecToWEIBN, weiHexToGweiDec } from 'app/lib/util';
-import { BN } from 'ethereumjs-util';
+import { BN, isHexString } from 'ethereumjs-util';
+
+import { hexToBn } from '../transactions/tx-util';
 
 const gasApiBaseUrl = process.env.SWAPS_USE_DEV_APIS
   ? GAS_DEV_API_BASE_URL
@@ -40,6 +42,36 @@ export function normalizeGWEIDecimalNumbers(n) {
   const numberAsWEIHex = gweiDecToWEIBN(n).toString(16);
   const numberAsGWEI = weiHexToGweiDec(numberAsWEIHex).toString(10);
   return numberAsGWEI;
+}
+
+/**
+ * Parses a hex string and converts it into a number that can be operated on in a bignum-safe,
+ * base-10 way.
+ *
+ * @param value - A base-16 number encoded as a string.
+ * @returns The number as a BN object in base-16 mode.
+ */
+export function fromHex(value) {
+  if (BN.isBN(value)) {
+    return value;
+  }
+  return new BN(hexToBn(value).toString(10));
+}
+
+/**
+ * Converts an integer to a hexadecimal representation.
+ *
+ * @param value - An integer, an integer encoded as a base-10 string, or a BN.
+ * @returns The integer encoded as a hex string.
+ */
+export function toHex(value) {
+  if (typeof value === 'string' && isHexString(value)) {
+    return value;
+  }
+  const hexString = BN.isBN(value)
+    ? value.toString(16)
+    : new BN(value.toString(), 10).toString(16);
+  return `0x${hexString}`;
 }
 
 /**
@@ -156,8 +188,9 @@ export async function fetchLegacyGasPriceEstimates(url, clientId) {
  */
 export async function fetchEthGasPriceEstimate(ethQuery) {
   const gasPrice = await ethQuery.gasPrice();
+  const hexGasPrice = gasPrice.toString(16);
   return {
-    gasPrice: weiHexToGweiDec(gasPrice).toString(),
+    gasPrice: weiHexToGweiDec(hexGasPrice).toString(),
   };
 }
 
@@ -225,4 +258,26 @@ export function calculateTimeEstimate(
     lowerTimeBound,
     upperTimeBound,
   };
+}
+
+/**
+ * Wrapper method to handle EthQuery requests.
+ *
+ * @param ethQuery - EthQuery object initialized with a provider.
+ * @param method - Method to request.
+ * @param args - Arguments to send.
+ * @returns Promise resolving the request.
+ */
+export function query(ethQuery, method, args) {
+  return new Promise((resolve, reject) => {
+    const cb = (error, result) => {
+      if (error) {
+        reject(error);
+        return;
+      }
+      resolve(result);
+    };
+
+    ethQuery.rpc.currentProvider.sendAsync({ method, params: args }, cb);
+  });
 }

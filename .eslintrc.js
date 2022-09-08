@@ -86,6 +86,7 @@ module.exports = {
       },
     ],
     'jsx-a11y/label-has-associated-control': 'off',
+    'no-return-assign': 'off',
   },
   globals: {
     React: 'writable',
