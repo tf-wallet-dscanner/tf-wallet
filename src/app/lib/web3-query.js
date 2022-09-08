@@ -124,7 +124,6 @@ class Web3Query {
   getAccountsEncrypt({ privateKey, password }) {
     try {
       const acct = new Accounts();
-      console.log('acct: ', acct);
 
       const keystoreV3 = acct.encrypt(privateKey, password);
       return keystoreV3;
