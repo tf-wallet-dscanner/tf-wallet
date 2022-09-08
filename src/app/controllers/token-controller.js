@@ -19,36 +19,71 @@ class TokenController {
    */
   #tokenStore; // keyrings eoa들의 모든 token list
 
+  #accountStore;
+
   constructor(opts = {}) {
     this.#store = opts.store;
     this.getProvider = opts.getProvider;
-    this.#tokenStore = this.#store.tokens;
+    this.#tokenStore = this.getTokenStore();
+    this.#accountStore = this.getStoreAccounts();
     this.tokens = []; // state에서 사용할 eoa 별 token list
+    // this.initializeTokens();
+  }
+
+  /**
+   * 어플리케이션 실행 시 실행되는 함수, #tokenStore.tokens 세팅
+   */
+  async initializeTokens() {
+    const { accounts } = await this.#accountStore;
+    const { tokens } = await this.#tokenStore;
+
+    console.log('tokens', tokens);
+
+    if (tokens) {
+      this.tokens = await tokens[`${accounts.selectedAddress}`];
+    } else {
+      await this.#setTokenList({
+        tokens: {
+          [`${accounts.selectedAddress}`]: this.tokens,
+        },
+      });
+    }
+    console.log('initializeTokens', await this.getTokenStore(), this.tokens);
   }
 
   /**
    * @returns {Promise<any>}
    */
-  get getStoreAll() {
-    return this.#store.getAll();
+  async getStoreAccounts() {
+    const result = await this.#store.get('accounts');
+    return result;
   }
 
   /**
    * @returns {Promise<any>}
    */
   async getTokenStore() {
-    const res = await this.#store.get('tokens');
-    return res;
+    const result = await this.#store.get('tokens');
+    return result;
   }
 
   /**
    * set Token List
-   * @param {Object} tokenConfig
+   * @param {Object} config
    */
   async #setTokenList(config) {
     await this.#store.set({
       ...config,
     });
+  }
+
+  async switchAccounts() {
+    /**
+     * @TODO switch accounts 시 해당 address의 tokens 정보 체크 없으면 빈 값 저장
+     */
+    this.#accountStore = await this.getStoreAccounts();
+    const { accounts } = this.#accountStore;
+    return accounts.selectedAddress;
   }
 
   getTokens() {
@@ -76,9 +111,10 @@ class TokenController {
    * @returns Current token list.
    */
   async addToken(address, symbol, decimals, image) {
-    const { accounts } = await this.getStoreAll;
-    this.#tokenStore = await this.getTokenStore();
-    console.log('this.#tokenStore', this.#tokenStore);
+    const { accounts } = await this.getStoreAccounts();
+    const { tokens } = await this.getTokenStore();
+
+    console.log('before tokens', tokens);
 
     if (!accounts) {
       throw new Error('accounts store data not exist.');
@@ -89,20 +125,31 @@ class TokenController {
     const previousEntry = this.tokens.find(
       (token) => token.address.toLowerCase() === address.toLowerCase(),
     );
-    console.log('previousEntry', previousEntry);
+
+    console.log(
+      'previousEntry',
+      previousEntry,
+      this.tokens.indexOf(previousEntry),
+    );
+    console.log('selectedAddress', accounts.selectedAddress);
+
     if (previousEntry) {
+      // 기존 tokens에 존재하면 token 정보 수정
       const previousIndex = this.tokens.indexOf(previousEntry);
       this.tokens[previousIndex] = newEntry;
+      tokens[accounts.selectedAddress].splice(previousIndex, 1, newEntry);
+      console.log('true previousEntry', tokens);
+      await this.#setTokenList({ tokens });
     } else {
       this.tokens.push(newEntry);
-      this.#setTokenList({
-        tokens: {
-          [`${accounts.selectedAddress}`]: this.tokens,
-        },
-      });
 
-      console.log('tokens', await this.getTokens());
+      await tokens[accounts.selectedAddress].push(newEntry);
+      await this.#setTokenList({ tokens });
+      console.log('setTokenList', tokens);
     }
+
+    console.log('after this.tokens', this.tokens);
+    console.log('after this.#tokenStore', await this.getTokenStore());
     return newEntry;
   }
 
@@ -133,10 +180,10 @@ class TokenController {
   }
 
   /**
-   * Removes all tokens from the ignored list.
+   * Removes all tokens from the token list.
    */
-  clearIgnoredTokens() {
-    this.update({ ignoredTokens: [], allIgnoredTokens: {} });
+  clearTokens() {
+    this.update({ tokens: [] });
   }
 }
 

@@ -19,4 +19,5 @@ export const BackgroundMessages = {
   GET_GAS_FEE_ESTIMATE_START_POLLING: 'getGasFeeEstimatesAndStartPolling',
   GET_TOKENS: 'getTokens', // 선택된 계정의 token list 불러오기
   ADD_TOKEN: 'addToken', // Store에 추가된 token 정보 set (계정 별 token list 다름)
+  SWITCH_ACCOUNTS: 'switchAccounts', // 변경된 Accounts로 token controller 재설정
 };

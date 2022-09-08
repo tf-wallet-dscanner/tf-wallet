@@ -19,3 +19,10 @@ export async function addToken({ tokenAddress, symbol, decimals }) {
   );
   return token;
 }
+
+export async function switchAccounts() {
+  const { address } = await Messenger.sendMessageToBackground(
+    BackgroundMessages.SWITCH_ACCOUNTS,
+  );
+  return address;
+}
