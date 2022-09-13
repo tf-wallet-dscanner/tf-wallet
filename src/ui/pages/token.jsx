@@ -30,7 +30,7 @@ function Token() {
   });
   const { mutate: addToken } = useAddToken({
     onSuccess(tokenResult) {
-      alert(`add token result: ${tokenResult}`);
+      alert(`add token result: ${JSON.stringify(tokenResult)}`);
       getAccountTokenList();
       getSwitchAccounts();
     },
