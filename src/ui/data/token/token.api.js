@@ -9,7 +9,7 @@ export async function getTokens() {
 }
 
 export async function addToken({ tokenAddress, symbol, decimals }) {
-  const { token } = await Messenger.sendMessageToBackground(
+  const { tokenResult } = await Messenger.sendMessageToBackground(
     BackgroundMessages.ADD_TOKEN,
     {
       tokenAddress,
@@ -17,7 +17,7 @@ export async function addToken({ tokenAddress, symbol, decimals }) {
       decimals,
     },
   );
-  return token;
+  return tokenResult;
 }
 
 export async function switchAccounts() {
