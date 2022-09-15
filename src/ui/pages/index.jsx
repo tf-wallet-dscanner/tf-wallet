@@ -24,12 +24,10 @@ browser.runtime.connect({ name: 'popup' });
 const devtool = process.env.DEVTOOL;
 
 root.render(
-  <React.StrictMode>
-    <HashRouter>
-      <QueryClientProvider client={queryClient}>
-        <Routing />
-        {devtool && <ReactQueryDevtools initialIsOpen={false} />}
-      </QueryClientProvider>
-    </HashRouter>
-  </React.StrictMode>,
+  <HashRouter>
+    <QueryClientProvider client={queryClient}>
+      <Routing />
+      {devtool && <ReactQueryDevtools initialIsOpen={false} />}
+    </QueryClientProvider>
+  </HashRouter>,
 );

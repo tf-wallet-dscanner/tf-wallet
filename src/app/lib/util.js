@@ -1,6 +1,7 @@
 import { BN, addHexPrefix, bufferToHex, toBuffer } from 'ethereumjs-util';
 import { fromWei, toWei } from 'ethjs-unit';
 import { memoize } from 'lodash';
+import Web3 from 'web3';
 
 import {
   ENVIRONMENT_TYPE_BACKGROUND,
@@ -158,4 +159,24 @@ export async function safelyExecuteWithTimeout(
     }
     return undefined;
   }
+}
+
+/**
+ * Used to convert values from wei hex format to dec eth format.
+ *
+ * @param {string}hex - The value in hex wei.
+ * @returns The value in dec eth as string.
+ */
+export function weiHexToEthDec(hex) {
+  return Web3.utils.fromWei(hex.toString(), 'ether');
+}
+
+/**
+ * Checks if the given string is an address
+ *
+ * @param {string}address - address the given HEX adress
+ * @returns {Boolean}
+ */
+export function isAddress(address) {
+  return Web3.utils.isAddress(address);
 }

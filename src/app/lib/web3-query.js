@@ -131,6 +131,23 @@ class Web3Query {
       console.error('Web3Query - web3.eth.accounts.encrypt Error - ', e);
     }
   }
+
+  /**
+   * @see https://web3js.readthedocs.io/en/v1.7.4/web3-eth-contract.html
+   * @param {string} abi The json interface for the contract to instantiate.
+   * @param {string} address The address of the smart contract to call.
+   * @returns {Promise<string>} The current balance for the given address in wei.
+   */
+  async contract(abi, address) {
+    try {
+      // const ethContract = new this.#web3Provider.eth.Contract(abi, address);
+      console.log('this.#web3Provider', this.#web3Provider, this.#rpcUrl);
+      const ethContract = new this.#web3Provider.eth.Contract(abi, address);
+      return ethContract;
+    } catch (e) {
+      console.error('Web3Query - contract Error - ', e);
+    }
+  }
 }
 
 export default Web3Query;
