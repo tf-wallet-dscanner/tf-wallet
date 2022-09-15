@@ -35,9 +35,9 @@ export default class TxGasUtil {
     const block = await this.query.getBlockByNumber('latest', false);
 
     // fallback to block gasLimit
-    const blockGasLimitBN = hexToBn(block.gasLimit);
+    const blockGasLimitBN = hexToBn(block.gasLimit.toString(16));
     const saferGasLimitBN = BnMultiplyByFraction(blockGasLimitBN, 19, 20);
-    let estimatedGasHex = bnToHex(saferGasLimitBN);
+    let estimatedGasHex = bnToHex(saferGasLimitBN.toString(16));
     let simulationFails;
     try {
       estimatedGasHex = await this.estimateTxGas(txMeta);
@@ -60,7 +60,7 @@ export default class TxGasUtil {
    * @returns {string} the estimated gas limit as a hex string
    */
   async estimateTxGas(txMeta) {
-    const txParams = cloneDeep(txMeta.txParams);
+    const txParams = cloneDeep(txMeta);
 
     // `eth_estimateGas` can fail if the user has insufficient balance for the
     // value being sent, or for the gas cost. We don't want to check their

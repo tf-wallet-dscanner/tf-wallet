@@ -100,6 +100,25 @@ export function gweiDecToWEIBN(n) {
 }
 
 /**
+ * Used to convert a base-10 number from GWEI to WEI. Can handle numbers with decimal parts.
+ *
+ * @param {number | string}n - The base 10 number to convert to WEI.
+ * @returns The number in WEI, as a BN.
+ */
+export function gweiDecToETHDec(n) {
+  if (Number.isNaN(n)) {
+    return new BN(0);
+  }
+
+  const parts = n.toString().split('.');
+  const wholePart = parts[0] || '0';
+
+  const eth = parseInt(wholePart, 10) / 10 ** 9;
+
+  return eth;
+}
+
+/**
  * Used to convert values from wei hex format to dec gwei format.
  *
  * @param {string}hex - The value in hex wei.
@@ -180,3 +199,7 @@ export function weiHexToEthDec(hex) {
 export function isAddress(address) {
   return Web3.utils.isAddress(address);
 }
+
+export const makeCorrectNumber = (n) => {
+  return Math.round(n * 1e12) / 1e12;
+};

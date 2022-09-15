@@ -1,9 +1,7 @@
+import { SECOND } from 'app/constants/time';
 import { useMutation, useQuery } from 'react-query';
 
-import {
-  getGasFeeEstimatesAndStartPolling,
-  sendRawTransaction,
-} from './transaction.api';
+import { getGasFeeEstimates, sendRawTransaction } from './transaction.api';
 
 export function useSendRawTransaction(options) {
   return useMutation(['/transaction/sendRawTransaction'], sendRawTransaction, {
@@ -11,13 +9,10 @@ export function useSendRawTransaction(options) {
   });
 }
 
-export function useGetGasFeeEstimatesAndStartPolling(options) {
-  return useQuery(
-    ['/transaction/getGasFeeEstimatesAndStartPolling'],
-    getGasFeeEstimatesAndStartPolling,
-    {
-      retry: 2,
-      ...options,
-    },
-  );
+export function useGetGasFeeEstimates(options) {
+  return useQuery(['/transaction/getGasFeeEstimates'], getGasFeeEstimates, {
+    retry: 2,
+    refetchInterval: SECOND * 10,
+    ...options,
+  });
 }

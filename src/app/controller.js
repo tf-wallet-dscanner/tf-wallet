@@ -192,12 +192,8 @@ class Controller extends EventEmitter {
   };
 
   // transaction send test
-  sendRawTransaction = async (_, { password, to, decimalValue }) => {
-    const txResult = await this.txController.sendRawTransaction(
-      password,
-      to,
-      decimalValue,
-    );
+  sendRawTransaction = async (_, txMeta) => {
+    const txResult = await this.txController.sendRawTransaction(txMeta);
     return {
       txResult,
     };
@@ -205,11 +201,15 @@ class Controller extends EventEmitter {
 
   // 가스비를 polling하면서 가져오는 함수
   getGasFeeEstimatesAndStartPolling = async () => {
-    const pollToken =
+    const gasFeeEstimatesResult =
       await this.gasFeeController.getGasFeeEstimatesAndStartPolling();
-    return {
-      pollToken,
-    };
+    return gasFeeEstimatesResult;
+  };
+
+  // 가스비를 가져오는 함수
+  getGasFeeEstimates = async () => {
+    const estimateData = await this.gasFeeController.fetchGasFeeEstimates();
+    return estimateData;
   };
 
   // 특정 task 삭제

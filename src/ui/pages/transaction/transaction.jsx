@@ -3,24 +3,42 @@ import {
   NETWORK_TO_NAME_MAP,
   NETWORK_TYPE_TO_ID_MAP,
 } from 'app/constants/network';
+import { useEffect } from 'react';
 import { Outlet, useNavigate } from 'react-router-dom';
 import Button from 'ui/components/atoms/button';
 import { THEME_COLOR } from 'ui/constants/colors';
 import { useGetCurrentChainId, useSetProviderType } from 'ui/data/provider';
-import { useGetGasFeeEstimatesAndStartPolling } from 'ui/data/transaction';
+import { useGetGasFeeEstimates } from 'ui/data/transaction';
+import { useTransactionStore } from 'ui/store';
+import shallow from 'zustand/shallow';
 
 function Transaction() {
   const navigation = useNavigate();
-  const { data } = useGetGasFeeEstimatesAndStartPolling();
+  const { data: estimateData, refetch: refetchGasEstimate } =
+    useGetGasFeeEstimates();
   const { data: currentChainId, refetch: getCurrentChainId } =
     useGetCurrentChainId();
   const { mutate } = useSetProviderType({
     onSuccess() {
       getCurrentChainId();
+      // 네트워크가 바뀌면 즉시 바뀌도록 해야함
+      refetchGasEstimate();
     },
   });
+  const { setEstimateData, clearTxState } = useTransactionStore(
+    (state) => ({
+      setEstimateData: state.setEstimateData,
+      clearTxState: state.clearTxState,
+    }),
+    shallow,
+  );
 
-  console.log('data: ', data);
+  useEffect(() => {
+    if (estimateData) {
+      setEstimateData(estimateData);
+    }
+    return () => clearTxState();
+  }, [estimateData]);
 
   const onNextPage = () => {
     navigation('/');
