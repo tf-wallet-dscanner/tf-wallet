@@ -1,8 +1,8 @@
-import Web3Query from 'app/lib/web3-query';
+import abi from 'ethereumjs-abi';
 
-// import EthQuery from 'ethjs-query';
-import abiERC20 from '../contracts/ERC20.json';
+import { isAddress, weiHexToEthDec } from '../lib/util';
 
+// import abiERC20 from '../contracts/ERC20.json';
 // import abiERC721 from '../contracts/ERC721.json';
 
 class TokenController {
@@ -49,11 +49,6 @@ class TokenController {
       };
       await this.#setTokenList(newAddress);
     }
-    console.log(
-      'initializeTokens result',
-      await this.getTokenStore(),
-      this.tokens,
-    );
   }
 
   /**
@@ -77,26 +72,26 @@ class TokenController {
     return accounts.selectedAddress;
   }
 
+  /**
+   * tokenStore 내에서 store.accounts.selectAddress 와 매칭된 주소의 token 저장
+   */
   async getTokens() {
-    /**
-     * @TODO tokenStore 내에서 store.accounts.selectAddress 와 매칭된 주소의 token 저장
-     */
-    const { accounts } = this.#accountStore;
-
-    this.tokens.forEach((token) => {
-      const balance = this.#getTokenBalances(
-        accounts.selectedAddress,
-        token.address,
-      );
-      console.log('balance', balance, token);
-    });
-    console.log('getTokens', this.tokens);
-    // return this.tokens;
-    return this.getTokenStore();
+    const { accounts } = await this.getStoreAccounts();
+    if (this.tokens.length > 0) {
+      this.tokens.forEach(async (token, index) => {
+        const balance = await this.#getTokenBalances(
+          accounts.selectedAddress,
+          token.address,
+        );
+        Object.assign(this.tokens[index], { ...this.tokens[index], balance });
+      });
+    }
+    return this.tokens;
   }
 
   /**
    * For each token in the tokenlist provided by the TokenListController, check selectedAddress balance.
+   * @TODO 이더 or 클레이튼 explorer DB에 유저 EOA를 조회하여 Token 리스트를 받아오기
    */
   async detectNewTokens() {
     const { keyringTokens } = this.#tokenStore;
@@ -124,12 +119,6 @@ class TokenController {
       (token) => token.address.toLowerCase() === address.toLowerCase(),
     );
 
-    console.log(
-      'previousEntry',
-      previousEntry,
-      this.tokens.indexOf(previousEntry),
-    );
-
     if (previousEntry) {
       // 기존 tokens에 존재하면 token 정보 수정
       const previousIndex = this.tokens.indexOf(previousEntry);
@@ -142,48 +131,66 @@ class TokenController {
       await tokens[accounts.selectedAddress].push(newEntry);
       await this.#setTokenList({ tokens });
     }
-
-    console.log('addToken this.tokens', this.tokens);
-    console.log('addToken this.#tokenStore', await this.getTokenStore());
     return newEntry;
   }
 
   /**
+   * @TODO ethererumjs-abi를 통한 rawHexData 생성 함수 작성 필요
+   */
+  encodeCall(name, args, values) {
+    const methodId = abi.methodID(name, args).toString('hex');
+    const params = abi.rawEncode(args, values).toString('hex');
+    return `0x${methodId}${params}`;
+  }
+
+  /**
+   * Wrapper method to handle provider requests.
    *
+   * @param provider - provider object initialized with a JsonRpcEngine.
+   * @param method - Method to request.
+   * @param args - Arguments to send.
+   * @returns Promise resolving the request.
+   */
+  async query(provider, method, args) {
+    return new Promise((resolve, reject) => {
+      const cb = (err, res) => {
+        if (err) {
+          reject(err);
+          return;
+        }
+        resolve(res.result);
+      };
+      provider.sendAsync(
+        { id: 1, jsonrpc: '2.0', method, params: [args, 'latest'] },
+        cb,
+      );
+    });
+  }
+
+  /**
+   * @TODO rawHexData 리팩토링 필요
    *
-   * @param tokenCa
+   * @param address EOA
+   * @param tokenCa ERC20 contract address
    */
   async #getTokenBalances(address, tokenCa) {
-    // const provider = this.getProvider();
-    // const ethQuery = new EthQuery(provider);
-    // const contract = ethQuery.contract(abiERC20.abi, tokenCa);
+    if (!isAddress(tokenCa)) return 0;
+    const provider = this.getProvider();
+    const sha3BalanceOf = '70a08231';
+    const holder = address.slice(2);
+    const rawHexData = `0x${sha3BalanceOf}000000000000000000000000${holder}`;
 
-    const { rpcUrl } = await this.getStoreAll();
-    const web3Query = new Web3Query(rpcUrl);
-    const contract = await web3Query.contract(abiERC20.abi, tokenCa);
-    console.log('contract', contract);
-    contract.methods.balanceOf(address).call((err, res) => {
-      if (err) {
-        console.log('An error occured', err);
-        return;
-      }
-      console.log('The balance is: ', res);
-    });
-    // const amount = await ethQuery.balanceOf(address).call();
-    // console.log('amount', amount);
-    // return new Promise((resolve, reject) => {
-    //   contract.balanceOf([this.selectedAddress], tokenCa, (error, result) => {
-    //     if (error) {
-    //       return reject(error);
-    //     }
-    //     return resolve(result);
-    //   });
-    // });
-    return null;
+    const params = {
+      to: tokenCa,
+      data: rawHexData,
+    };
+    const amount = await this.query(provider, 'eth_call', params);
+    return weiHexToEthDec(amount);
   }
 
   /**
    * Remove a token from the stored token list.
+   * @TODO storeToken에 등록된 token 정보 삭제
    *
    * @param address - The hex address of the token contract.
    */

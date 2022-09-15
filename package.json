@@ -59,6 +59,7 @@
     "eslint-webpack-plugin": "^3.1.1",
     "eth-json-rpc-infura": "^5.1.0",
     "eth-json-rpc-middleware": "^8.1.0",
+    "ethereumjs-abi": "^0.6.8",
     "ethereumjs-util": "^7.0.10",
     "ethereumjs-wallet": "^1.0.2",
     "ethjs-query": "^0.3.8",

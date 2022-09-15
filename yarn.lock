@@ -9060,6 +9060,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"ethereumjs-abi@npm:^0.6.8":
+  version: 0.6.8
+  resolution: "ethereumjs-abi@npm:0.6.8"
+  dependencies:
+    bn.js: ^4.11.8
+    ethereumjs-util: ^6.0.0
+  checksum: cede2a8ae7c7e04eeaec079c2f925601a25b2ef75cf9230e7c5da63b4ea27883b35447365a47e35c1e831af520973a2252af89022c292c18a09a4607821a366b
+  languageName: node
+  linkType: hard
+
 "ethereumjs-util@npm:^5.1.1, ethereumjs-util@npm:^5.1.2":
   version: 5.2.1
   resolution: "ethereumjs-util@npm:5.2.1"
@@ -18842,6 +18852,7 @@ __metadata:
     eslint-webpack-plugin: ^3.1.1
     eth-json-rpc-infura: ^5.1.0
     eth-json-rpc-middleware: ^8.1.0
+    ethereumjs-abi: ^0.6.8
     ethereumjs-util: ^7.0.10
     ethereumjs-wallet: ^1.0.2
     ethjs-query: ^0.3.8
