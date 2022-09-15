@@ -9,7 +9,7 @@ import Button from 'ui/components/atoms/button';
 import Card from 'ui/components/atoms/card';
 import TextField from 'ui/components/atoms/text-field';
 import { THEME_COLOR } from 'ui/constants/colors';
-import { useGetCurrentChainId, useSetProviderType } from 'ui/data/provider';
+import { useSetProviderType } from 'ui/data/provider';
 import { useAddToken, useGetTokens, useSwitchAccounts } from 'ui/data/token';
 
 function Token() {
@@ -17,22 +17,16 @@ function Token() {
   const [tokenAddress, setTokenAddress] = useState();
   const [symbol, setSymbol] = useState();
   const [decimals, setDecimals] = useState(18 /** 1ETH */);
-  const { data: currentChainId, refetch: getCurrentChainId } =
-    useGetCurrentChainId();
-  const { data: accountTokenList, refetch: getAccountTokenList } =
-    useGetTokens();
   const { data: currentAccounts, refetch: getSwitchAccounts } =
     useSwitchAccounts();
-  const { mutate } = useSetProviderType({
-    onSuccess() {
-      getCurrentChainId();
-    },
-  });
+  const { data: accountTokenList, refetch: getAccountTokenList } =
+    useGetTokens();
+  const { mutate } = useSetProviderType({});
   const { mutate: addToken } = useAddToken({
     onSuccess(tokenResult) {
       alert(`add token result: ${JSON.stringify(tokenResult)}`);
-      getAccountTokenList();
       getSwitchAccounts();
+      getAccountTokenList();
     },
   });
 
@@ -62,7 +56,6 @@ function Token() {
         name="providers"
         onChange={handleProviderTypeChange}
         defaultValue={MAINNET_CHAIN_ID}
-        value={currentChainId}
       >
         {sortedNetworkList.map(({ chainId }, index) => (
           <option key={index} value={chainId}>
@@ -106,7 +99,6 @@ function Token() {
           content={JSON.stringify(accountTokenList)}
         />
       )}
-      {currentChainId && <Card title="Chain Id" content={currentChainId} />}
     </div>
   );
 }
