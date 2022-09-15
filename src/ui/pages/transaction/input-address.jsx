@@ -30,7 +30,7 @@ function InputAddress() {
         value={to}
         onChange={(event) => setTo(event.target.value)}
       />
-      <label htmlFor="decimalValue">금액(wei or ston)</label>
+      <label htmlFor="decimalValue">금액(ETH or KLAY)</label>
       <TextField
         type="text"
         name="decimalValue"

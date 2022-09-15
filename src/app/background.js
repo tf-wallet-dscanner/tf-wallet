@@ -112,9 +112,16 @@ class Background {
 
     // gas fee estimate setInterval(polling)
     this.requests.set(
-      BackgroundMessages.SEND_RAW_TGET_GAS_FEE_ESTIMATE_START_POLLING,
+      BackgroundMessages.GET_GAS_FEE_ESTIMATES_START_POLLING,
       this.controller.getGasFeeEstimatesAndStartPolling,
     );
+
+    // gas fee estimate
+    this.requests.set(
+      BackgroundMessages.GET_GAS_FEE_ESTIMATES,
+      this.controller.getGasFeeEstimates,
+    );
+
     // get tokens for selected address
     this.requests.set(BackgroundMessages.GET_TOKENS, this.controller.getTokens);
 

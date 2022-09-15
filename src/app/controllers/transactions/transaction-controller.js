@@ -3,10 +3,13 @@ import { Transaction } from '@ethereumjs/tx';
 import {
   CHAIN_ID_TO_NETWORK_ID_MAP,
   HARDFORKS,
-  NETWORK_TYPE_RPC,
+  INFURA_PROVIDER_TYPES,
 } from 'app/constants/network';
+import { addHexPrefix } from 'ethereumjs-util';
 import EthQuery from 'ethjs-query';
 import EventEmitter from 'events';
+
+import TxGasUtil from './tx-gas-utils';
 
 class TransactionController extends EventEmitter {
   #txStore;
@@ -53,7 +56,8 @@ class TransactionController extends EventEmitter {
     // type will be one of our default network names or 'rpc'. the default
     // network names are sufficient configuration, simply pass the name as the
     // chain argument in the constructor.
-    if (network !== NETWORK_TYPE_RPC) {
+    const isInfura = INFURA_PROVIDER_TYPES.includes(network);
+    if (isInfura) {
       return new Common({
         chain: network,
         hardfork,
@@ -67,48 +71,80 @@ class TransactionController extends EventEmitter {
     return Common.custom({ chainId: decimalChainId });
   }
 
-  // sendTransaction
-  async sendRawTransaction(password, to, decimalValue) {
-    const { accounts } = await this.txConfig;
+  /**
+   * 코인/토큰 보내기
+   * @param {object} txMeta
+   * @param {string} txMeta.password - 사용자 패스워드
+   * @param {string} txMeta.to - 받는 사람
+   * @param {number} txMeta.decimalValue - 보내는 코인/토큰 양 (DEC)
+   * @param {number} txMeta.gas - MIN_GAS_LIMIT_DEC(21000)
+   * @param {number} txMeta.gasPrice - ETH(KLAY) DEC
+   * @param {number} txMeta.maxFeePerGas - The maximum fee per gas that the transaction is willing to pay in total
+   * @param {number} txMeta.maxPriorityFeePerGas - The maximum fee per gas to give miners to incentivize them to include the transaction (Priority fee)
+   * @returns {string} txResult - 트랜잭션 해쉬값(txHash)
+   */
+  async sendRawTransaction(txMeta) {
+    const { password, to, decimalValue, gasPrice } = txMeta;
+    try {
+      console.log('txMeta: ', txMeta);
+      const { accounts } = await this.txConfig;
 
-    if (!accounts) {
-      throw new Error('accounts store data not exist.');
+      if (!accounts) {
+        throw new Error('accounts store data not exist.');
+      }
+
+      // keyring restore
+      await this.unlockKeyrings(password);
+
+      const provider = this.getProvider();
+      const ethQuery = new EthQuery(provider);
+
+      const txnCount = await ethQuery.getTransactionCount(
+        accounts.selectedAddress,
+        'latest',
+      );
+
+      const common = await this.getCommonConfiguration();
+      const txGasUtil = new TxGasUtil(provider);
+
+      const { blockGasLimit, estimatedGasHex, simulationFails } =
+        await txGasUtil.analyzeGasUsage(txMeta);
+
+      if (simulationFails) {
+        console.error('simulationFails: ', simulationFails);
+        return simulationFails.reason;
+      }
+
+      // add additional gas buffer to our estimation for safety
+      const gasLimit = txGasUtil.addGasBuffer(
+        addHexPrefix(estimatedGasHex.toString(16)),
+        blockGasLimit.toString(16),
+      );
+
+      const txParams = {
+        nonce: addHexPrefix(txnCount.toString(16)),
+        gasPrice: addHexPrefix(parseInt(gasPrice * 10 ** 18, 10).toString(16)), // eth to wei
+        gasLimit: addHexPrefix(gasLimit),
+        to,
+        value: addHexPrefix(parseInt(decimalValue * 10 ** 18, 10).toString(16)),
+      };
+      console.log('txParams: ', txParams);
+
+      // sign tx
+      const unsignedEthTx = Transaction.fromTxData(txParams, { common });
+      const signedEthTx = await this.signEthTx(
+        unsignedEthTx,
+        accounts.selectedAddress,
+      );
+      const serializedEthTx = signedEthTx.serialize();
+      const rawTxHex = `0x${serializedEthTx.toString('hex')}`;
+
+      const txResult = await ethQuery.sendRawTransaction(rawTxHex);
+      return txResult;
+    } catch (e) {
+      console.error('sendRawTransaction error: ', e);
+      return e.message;
     }
-
-    // keyring restore
-    await this.unlockKeyrings(password);
-
-    const provider = this.getProvider();
-    const ethQuery = new EthQuery(provider);
-
-    const txnCount = await ethQuery.getTransactionCount(
-      accounts.selectedAddress,
-      'latest',
-    );
-
-    const common = await this.getCommonConfiguration();
-
-    const txParams = {
-      nonce: txnCount,
-      gasPrice: '0x9184e72a000',
-      gasLimit: '0x5208',
-      to,
-      value: `0x${parseInt(decimalValue, 10).toString(16)}`,
-    };
-
-    // sign tx
-    const unsignedEthTx = Transaction.fromTxData(txParams, { common });
-    const signedEthTx = await this.signEthTx(
-      unsignedEthTx,
-      accounts.selectedAddress,
-    );
-    // const signedTx = tx.sign(Buffer.from(privKey, 'hex'));
-    const serializedEthTx = signedEthTx.serialize();
-    const rawTxHex = `0x${serializedEthTx.toString('hex')}`;
-
-    const txResult = await ethQuery.sendRawTransaction(rawTxHex);
-    console.log('txResult: ', txResult);
-    return txResult;
   }
 
   /**
