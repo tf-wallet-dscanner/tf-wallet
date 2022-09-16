@@ -51,9 +51,7 @@ class Controller extends EventEmitter {
 
     this.txController = new TransactionController({
       store: this.store,
-      getProvider: this.providerController.getProvider.bind(
-        this.providerController,
-      ),
+      ethQuery: this.providerController.query.bind(this.providerController),
       unlockKeyrings: this.keyringController.unlockKeyrings.bind(
         this.keyringController,
       ),

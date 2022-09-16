@@ -6,7 +6,6 @@ import {
   INFURA_PROVIDER_TYPES,
 } from 'app/constants/network';
 import { addHexPrefix } from 'ethereumjs-util';
-import EthQuery from 'ethjs-query';
 import EventEmitter from 'events';
 
 import TxGasUtil from './tx-gas-utils';
@@ -20,7 +19,7 @@ class TransactionController extends EventEmitter {
     this.#txStore = opts.store;
     this.unlockKeyrings = opts.unlockKeyrings;
     this.signEthTx = opts.signTransaction;
-    this.getProvider = opts.getProvider;
+    this.ethQuery = opts.ethQuery;
     this.getEIP1559Compatibility = opts.getEIP1559Compatibility;
   }
 
@@ -96,16 +95,16 @@ class TransactionController extends EventEmitter {
       // keyring restore
       await this.unlockKeyrings(password);
 
-      const provider = this.getProvider();
-      const ethQuery = new EthQuery(provider);
-
-      const txnCount = await ethQuery.getTransactionCount(
+      const txnCount = await this.ethQuery(
+        'eth_getTransactionCount',
         accounts.selectedAddress,
         'latest',
       );
 
       const common = await this.getCommonConfiguration();
-      const txGasUtil = new TxGasUtil(provider);
+      const txGasUtil = new TxGasUtil({
+        ethQuery: this.ethQuery.bind(this.ethQuery),
+      });
 
       const { blockGasLimit, estimatedGasHex, simulationFails } =
         await txGasUtil.analyzeGasUsage(txMeta);
@@ -139,7 +138,7 @@ class TransactionController extends EventEmitter {
       const serializedEthTx = signedEthTx.serialize();
       const rawTxHex = `0x${serializedEthTx.toString('hex')}`;
 
-      const txResult = await ethQuery.sendRawTransaction(rawTxHex);
+      const txResult = await this.ethQuery('eth_sendRawTransaction', rawTxHex);
       return txResult;
     } catch (e) {
       console.error('sendRawTransaction error: ', e);

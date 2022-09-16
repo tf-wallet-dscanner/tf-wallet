@@ -13,7 +13,7 @@ import shallow from 'zustand/shallow';
 
 function EstimateGas() {
   const navigation = useNavigate();
-  const [password, setPassword] = useState();
+  const [password, setPassword] = useState('');
   const { to, decimalValue, gas, gasPrice, estimateData, setGasPrice } =
     useTransactionStore(
       (state) => ({
