@@ -183,11 +183,11 @@ export async function fetchLegacyGasPriceEstimates(url, clientId) {
 /**
  * non-EIP-1559-specific estimates.
  * Get a gas price estimate from the network using the `eth_gasPrice` method.
- * @param {ethjs-query}ethQuery - The EthQuery instance to call the network with.
+ * @param {ProviderController.query} ethQuery - The EthQuery instance to call the network with.
  * @returns A gas price estimate.
  */
 export async function fetchEthGasPriceEstimate(ethQuery) {
-  const gasPrice = await ethQuery.gasPrice();
+  const gasPrice = await ethQuery('eth_gasPrice');
   const hexGasPrice = gasPrice.toString(16);
   return {
     gasPrice: weiHexToGweiDec(hexGasPrice).toString(),
@@ -258,26 +258,4 @@ export function calculateTimeEstimate(
     lowerTimeBound,
     upperTimeBound,
   };
-}
-
-/**
- * Wrapper method to handle EthQuery requests.
- *
- * @param ethQuery - EthQuery object initialized with a provider.
- * @param method - Method to request.
- * @param args - Arguments to send.
- * @returns Promise resolving the request.
- */
-export function query(ethQuery, method, args) {
-  return new Promise((resolve, reject) => {
-    const cb = (error, result) => {
-      if (error) {
-        reject(error);
-        return;
-      }
-      resolve(result);
-    };
-
-    ethQuery.rpc.currentProvider.sendAsync({ method, params: args }, cb);
-  });
 }

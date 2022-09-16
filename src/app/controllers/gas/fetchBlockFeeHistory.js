@@ -1,6 +1,6 @@
 import { BN } from 'ethereumjs-util';
 
-import { fromHex, query, toHex } from './gas-util';
+import { fromHex, toHex } from './gas-util';
 
 const MAX_NUMBER_OF_BLOCKS_PER_ETH_FEE_HISTORY_CALL = 1024;
 
@@ -82,11 +82,12 @@ async function makeRequestForChunk({
   includeNextBlock,
 }) {
   try {
-    const response = await query(ethQuery, 'eth_feeHistory', [
+    const response = await ethQuery(
+      'eth_feeHistory',
       toHex(numberOfBlocks),
       toHex(endBlockNumber),
       percentiles,
-    ]);
+    );
 
     const startBlockNumber = fromHex(response.oldestBlock);
 
@@ -216,7 +217,7 @@ export default async function fetchBlockFeeHistory({
 
   let finalEndBlockNumber = givenEndBlock;
   if (givenEndBlock.toString() === 'latest') {
-    const blockNumber = await ethQuery.blockNumber();
+    const blockNumber = await ethQuery('eth_blockNumber');
     finalEndBlockNumber = fromHex(blockNumber.toString(16));
   }
 
