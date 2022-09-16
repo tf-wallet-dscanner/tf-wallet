@@ -31,9 +31,7 @@ class Controller extends EventEmitter {
 
     this.gasFeeController = new GasFeeController({
       interval: SECOND * 10,
-      getProvider: this.providerController.getProvider.bind(
-        this.providerController,
-      ),
+      ethQuery: this.providerController.query.bind(this.providerController),
       onNetworkStateChange: this.providerController.on.bind(
         this.providerController,
         NETWORK_EVENTS.NETWORK_DID_CHANGE,

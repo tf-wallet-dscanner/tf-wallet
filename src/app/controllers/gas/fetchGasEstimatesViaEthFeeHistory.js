@@ -23,7 +23,7 @@ import fetchBlockFeeHistory from './fetchBlockFeeHistory';
  * for the next block's base fee.
  */
 export default async function fetchGasEstimatesViaEthFeeHistory(ethQuery) {
-  const latestBlock = await ethQuery.getBlockByNumber('latest', false);
+  const latestBlock = await ethQuery('eth_getBlockByNumber', 'latest', false);
   const blocks = await fetchBlockFeeHistory({
     ethQuery,
     endBlock: latestBlock.number,

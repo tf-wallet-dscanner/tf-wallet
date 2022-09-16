@@ -28,9 +28,9 @@ import {
 } from 'app/modules/network.utils';
 import { strict as assert } from 'assert';
 import { providerFromEngine } from 'eth-json-rpc-middleware';
-import EthQuery from 'ethjs-query';
 import EventEmitter from 'events';
 import { JsonRpcEngine } from 'json-rpc-engine';
+import { v1 as random } from 'uuid';
 
 /**
  * 1. 사용자가 provider를 선택할 수 있다
@@ -161,15 +161,13 @@ class ProviderController extends EventEmitter {
    * infura network 사용 가능여부 체크
    */
   async #checkInfuraAvailability() {
-    const ethQuery = new EthQuery(this.#provider);
-
     let networkChanged = false;
     this.once(NETWORK_EVENTS.NETWORK_DID_CHANGE, () => {
       networkChanged = true;
     });
 
     try {
-      const response = await ethQuery.blockNumber();
+      const response = await this.query('eth_blockNumber');
 
       if (networkChanged) {
         return;
@@ -305,8 +303,11 @@ class ProviderController extends EventEmitter {
    * @returns {Promise<Block>} Block object
    */
   async getLatestBlock() {
-    const ethQuery = new EthQuery(this.#provider);
-    const latestBlock = await ethQuery.getBlockByNumber('latest', false);
+    const latestBlock = await this.query(
+      'eth_getBlockByNumber',
+      'latest',
+      false,
+    );
     return latestBlock;
   }
 
@@ -314,8 +315,7 @@ class ProviderController extends EventEmitter {
    * @returns {Promise<string>} networkId
    */
   async getNetworkId() {
-    const ethQuery = new EthQuery(this.#provider);
-    const networkId = await ethQuery.net_version();
+    const networkId = await this.query('net_version');
     return networkId;
   }
 
@@ -388,6 +388,29 @@ class ProviderController extends EventEmitter {
    */
   #clearNetworkDetails() {
     this.#networkDetails.putState({ ...defaultNetworkDetailsState });
+  }
+
+  /**
+   * Wrapper method to handle provider requests.
+   *
+   * @param {string} method - Method to request.
+   * @param {Array<any>} args - Arguments to send.
+   * @returns Promise resolving the request.
+   */
+  query(method, ...args) {
+    return new Promise((resolve, reject) => {
+      const cb = (err, res) => {
+        if (err) {
+          reject(err);
+          return;
+        }
+        resolve(res.result);
+      };
+      this.#provider.sendAsync(
+        { id: random(), jsonrpc: '2.0', method, params: [...args] },
+        cb,
+      );
+    });
   }
 }
 

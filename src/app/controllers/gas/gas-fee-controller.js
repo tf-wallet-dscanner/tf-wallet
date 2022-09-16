@@ -3,7 +3,6 @@ import { GAS_ESTIMATE_TYPES } from 'app/constants/gas';
 import { SECOND } from 'app/constants/time';
 import { safelyExecute } from 'app/lib/util';
 import { isHexString } from 'ethereumjs-util';
-import EthQuery from 'ethjs-query';
 import { v1 as random } from 'uuid';
 
 import determineGasFeeCalculations from './determineGasFeeCalculations';
@@ -42,8 +41,8 @@ export class GasFeeController {
 
   constructor({
     interval = SECOND * 10,
+    ethQuery,
     getChainId,
-    getProvider,
     getCurrentNetworkEIP1559Compatibility,
     getCurrentNetworkLegacyGasAPICompatibility,
     getCurrentAccountEIP1559Compatibility,
@@ -55,8 +54,7 @@ export class GasFeeController {
     this.#getChainId().then((chainId) => {
       this.#currentChainId = chainId;
     });
-    const provider = getProvider();
-    this.#ethQuery = new EthQuery(provider);
+    this.#ethQuery = ethQuery;
     this.#getCurrentNetworkEIP1559Compatibility =
       getCurrentNetworkEIP1559Compatibility;
     this.#getCurrentNetworkLegacyGasAPICompatibility =
@@ -69,9 +67,7 @@ export class GasFeeController {
     });
 
     onNetworkStateChange(async () => {
-      const newProvider = getProvider();
       const newChainId = await this.#getChainId();
-      this.#ethQuery = new EthQuery(newProvider);
       if (this.#currentChainId !== newChainId) {
         this.#currentChainId = newChainId;
         await this.resetPolling();
