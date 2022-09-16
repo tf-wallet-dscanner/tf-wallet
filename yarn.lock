@@ -5531,16 +5531,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"babel-runtime@npm:^6.26.0":
-  version: 6.26.0
-  resolution: "babel-runtime@npm:6.26.0"
-  dependencies:
-    core-js: ^2.4.0
-    regenerator-runtime: ^0.11.0
-  checksum: 8aeade94665e67a73c1ccc10f6fd42ba0c689b980032b70929de7a6d9a12eb87ef51902733f8fefede35afea7a5c3ef7e916a64d503446c1eedc9e3284bd3d50
-  languageName: node
-  linkType: hard
-
 "balanced-match@npm:^1.0.0":
   version: 1.0.2
   resolution: "balanced-match@npm:1.0.2"
@@ -6924,13 +6914,6 @@ __metadata:
   version: 3.21.1
   resolution: "core-js-pure@npm:3.21.1"
   checksum: 00a5dff599b7fb0b30746a638b9d0edbdc0df24ed1580ca56be595fbe3c78c375d37fc4e1bff23627109229702c9ee8ea2587a66b8280eb33b85160aa4e401e9
-  languageName: node
-  linkType: hard
-
-"core-js@npm:^2.4.0":
-  version: 2.6.12
-  resolution: "core-js@npm:2.6.12"
-  checksum: 44fa9934a85f8c78d61e0c8b7b22436330471ffe59ec5076fe7f324d6e8cf7f824b14b1c81ca73608b13bdb0fef035bd820989bf059767ad6fa13123bb8bd016
   languageName: node
   linkType: hard
 
@@ -9167,48 +9150,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"ethjs-format@npm:0.2.7":
-  version: 0.2.7
-  resolution: "ethjs-format@npm:0.2.7"
-  dependencies:
-    bn.js: 4.11.6
-    ethjs-schema: 0.2.1
-    ethjs-util: 0.1.3
-    is-hex-prefixed: 1.0.0
-    number-to-bn: 1.7.0
-    strip-hex-prefix: 1.0.0
-  checksum: b27ea907e03ffcecd94baf8fa58afcc345af0af6ceb4ebe45e2f2aea3e3d14cf70a80c18ceb302f4b6cc439018fc05060f6bbf98751ab2fdc7f4af19b3b578b7
-  languageName: node
-  linkType: hard
-
-"ethjs-query@npm:^0.3.8":
-  version: 0.3.8
-  resolution: "ethjs-query@npm:0.3.8"
-  dependencies:
-    babel-runtime: ^6.26.0
-    ethjs-format: 0.2.7
-    ethjs-rpc: 0.2.0
-    promise-to-callback: ^1.0.0
-  checksum: 6673167101e793dfdbb212f3ee2e7449a7c1eb7f4d72aba04a1c504eb36d9148f18c42a702839ebce7534709d821f32adcca84c56b7900788b2875cba8a371f1
-  languageName: node
-  linkType: hard
-
-"ethjs-rpc@npm:0.2.0":
-  version: 0.2.0
-  resolution: "ethjs-rpc@npm:0.2.0"
-  dependencies:
-    promise-to-callback: ^1.0.0
-  checksum: b6f4f021ba2b613d453fc02a7d33ec198d64d29af3da137bf728175360281323ab1525b22079d9b0689db0683d76cf265b68774412bff7281d0d26898f4875da
-  languageName: node
-  linkType: hard
-
-"ethjs-schema@npm:0.2.1":
-  version: 0.2.1
-  resolution: "ethjs-schema@npm:0.2.1"
-  checksum: 7d8b1225bcf9616bfe94a24c2f4a48dae5ec30180a61d509efd7335eec68431abee638fbd02c2088e0ee59010396284e4b8364af8afdb229ac67e29ae38a3230
-  languageName: node
-  linkType: hard
-
 "ethjs-unit@npm:0.1.6, ethjs-unit@npm:^0.1.6":
   version: 0.1.6
   resolution: "ethjs-unit@npm:0.1.6"
@@ -9216,16 +9157,6 @@ __metadata:
     bn.js: 4.11.6
     number-to-bn: 1.7.0
   checksum: df6b4752ff7461a59a20219f4b1684c631ea601241c39660e3f6c6bd63c950189723841c22b3c6c0ebeb3c9fc99e0e803e3c613101206132603705fcbcf4def5
-  languageName: node
-  linkType: hard
-
-"ethjs-util@npm:0.1.3":
-  version: 0.1.3
-  resolution: "ethjs-util@npm:0.1.3"
-  dependencies:
-    is-hex-prefixed: 1.0.0
-    strip-hex-prefix: 1.0.0
-  checksum: 1e2c0f94a806986f0db84604e5ecbad93937f34e6cf589de4db2f2870a8278b366482a2d116b392bfa87910f29300c114daace8fa876d3d6b8b886ca0c023b57
   languageName: node
   linkType: hard
 
@@ -11301,13 +11232,6 @@ __metadata:
   version: 2.1.1
   resolution: "is-extglob@npm:2.1.1"
   checksum: df033653d06d0eb567461e58a7a8c9f940bd8c22274b94bf7671ab36df5719791aae15eef6d83bbb5e23283967f2f984b8914559d4449efda578c775c4be6f85
-  languageName: node
-  linkType: hard
-
-"is-fn@npm:^1.0.0":
-  version: 1.0.0
-  resolution: "is-fn@npm:1.0.0"
-  checksum: eeea1e536716f93a92dc1a8550b2c0909fe74bb5144d0fb6d65e0d31eb9c06c30559f69d83a9351d2288cc7293b43bc074e0fab5fae19e312ff38aa0c7672827
   languageName: node
   linkType: hard
 
@@ -16093,16 +16017,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"promise-to-callback@npm:^1.0.0":
-  version: 1.0.0
-  resolution: "promise-to-callback@npm:1.0.0"
-  dependencies:
-    is-fn: ^1.0.0
-    set-immediate-shim: ^1.0.1
-  checksum: 8c9e1327386e00f799589cdf96fff2586a13b52b0185222bc3199e1305ba9344589eedfd4038dcbaf5592d85d567097d1507b81e948b7fff6ffdd3de49d54e14
-  languageName: node
-  linkType: hard
-
 "promise@npm:^8.1.0":
   version: 8.1.0
   resolution: "promise@npm:8.1.0"
@@ -16760,13 +16674,6 @@ __metadata:
   version: 1.4.2
   resolution: "regenerate@npm:1.4.2"
   checksum: 3317a09b2f802da8db09aa276e469b57a6c0dd818347e05b8862959c6193408242f150db5de83c12c3fa99091ad95fb42a6db2c3329bfaa12a0ea4cbbeb30cb0
-  languageName: node
-  linkType: hard
-
-"regenerator-runtime@npm:^0.11.0":
-  version: 0.11.1
-  resolution: "regenerator-runtime@npm:0.11.1"
-  checksum: 3c97bd2c7b2b3247e6f8e2147a002eb78c995323732dad5dc70fac8d8d0b758d0295e7015b90d3d444446ae77cbd24b9f9123ec3a77018e81d8999818301b4f4
   languageName: node
   linkType: hard
 
@@ -17611,13 +17518,6 @@ __metadata:
   version: 2.4.8
   resolution: "set-cookie-parser@npm:2.4.8"
   checksum: e15b5df9a56ab06d4895286033a6aff7b318ad024310df058b5821b3539cc06f716ef529618cac0dd78df40e37830de715f388c0f97f84062dd9be2326efcd0c
-  languageName: node
-  linkType: hard
-
-"set-immediate-shim@npm:^1.0.1":
-  version: 1.0.1
-  resolution: "set-immediate-shim@npm:1.0.1"
-  checksum: 5085c84039d1e5eee73d2bf48ce765fcec76159021d0cc7b40e23bcdf62cb6d450ffb781e3c62c1118425242c48eae96df712cba0a20a437e86b0d4a15d51a11
   languageName: node
   linkType: hard
 
@@ -18855,7 +18755,6 @@ __metadata:
     ethereumjs-abi: ^0.6.8
     ethereumjs-util: ^7.0.10
     ethereumjs-wallet: ^1.0.2
-    ethjs-query: ^0.3.8
     ethjs-unit: ^0.1.6
     events: ^3.3.0
     extension-port-stream: ^2.0.1
