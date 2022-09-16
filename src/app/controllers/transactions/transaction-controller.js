@@ -136,7 +136,7 @@ class TransactionController extends EventEmitter {
         accounts.selectedAddress,
       );
       const serializedEthTx = signedEthTx.serialize();
-      const rawTxHex = `0x${serializedEthTx.toString('hex')}`;
+      const rawTxHex = addHexPrefix(serializedEthTx.toString('hex'));
 
       const txResult = await this.ethQuery('eth_sendRawTransaction', rawTxHex);
       return txResult;

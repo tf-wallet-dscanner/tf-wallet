@@ -4,7 +4,6 @@ import SimpleKeyring from 'app/lib/simple-keyring';
 import { normalize, stripHexPrefix } from 'app/lib/util';
 import Web3Query from 'app/lib/web3-query';
 import encryptor from 'browser-passworder';
-import EthQuery from 'ethjs-query';
 
 const bip39 = require('bip39');
 
@@ -24,7 +23,7 @@ class KeyringController {
     this.encryptor = opts.encryptor || encryptor;
     this.keyrings = [];
     this.#keyringStore = opts.store;
-    this.getProvider = opts.getProvider;
+    this.ethQuery = opts.ethQuery;
   }
 
   /**
@@ -315,19 +314,17 @@ class KeyringController {
 
     const identities = !accounts ? [] : accounts.identities;
 
-    // getBalance
-    const provider = this.getProvider ? this.getProvider() : null;
-    let currentBalance = '0';
-    if (provider) {
-      const ethQuery = new EthQuery(provider);
-      currentBalance = await ethQuery.getBalance(address);
-    }
+    const currentBalance = await this.ethQuery(
+      'eth_getBalance',
+      address,
+      'latest',
+    );
 
     // add address data
     identities.push({
       address,
       name: `Account ${identities.length + 1}`,
-      balance: `0x${currentBalance.toString(16)}`,
+      balance: currentBalance,
       lastSelected: new Date().getTime(),
     });
 

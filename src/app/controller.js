@@ -24,9 +24,7 @@ class Controller extends EventEmitter {
 
     this.keyringController = new KeyringController({
       store: this.store,
-      getProvider: this.providerController.getProvider.bind(
-        this.providerController,
-      ),
+      ethQuery: this.providerController.query.bind(this.providerController),
     });
 
     this.gasFeeController = new GasFeeController({
