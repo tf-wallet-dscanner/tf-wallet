@@ -1,5 +1,4 @@
-import { addHexPrefix, bnToHex } from 'ethereumjs-util';
-import EthQuery from 'ethjs-query';
+import { addHexPrefix, bnToHex, isHexString } from 'ethereumjs-util';
 import { cloneDeep } from 'lodash';
 
 import { BnMultiplyByFraction, hexToBn } from './tx-util';
@@ -23,8 +22,8 @@ import { BnMultiplyByFraction, hexToBn } from './tx-util';
  */
 
 export default class TxGasUtil {
-  constructor(provider) {
-    this.query = new EthQuery(provider);
+  constructor({ ethQuery }) {
+    this.query = ethQuery;
   }
 
   /**
@@ -32,10 +31,10 @@ export default class TxGasUtil {
    * @returns {GasAnalysisResult} The result of the gas analysis
    */
   async analyzeGasUsage(txMeta) {
-    const block = await this.query.getBlockByNumber('latest', false);
+    const block = await this.query('eth_getBlockByNumber', 'latest', false);
 
     // fallback to block gasLimit
-    const blockGasLimitBN = hexToBn(block.gasLimit.toString(16));
+    const blockGasLimitBN = hexToBn(block.gasLimit);
     const saferGasLimitBN = BnMultiplyByFraction(blockGasLimitBN, 19, 20);
     let estimatedGasHex = bnToHex(saferGasLimitBN.toString(16));
     let simulationFails;
@@ -67,12 +66,24 @@ export default class TxGasUtil {
     // balance here, we just want the gas estimate. The gas price is removed
     // to skip those balance checks. We check balance elsewhere. We also delete
     // maxFeePerGas and maxPriorityFeePerGas to support EIP-1559 txs.
+    delete txParams.password;
     delete txParams.gasPrice;
     delete txParams.maxFeePerGas;
     delete txParams.maxPriorityFeePerGas;
 
+    if (!isHexString(txParams.gas)) {
+      txParams.gas = addHexPrefix(parseInt(txParams.gas, 10).toString(16));
+    }
+
+    if (!isHexString(txParams.decimalValue)) {
+      txParams.value = addHexPrefix(
+        parseInt(txParams.decimalValue * 10 ** 18, 10).toString(16),
+      );
+      delete txParams.decimalValue;
+    }
+
     // estimate tx gas requirements
-    const estimateGas = await this.query.estimateGas(txParams);
+    const estimateGas = await this.query('eth_estimateGas', txParams);
     return estimateGas;
   }
 
