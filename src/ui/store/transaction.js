@@ -28,6 +28,7 @@ const createState = (set) => ({
   setValue: (decimalValue) => set(() => ({ value: decimalValue })),
   setEstimateData: (estimateData) => set(() => ({ estimateData })),
   setGasPrice: (gasPrice) => set(() => ({ gasPrice })),
+  setTokenData: (tokenData) => set(() => ({ data: tokenData })),
   clearTxState: () => set(() => ({ ...initialState })),
 });
 

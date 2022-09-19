@@ -25,7 +25,8 @@ class TokenController {
 
   constructor(opts = {}) {
     this.#store = opts.store;
-    this.getProvider = opts.getProvider;
+    this.ethQuery = opts.ethQuery;
+    this.sendRawTransaction = opts.sendRawTransaction;
     this.#tokenStore = this.getTokenStore();
     this.#accountStore = this.getStoreAccounts();
     this.tokens = []; // state에서 사용할 eoa 별 token list
@@ -123,15 +124,25 @@ class TokenController {
       // 기존 tokens에 존재하면 token 정보 수정
       const previousIndex = this.tokens.indexOf(previousEntry);
       this.tokens[previousIndex] = newEntry;
-      tokens[accounts.selectedAddress].splice(previousIndex, 1, newEntry);
-      await this.#setTokenList({ tokens });
+      await tokens[accounts.selectedAddress].splice(previousIndex, 1, newEntry);
     } else {
       // 신규 토큰 저장
       this.tokens.push(newEntry);
       await tokens[accounts.selectedAddress].push(newEntry);
-      await this.#setTokenList({ tokens });
     }
+    await this.#setTokenList({ tokens });
     return newEntry;
+  }
+
+  /**
+   *
+   * @param {*} token
+   * @returns
+   */
+  async ERC20Transfer(token) {
+    // this.sendRawTransaction(txMeta);
+    console.log('ERC20Transfer');
+    return null;
   }
 
   /**
@@ -144,30 +155,6 @@ class TokenController {
   }
 
   /**
-   * Wrapper method to handle provider requests.
-   *
-   * @param provider - provider object initialized with a JsonRpcEngine.
-   * @param method - Method to request.
-   * @param args - Arguments to send.
-   * @returns Promise resolving the request.
-   */
-  async query(provider, method, args) {
-    return new Promise((resolve, reject) => {
-      const cb = (err, res) => {
-        if (err) {
-          reject(err);
-          return;
-        }
-        resolve(res.result);
-      };
-      provider.sendAsync(
-        { id: 1, jsonrpc: '2.0', method, params: [args, 'latest'] },
-        cb,
-      );
-    });
-  }
-
-  /**
    * @TODO rawHexData 리팩토링 필요
    *
    * @param address EOA
@@ -175,7 +162,6 @@ class TokenController {
    */
   async #getTokenBalances(address, tokenCa) {
     if (!isAddress(tokenCa)) return 0;
-    const provider = this.getProvider();
     const sha3BalanceOf = '70a08231';
     const holder = address.slice(2);
     const rawHexData = `0x${sha3BalanceOf}000000000000000000000000${holder}`;
@@ -184,7 +170,8 @@ class TokenController {
       to: tokenCa,
       data: rawHexData,
     };
-    const amount = await this.query(provider, 'eth_call', params);
+
+    const amount = await this.ethQuery('eth_call', params, 'latest');
     return weiHexToEthDec(amount);
   }
 

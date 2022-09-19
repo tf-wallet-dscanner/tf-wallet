@@ -66,8 +66,9 @@ class Controller extends EventEmitter {
 
     this.tokenController = new TokenController({
       store: this.store,
-      getProvider: this.providerController.getProvider.bind(
-        this.providerController,
+      ethQuery: this.providerController.query.bind(this.providerController),
+      sendRawTransaction: this.txController.sendRawTransaction.bind(
+        this.txController,
       ),
     });
     this.tokenController.initializeTokens();

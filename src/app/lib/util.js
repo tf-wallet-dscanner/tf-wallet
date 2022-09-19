@@ -183,7 +183,7 @@ export async function safelyExecuteWithTimeout(
 /**
  * Used to convert values from wei hex format to dec eth format.
  *
- * @param {string}hex - The value in hex wei.
+ * @param {string} hex - The value in hex wei.
  * @returns The value in dec eth as string.
  */
 export function weiHexToEthDec(hex) {
@@ -193,7 +193,7 @@ export function weiHexToEthDec(hex) {
 /**
  * Checks if the given string is an address
  *
- * @param {string}address - address the given HEX adress
+ * @param {string} address - address the given HEX adress
  * @returns {Boolean}
  */
 export function isAddress(address) {
@@ -203,3 +203,13 @@ export function isAddress(address) {
 export const makeCorrectNumber = (n) => {
   return Math.round(n * 1e12) / 1e12;
 };
+
+/**
+ * Returns the number representation of a given HEX value.
+ *
+ * @param {string|HEX} hex - A string to hash.
+ * @returns {number}
+ */
+export function hexToNumber(hex) {
+  return Web3.utils.hexToNumber(hex);
+}

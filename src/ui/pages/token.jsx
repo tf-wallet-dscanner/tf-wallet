@@ -10,7 +10,14 @@ import Card from 'ui/components/atoms/card';
 import TextField from 'ui/components/atoms/text-field';
 import { THEME_COLOR } from 'ui/constants/colors';
 import { useSetProviderType } from 'ui/data/provider';
-import { useAddToken, useGetTokens, useSwitchAccounts } from 'ui/data/token';
+import {
+  getTokens,
+  useAddToken,
+  useGetTokens,
+  useSwitchAccounts,
+} from 'ui/data/token';
+import { useTransactionStore } from 'ui/store';
+import shallow from 'zustand/shallow';
 
 function Token() {
   const navigation = useNavigate();
@@ -29,9 +36,29 @@ function Token() {
       getAccountTokenList();
     },
   });
+  const { setTokenData } = useTransactionStore(
+    (state) => ({
+      setTokenData: state.setTokenData,
+    }),
+    shallow,
+  );
 
   const onNextPage = () => {
     navigation('/');
+  };
+
+  const onNextPageInputAddress = () => {
+    navigation('/transaction');
+  };
+
+  const createTransferData = async (token) => {
+    try {
+      const result = await getTokens(token);
+      setTokenData(12);
+      onNextPageInputAddress();
+    } catch (e) {
+      console.error(e);
+    }
   };
 
   const handleProviderTypeChange = (event) => {
@@ -99,6 +126,15 @@ function Token() {
           content={JSON.stringify(accountTokenList)}
         />
       )}
+      {accountTokenList?.map((token) => (
+        <Card
+          key={token.address}
+          title={token.symbol}
+          content={`balance: ${token.balance}`}
+          outlined
+          onClick={() => createTransferData(token)}
+        />
+      ))}
     </div>
   );
 }
