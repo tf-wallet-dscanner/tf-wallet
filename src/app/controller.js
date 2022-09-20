@@ -50,6 +50,9 @@ class Controller extends EventEmitter {
     this.txController = new TransactionController({
       store: this.store,
       ethQuery: this.providerController.query.bind(this.providerController),
+      getBlockTracker: this.providerController.getBlockTracker.bind(
+        this.providerController,
+      ),
       unlockKeyrings: this.keyringController.unlockKeyrings.bind(
         this.keyringController,
       ),
@@ -62,6 +65,13 @@ class Controller extends EventEmitter {
         ),
       getEIP1559GasFeeEstimates:
         this.gasFeeController.fetchGasFeeEstimates.bind(this.gasFeeController),
+      txHistoryLimit: 60,
+      getNetworkId: this.providerController.getNetworkId.bind(
+        this.providerController,
+      ),
+      getCurrentChainId: () => {
+        return this.providerController.getCurrentChainId();
+      },
     });
 
     this.tokenController = new TokenController({
