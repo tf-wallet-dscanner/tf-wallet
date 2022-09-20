@@ -45,16 +45,16 @@ class Background {
       this.controller.getCurrentChainId,
     );
 
-    // 니모닉 생성
+    // 신규 니모닉 얻기
     this.requests.set(
-      BackgroundMessages.GENERATE_MNEMONIC_BG,
-      this.controller.generateMnemonic,
+      BackgroundMessages.GET_NEW_MNEMONIC_BG,
+      this.controller.getNewMnemonic,
     );
 
     // 니모닉 검증
     this.requests.set(
-      BackgroundMessages.VALIDATE_MNEMONIC_BG,
-      this.controller.validateMnemonic,
+      BackgroundMessages.GET_MNEMONIC_VALIDATE_BG,
+      this.controller.getMnemonicValidate,
     );
 
     // 신규 계정 생성
@@ -71,26 +71,32 @@ class Background {
 
     // 비공개키 추출
     this.requests.set(
-      BackgroundMessages.EXPORT_PRIVATE_KEY_BG,
-      this.controller.exportPrivateKey,
+      BackgroundMessages.GET_EXPORT_PRIVATE_KEY_BG,
+      this.controller.getExportPrivateKey,
     );
 
     // 공개키 추출
     this.requests.set(
-      BackgroundMessages.EXPORT_PUBLIC_KEY_BG,
-      this.controller.exportPublicKey,
+      BackgroundMessages.GET_EXPORT_PUBLIC_KEY_BG,
+      this.controller.getExportPublicKey,
     );
 
     // 키스토어 v3 추출
     this.requests.set(
-      BackgroundMessages.EXPORT_KEYSTORE_V3_BG,
-      this.controller.exportKeystoreV3,
+      BackgroundMessages.GET_EXPORT_KEYSTORE_V3_BG,
+      this.controller.getExportKeystoreV3,
     );
 
     // 계정 가져오기 (비공개 키 or json 파일)
     this.requests.set(
-      BackgroundMessages.IMPORT_ACCOUNT_STRATEGY_BG,
-      this.controller.importAccountStrategy,
+      BackgroundMessages.GET_IMPORT_ACCOUNT_STRATEGY_BG,
+      this.controller.getImportAccountStrategy,
+    );
+
+    // keystore -> privKey 추출
+    this.requests.set(
+      BackgroundMessages.GET_KEYSTORE_TO_PRIVKEY,
+      this.controller.getKeystoreToPrivKey,
     );
 
     // store get accounts

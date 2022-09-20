@@ -1,20 +1,22 @@
-import { useCallback, useState } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import FileInput from 'react-simple-file-input';
 import Button from 'ui/components/atoms/button';
+import Card from 'ui/components/atoms/card';
 import TextField from 'ui/components/atoms/text-field';
+import { THEME_COLOR } from 'ui/constants/colors';
 import {
-  exportKeystoreV3,
-  importAccountStrategy,
-} from 'ui/data/account/account.api';
+  useGetExportKeystoreV3,
+  useGetImportAccountStrategy,
+} from 'ui/data/account/account.hooks';
 import { downloadFile } from 'ui/utils/util';
 
 function JsonFile() {
-  // keystore json v3 export시 필요한 정보(비공개키, 패스워드)
-  const [privateKey, setPrivateKey] = useState('');
-  const [password, setPassword] = useState('');
-
   const navigation = useNavigate();
+
+  // keystore json v3 export시 필요한 정보(비공개키, 패스워드)
+  const [toJsonPrivKey, setToJsonPrivKey] = useState('');
+  const [toJsonPassword, setToJsonPassword] = useState('');
 
   // import할 2가지 타입
   const importTypeList = [
@@ -26,41 +28,28 @@ function JsonFile() {
   const [importPrivKey, setImportPrivKey] = useState(''); // 비공개키 type일 때 비공개키 정보
   const [importFileInput, setImportFileInput] = useState(''); // json file type일 때 file 정보
   const [importPassword, setImportPassword] = useState(''); // import 시 필요한 password 정보
-  const [selectedAddress, setSelectedAddress] = useState(''); // 계정 가져오기를 통해 controller에서 전달받은 address 정보
-
-  const onNextPage = () => {
-    navigation('/');
-  };
 
   // 키스토어 파일 v3 다운로드
-  const makeKeystoreV3 = useCallback(async () => {
-    const keystoreV3 = await exportKeystoreV3({
-      privateKey,
-      password,
-    });
-    downloadFile(JSON.stringify(keystoreV3), 'keystoreV3.json');
-  }, [privateKey, password]);
-
-  const handleTypeChange = (event) => {
-    const { value: importType } = event.target;
-    setCurrentType(importType);
-  };
-
-  /**
-   *  file input 이벤트
-   *  keystore v3 json file의 경우 event.target.result JSON string 형태
-   */
-  const onLoad = (event) => {
-    setImportFileInput(event.target.result);
-  };
+  const { refetch: makeKeystoreV3 } = useGetExportKeystoreV3(
+    {
+      privateKey: toJsonPrivKey,
+      password: toJsonPassword,
+    },
+    {
+      onSuccess(keystoreV3) {
+        downloadFile(JSON.stringify(keystoreV3), 'keystoreV3.json');
+      },
+    },
+  );
 
   /**
-   * 계정 가져오기
+   * import 타입에 따른 계정 가져오기
    * @param {string} strategy - import 유형 (Private Key, JSON File)
    * @param {object} args - { password: 비밀번호, privateKey || fileContents: 타입에 따라 비공개 키 or JSON File }
+   * @returns {string} selectedAddress - 주소값
    */
-  const importAccount = useCallback(async () => {
-    const resAddress = await importAccountStrategy({
+  const { data: selectedAddress, refetch: refetchImportStrategy } =
+    useGetImportAccountStrategy({
       strategy: currentType,
       args: {
         password: importPassword,
@@ -69,34 +58,40 @@ function JsonFile() {
           : { fileContents: importFileInput }),
       },
     });
-    setSelectedAddress(resAddress);
-  }, [importPrivKey, importPassword, currentType, importFileInput]);
+
+  const onNextPage = () => {
+    navigation('/');
+  };
 
   return (
     <div style={{ padding: 16 }}>
-      <Button onClick={onNextPage}>Home</Button>
-      <br />
+      <Button className="mb-3" onClick={onNextPage}>
+        Home
+      </Button>
 
       <TextField
-        password
         placeholder="개인키 입력"
         onChange={(e) => {
-          setPrivateKey(e.target.value);
+          setToJsonPrivKey(e.target.value);
         }}
       />
       <TextField
         password
         placeholder="비밀번호 입력"
         onChange={(e) => {
-          setPassword(e.target.value);
+          setToJsonPassword(e.target.value);
         }}
       />
-      <Button onClick={makeKeystoreV3} className="mb-20">
+      <Button onClick={makeKeystoreV3} color={THEME_COLOR.WARNING}>
         V3 JSON 다운로드
       </Button>
 
-      <div>계정 가져오기 : {selectedAddress}</div>
-      <select name="importType" onChange={handleTypeChange} value={currentType}>
+      <Card title="계정 가져오기" content={selectedAddress} />
+      <select
+        name="importType"
+        onChange={(event) => setCurrentType(event.target.value)}
+        value={currentType}
+      >
         {importTypeList.map(({ type, name }, index) => (
           <option key={index} value={type}>
             {name}
@@ -125,7 +120,7 @@ function JsonFile() {
         <>
           <FileInput
             readAs="text"
-            onLoad={onLoad}
+            onLoad={(event) => setImportFileInput(event.target.result)}
             style={{
               padding: '20px 0px 12px 15%',
               fontSize: '15px',
@@ -143,7 +138,7 @@ function JsonFile() {
           />
         </>
       )}
-      <Button onClick={importAccount} className="mb-20">
+      <Button onClick={refetchImportStrategy} color={THEME_COLOR.SUCCESS}>
         가져오기
       </Button>
     </div>

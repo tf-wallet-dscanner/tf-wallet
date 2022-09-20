@@ -5,14 +5,15 @@ export const BackgroundMessages = {
   SET_RPC_TARGET: 'setRpcTarget',
   SET_PROVIDER_TYPE: 'setProviderType',
   GET_CURRENT_CHAIN_ID: 'getCurrentChainId',
-  GENERATE_MNEMONIC_BG: 'generateMnemonic', // 니모닉 생성
-  VALIDATE_MNEMONIC_BG: 'validateMnemonic', // 니모닉 검증
+  GET_NEW_MNEMONIC_BG: 'getNewMnemonic', // 신규 니모닉 얻기
+  GET_MNEMONIC_VALIDATE_BG: 'getMnemonicValidate', // 니모닉 검증값 얻기
   NEW_ACCOUNT_BG: 'newAccount', // 새 계정 생성
   IMPORT_ACCOUNT_BG: 'importAccount', // 계정 복구
-  EXPORT_PRIVATE_KEY_BG: 'exportPrivateKey', // 비공개키 추출
-  EXPORT_PUBLIC_KEY_BG: 'exportPublicKey', // 공개키 추출
-  EXPORT_KEYSTORE_V3_BG: 'exportKeystoreV3', // 키스토어 V3 추출
-  IMPORT_ACCOUNT_STRATEGY_BG: 'importAccountStrategy', // 계정 가져오기(비공개키 or json 파일)
+  GET_EXPORT_PRIVATE_KEY_BG: 'getExportPrivateKey', // 비공개키 추출
+  GET_EXPORT_PUBLIC_KEY_BG: 'getExportPublicKey', // 공개키 추출
+  GET_EXPORT_KEYSTORE_V3_BG: 'getExportKeystoreV3', // 키스토어 V3 추출
+  GET_IMPORT_ACCOUNT_STRATEGY_BG: 'getImportAccountStrategy', // 계정 가져오기(비공개키 or json 파일)
+  GET_KEYSTORE_TO_PRIVKEY: 'getKeystoreToPrivKey', // keystoreV3로부터 privateKey 추출
   GET_STORE_ACCOUNTS: 'getStoreAccounts', // Store에서 Accounts 데이터 get
   SET_STORE_SELECTED_ADDRESS: 'setStoreSelectedAddress', // Store에서 Accounts SelectedAddress 값 set
   SEND_RAW_TRANSACTION: 'sendRawTransaction',
