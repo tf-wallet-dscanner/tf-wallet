@@ -49,15 +49,15 @@ class KeyringController {
     this.#setKeyringConfig({ vault });
   }
 
-  // 니모닉 생성
-  async generateMnemonic() {
+  // 신규 니모닉 얻기
+  async getNewMnemonic() {
     this.hdKeyring = new HdKeyring();
     const mnemonic = await this.hdKeyring.generateRandomMnemonic();
     return mnemonic;
   }
 
   // 니모닉 검증
-  validateMnemonic(mnemonic) {
+  getMnemonicValidate(mnemonic) {
     this.hdKeyring = new HdKeyring();
     const validate = this.hdKeyring.validateMnemonic(mnemonic);
     return validate;
@@ -197,7 +197,7 @@ class KeyringController {
   }
 
   // 계정 PrivateKey / PublicKey 추출
-  async exportKey({ address, keyType }) {
+  async getExportKey({ address, keyType }) {
     try {
       const keyring = await this.getKeyringForAccount(address);
       return keyring.exportKey({
@@ -207,6 +207,16 @@ class KeyringController {
     } catch (e) {
       return Promise.reject(e);
     }
+  }
+
+  // keystore json -> private key 추출
+  async getKeystoreToPrivKey({ fileContents, password }) {
+    this.#password = password;
+    const privateKey = await accountImporter.importAccount('JSON File', {
+      fileContents,
+      password,
+    });
+    return privateKey;
   }
 
   /**
@@ -253,7 +263,7 @@ class KeyringController {
    * @param {string} password 사용자 패스워드
    * @returns {Object} keystore v3 JSON
    */
-  async exportKeystoreV3({ privateKey, password }) {
+  async getExportKeystoreV3({ privateKey, password }) {
     const { rpcUrl } = await this.keyringConfig;
     const web3Query = new Web3Query(rpcUrl);
     return web3Query.getAccountsEncrypt({ privateKey, password });
@@ -265,7 +275,7 @@ class KeyringController {
    * @param {Object} args - { password: 비밀번호, privateKey || fileContents: 타입에 따라 비공개 키 or JSON File }
    * @returns {string} accounts[0] - 계정 address 주소
    */
-  async importAccountStrategy({ strategy, args }) {
+  async getImportAccountStrategy({ strategy, args }) {
     this.#password = args.password;
     const privateKey = await accountImporter.importAccount(strategy, args);
 

@@ -1,61 +1,66 @@
-import { useCallback, useState } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Button from 'ui/components/atoms/button';
+import Card from 'ui/components/atoms/card';
 import TextField from 'ui/components/atoms/text-field';
+import { THEME_COLOR } from 'ui/constants/colors';
 import {
-  generateMnemonic,
-  newAccount,
-  validateMnemonic,
-} from 'ui/data/account/account.api';
+  useGetMnemonicValidate,
+  useGetNewMnemonic,
+  useNewAccount,
+} from 'ui/data/account/account.hooks';
 
 function NewAccount() {
-  const [password, setPassword] = useState('');
-  const [mnemonicSeed, setMnemonicSeed] = useState('');
-  const [mnemonicValidate, setMnemonicValidate] = useState(false);
-  const [accountsData, setAccountsData] = useState([]);
   const navigation = useNavigate();
+  const [inputMnemonic, setInputMnemonic] = useState('');
+  const [password, setPassword] = useState('');
+
+  // 계정 생성 요청 (니모닉 코드 생성)
+  const { data: mnemonicSeed, refetch: getNewMnemonicRefetch } =
+    useGetNewMnemonic();
+
+  // 니모닉 검증
+  const { data: mnemonicValidate, refetch: getMnemonicValidateRefetch } =
+    useGetMnemonicValidate({
+      mnemonic: inputMnemonic,
+    });
+
+  // 계정 생성
+  const { data: accountsData, mutate: newAccountMutate } = useNewAccount();
+
+  const handleNewAccount = () => {
+    newAccountMutate({
+      mnemonic: mnemonicSeed,
+      password,
+    });
+  };
 
   const onNextPage = () => {
     navigation('/');
   };
 
-  // 계정 생성 요청 (니모닉 코드 생성)
-  const requestGenerateMnemonic = async () => {
-    const mnemonic = await generateMnemonic();
-    setMnemonicSeed(mnemonic);
-  };
-
-  // 니모닉 검증
-  const requestValidateMnemonic = async () => {
-    const validate = await validateMnemonic(
-      document.getElementById('newMnemonicInput').value,
-    );
-    setMnemonicValidate(validate);
-  };
-
-  // 계정 생성
-  const requestNewAccount = useCallback(async () => {
-    const accounts = await newAccount({
-      mnemonic: mnemonicSeed,
-      password,
-    });
-    setAccountsData(accounts);
-  }, [mnemonicSeed, password]);
-
   return (
     <div style={{ padding: 16 }}>
-      <Button onClick={onNextPage}>Home</Button>
-      <br />
+      <Button className="mb-3" onClick={onNextPage}>
+        Home
+      </Button>
 
-      <Button onClick={requestGenerateMnemonic}>니모닉 생성</Button>
-      <div>니모닉 코드 : {mnemonicSeed}</div>
-      <br />
+      <Button onClick={getNewMnemonicRefetch} color={THEME_COLOR.SUCCESS}>
+        니모닉 생성
+      </Button>
+      {mnemonicSeed && (
+        <Card className="mb-3" title="니모닉 코드" content={mnemonicSeed} />
+      )}
 
-      <textarea id="newMnemonicInput" style={{ width: '100%' }} />
-      <Button onClick={requestValidateMnemonic}>니모닉 검증</Button>
-      <div>니모닉 검증 결과 : {mnemonicValidate ? '정상' : ''}</div>
-      <br />
-
+      <textarea
+        className="mt-2"
+        id="newMnemonicInput"
+        placeholder="니모닉 구문 입력"
+        style={{ width: '100%' }}
+        onChange={(e) => {
+          setInputMnemonic(e.target.value);
+        }}
+      />
       <TextField
         password
         placeholder="비밀번호 입력"
@@ -63,8 +68,18 @@ function NewAccount() {
           setPassword(e.target.value);
         }}
       />
-      <Button onClick={requestNewAccount}>계정 생성</Button>
-      <div>계정 : {JSON.stringify(accountsData)}</div>
+      <Button
+        className="mb-1"
+        onClick={getMnemonicValidateRefetch}
+        color={THEME_COLOR.ERROR}
+      >
+        니모닉 검증
+      </Button>
+      <Button onClick={handleNewAccount} color={THEME_COLOR.WARNING}>
+        계정 생성
+      </Button>
+      {mnemonicValidate && <Card title="니모닉 검증 결과" content="정상" />}
+      {accountsData && <Card title="계정" content={accountsData[0]} />}
     </div>
   );
 }

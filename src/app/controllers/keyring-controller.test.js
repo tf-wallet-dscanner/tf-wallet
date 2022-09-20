@@ -30,12 +30,12 @@ describe('KeyringController', () => {
   });
 
   // Mnemonic generate and validate
-  describe('Generate Mnemonic', () => {
+  describe('Get New Mnemonic', () => {
     it('make new mnemonic seed and must be a valid seed syntax', async () => {
       let validate = false;
-      newMnemonic = await keyringController.generateMnemonic();
+      newMnemonic = await keyringController.getNewMnemonic();
       if (newMnemonic) {
-        validate = await keyringController.validateMnemonic(newMnemonic);
+        validate = await keyringController.getMnemonicValidate(newMnemonic);
       }
       expect(validate).toEqual(true);
     });
@@ -77,7 +77,7 @@ describe('KeyringController', () => {
     });
 
     it('Private key must be extracted with address value and password value', async () => {
-      const accountPrivateKey = await keyringController.exportKey({
+      const accountPrivateKey = await keyringController.getExportKey({
         keyType: 'private',
         address: defaultKeyringConfig.address,
       });
@@ -97,7 +97,7 @@ describe('KeyringController', () => {
     });
 
     it('Public key must be extracted with address value and password value', async () => {
-      const accountPublicKey = await keyringController.exportKey({
+      const accountPublicKey = await keyringController.getExportKey({
         keyType: 'public',
         address: defaultKeyringConfig.address,
       });
@@ -110,7 +110,7 @@ describe('KeyringController', () => {
   // account import for private key
   describe('importAccountWithStrategy', () => {
     beforeEach(async () => {
-      await keyringController.importAccountStrategy({
+      await keyringController.getImportAccountStrategy({
         strategy: 'Private Key',
         args: {
           password: defaultKeyringConfig.password,

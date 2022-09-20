@@ -104,14 +104,16 @@ class Controller extends EventEmitter {
     };
   };
 
-  // 니모닉 구문 생성
-  generateMnemonic = async () => {
-    return Promise.resolve(this.keyringController.generateMnemonic());
+  // 신규 니모닉 구문 얻기
+  getNewMnemonic = async () => {
+    return Promise.resolve(this.keyringController.getNewMnemonic());
   };
 
   // 니모닉 코드 검증
-  validateMnemonic = async (_, { mnemonic }) => {
-    return Promise.resolve(this.keyringController.validateMnemonic(mnemonic));
+  getMnemonicValidate = async (_, { mnemonic }) => {
+    return Promise.resolve(
+      this.keyringController.getMnemonicValidate(mnemonic),
+    );
   };
 
   // 신규 계정 생성
@@ -133,10 +135,10 @@ class Controller extends EventEmitter {
   };
 
   // 비공개키 추출
-  exportPrivateKey = async (_, { address, password }) => {
+  getExportPrivateKey = async (_, { address, password }) => {
     // 비밀번호 검증
     await this.keyringController.verifyPassword(password);
-    const privateKey = await this.keyringController.exportKey({
+    const privateKey = await this.keyringController.getExportKey({
       keyType: 'private',
       address,
     });
@@ -144,10 +146,10 @@ class Controller extends EventEmitter {
   };
 
   // 공개키 추출
-  exportPublicKey = async (_, { address, password }) => {
+  getExportPublicKey = async (_, { address, password }) => {
     // 비밀번호 검증
     await this.keyringController.verifyPassword(password);
-    const publicKey = await this.keyringController.exportKey({
+    const publicKey = await this.keyringController.getExportKey({
       keyType: 'public',
       address,
     });
@@ -155,8 +157,8 @@ class Controller extends EventEmitter {
   };
 
   // 키스토어 v3 추출
-  exportKeystoreV3 = async (_, { privateKey, password }) => {
-    const keystoreV3 = await this.keyringController.exportKeystoreV3({
+  getExportKeystoreV3 = async (_, { privateKey, password }) => {
+    const keystoreV3 = await this.keyringController.getExportKeystoreV3({
       privateKey,
       password,
     });
@@ -164,12 +166,21 @@ class Controller extends EventEmitter {
   };
 
   // 계정 가져오기 (비공개 키 or json 파일)
-  importAccountStrategy = (_, { strategy, args }) => {
-    const selectedAddress = this.keyringController.importAccountStrategy({
+  getImportAccountStrategy = (_, { strategy, args }) => {
+    const selectedAddress = this.keyringController.getImportAccountStrategy({
       strategy,
       args,
     });
     return selectedAddress;
+  };
+
+  // keystore -> privKey 추출
+  getKeystoreToPrivKey = async (_, { fileContents, password }) => {
+    const privKey = await this.keyringController.getKeystoreToPrivKey({
+      fileContents,
+      password,
+    });
+    return { privKey };
   };
 
   // store get accounts
