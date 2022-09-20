@@ -35,3 +35,13 @@ export async function getGasFeeEstimates() {
   );
   return estimateData;
 }
+
+export async function getNextNonce(address) {
+  const nextNonce = await Messenger.sendMessageToBackground(
+    BackgroundMessages.GET_NEXT_NONCE,
+    {
+      address,
+    },
+  );
+  return nextNonce;
+}

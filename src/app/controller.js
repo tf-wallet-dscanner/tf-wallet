@@ -290,6 +290,16 @@ class Controller extends EventEmitter {
     const address = await this.tokenController.switchAccounts();
     return { address };
   };
+
+  // next nonce
+  getNextNonce = async (_, { address }) => {
+    const nonceLock = await this.txController.nonceTracker.getNonceLock(
+      address,
+    );
+    nonceLock.releaseLock();
+    console.warn(nonceLock.nextNonce);
+    return nonceLock.nextNonce;
+  };
 }
 
 export default Controller;

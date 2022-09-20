@@ -1,7 +1,11 @@
 import { SECOND } from 'app/constants/time';
 import { useMutation, useQuery } from 'react-query';
 
-import { getGasFeeEstimates, sendRawTransaction } from './transaction.api';
+import {
+  getGasFeeEstimates,
+  getNextNonce,
+  sendRawTransaction,
+} from './transaction.api';
 
 export function useSendRawTransaction(options) {
   return useMutation(['/transaction/sendRawTransaction'], sendRawTransaction, {
@@ -15,4 +19,15 @@ export function useGetGasFeeEstimates(options) {
     refetchInterval: SECOND * 10,
     ...options,
   });
+}
+
+export function useGetNextNonce({ address }, options) {
+  return useQuery(
+    ['/transaction/getNextNonce', address],
+    () => getNextNonce(address),
+    {
+      enabled: false,
+      ...options,
+    },
+  );
 }

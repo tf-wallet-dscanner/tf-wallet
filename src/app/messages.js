@@ -22,4 +22,5 @@ export const BackgroundMessages = {
   SWITCH_ACCOUNTS: 'switchAccounts', // 변경된 Accounts로 token controller 재설정
   GET_GAS_FEE_ESTIMATES_START_POLLING: 'getGasFeeEstimatesAndStartPolling',
   GET_GAS_FEE_ESTIMATES: 'getGasFeeEstimates',
+  GET_NEXT_NONCE: 'getNextNonce',
 };

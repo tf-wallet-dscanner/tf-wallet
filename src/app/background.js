@@ -139,6 +139,12 @@ class Background {
       BackgroundMessages.SWITCH_ACCOUNTS,
       this.controller.switchAccounts,
     );
+
+    // next Nonce
+    this.requests.set(
+      BackgroundMessages.GET_NEXT_NONCE,
+      this.controller.getNextNonce,
+    );
   }
 
   listenForMessages() {
