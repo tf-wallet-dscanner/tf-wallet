@@ -82,6 +82,8 @@ class ProviderController extends EventEmitter {
 
   #networkDetails;
 
+  #blockTracker;
+
   constructor(opts = {}) {
     super();
 
@@ -262,7 +264,10 @@ class ProviderController extends EventEmitter {
       config.rpcUrl,
       config.chainId,
     );
-    this.#provider = this.#createProviderRpcEngine(networkClient);
+    this.#provider = this.#createProviderRpcEngine(
+      networkClient.networkMiddleware,
+    );
+    this.#blockTracker = networkClient.blockTracker;
   }
 
   /**
@@ -324,23 +329,23 @@ class ProviderController extends EventEmitter {
     const isInfura = INFURA_PROVIDER_TYPES.includes(network);
 
     if (isInfura) {
-      const { networkMiddleware } = createInfuraClient({
+      const networkClient = createInfuraClient({
         network,
         projectId,
       });
-      return networkMiddleware;
+      return networkClient;
     }
 
-    const { networkMiddleware } = createJsonRpcClient({
+    const networkClient = createJsonRpcClient({
       rpcUrl,
       chainId,
     });
-    return networkMiddleware;
+    return networkClient;
   }
 
-  #createProviderRpcEngine(networkClient) {
+  #createProviderRpcEngine(networkMiddleware) {
     const engine = new JsonRpcEngine();
-    engine.push(networkClient);
+    engine.push(networkMiddleware);
 
     const provider = providerFromEngine(engine);
 
@@ -349,6 +354,10 @@ class ProviderController extends EventEmitter {
 
   getProvider() {
     return this.#provider;
+  }
+
+  getBlockTracker() {
+    return this.#blockTracker;
   }
 
   /**

@@ -1,5 +1,14 @@
 import { NETWORK_TYPE_TO_ID_MAP } from 'app/constants/network';
+import { PollingBlockTracker } from 'eth-block-tracker';
 import createInfuraMiddleware from 'eth-json-rpc-infura';
+import {
+  createBlockCacheMiddleware,
+  createBlockRefMiddleware,
+  createBlockTrackerInspectorMiddleware,
+  createInflightCacheMiddleware,
+  createRetryOnEmptyMiddleware,
+  providerFromMiddleware,
+} from 'eth-json-rpc-middleware';
 import { createScaffoldMiddleware, mergeMiddleware } from 'json-rpc-engine';
 
 function createNetworkAndChainIdMiddleware({ network }) {
@@ -24,10 +33,17 @@ export default function createInfuraClient({ network, projectId }) {
     source: 'metamask',
   });
 
+  const infuraProvider = providerFromMiddleware(infuraMiddleware);
+  const blockTracker = new PollingBlockTracker({ provider: infuraProvider });
+
   const networkMiddleware = mergeMiddleware([
     createNetworkAndChainIdMiddleware({ network }),
+    createBlockCacheMiddleware({ blockTracker }),
+    createInflightCacheMiddleware(),
+    createBlockRefMiddleware({ blockTracker, provider: infuraProvider }),
+    createRetryOnEmptyMiddleware({ blockTracker, provider: infuraProvider }),
+    createBlockTrackerInspectorMiddleware({ blockTracker }),
     infuraMiddleware,
   ]);
-
-  return { networkMiddleware };
+  return { networkMiddleware, blockTracker };
 }
