@@ -1,8 +1,8 @@
 import abi from 'ethereumjs-abi';
 
+// import abiERC20 from '../contracts/ERC20.json';
 import { isAddress, weiHexToEthDec } from '../lib/util';
 
-// import abiERC20 from '../contracts/ERC20.json';
 // import abiERC721 from '../contracts/ERC721.json';
 
 class TokenController {
@@ -135,29 +135,42 @@ class TokenController {
   }
 
   /**
+   * ERC-20 Token Transfer RawData 생성 함수
    *
-   * @param {*} token
+   * @param {object} token
+   * @param {string} token.address - 수신 EOA
+   * @param {number} amount - 전송할 Token 개수
    * @returns
    */
-  async ERC20Transfer(token) {
-    // this.sendRawTransaction(txMeta);
-    console.log('ERC20Transfer');
-    return null;
+  async transferERC20(token, amount = 1) {
+    // @TODO 화면 단에서 amount 받기 위해 navigation('/transaction-token'); 페이지 추가
+    console.log('ERC20Transfer', token);
+    const rawHexData = await this.encodeCall(
+      'transfer',
+      ['address', 'uint256'],
+      [token.address, amount],
+    );
+    return rawHexData;
   }
 
   /**
-   * @TODO ethererumjs-abi를 통한 rawHexData 생성 함수 작성 필요
+   * ethererumjs-abi를 통한 rawHexData 생성
+   *
+   * @param {string} name - contract method name
+   * @param {Array<any>} typesList
+   * @param {Array<any>} valuesList
+   * @returns
    */
-  encodeCall(name, args, values) {
-    const methodId = abi.methodID(name, args).toString('hex');
-    const params = abi.rawEncode(args, values).toString('hex');
+  async encodeCall(name, typesList, valuesList) {
+    const methodId = abi.methodID(name, typesList).toString('hex');
+    const params = abi.rawEncode(typesList, valuesList).toString('hex');
     return `0x${methodId}${params}`;
   }
 
   /**
    * @TODO rawHexData 리팩토링 필요
    *
-   * @param address EOA
+   * @param address 잔액을 확인할 EOA
    * @param tokenCa ERC20 contract address
    */
   async #getTokenBalances(address, tokenCa) {

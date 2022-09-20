@@ -11,7 +11,7 @@ import TextField from 'ui/components/atoms/text-field';
 import { THEME_COLOR } from 'ui/constants/colors';
 import { useSetProviderType } from 'ui/data/provider';
 import {
-  getTokens,
+  transferERC20,
   useAddToken,
   useGetTokens,
   useSwitchAccounts,
@@ -36,9 +36,10 @@ function Token() {
       getAccountTokenList();
     },
   });
-  const { setTokenData } = useTransactionStore(
+  const { setTokenData, setTo } = useTransactionStore(
     (state) => ({
       setTokenData: state.setTokenData,
+      setTo: state.setTo,
     }),
     shallow,
   );
@@ -51,10 +52,12 @@ function Token() {
     navigation('/transaction');
   };
 
-  const createTransferData = async (token) => {
+  const createTransferRawData = async (token) => {
     try {
-      const result = await getTokens(token);
-      setTokenData(12);
+      const rawData = await transferERC20(token);
+      console.log('createTransferRawData', rawData);
+      setTo(token.address);
+      setTokenData(rawData);
       onNextPageInputAddress();
     } catch (e) {
       console.error(e);
@@ -132,7 +135,7 @@ function Token() {
           title={token.symbol}
           content={`balance: ${token.balance}`}
           outlined
-          onClick={() => createTransferData(token)}
+          onClick={() => createTransferRawData(token)}
         />
       ))}
     </div>

@@ -1,6 +1,11 @@
 import { useMutation, useQuery } from 'react-query';
 
-import { addToken, getTokens, switchAccounts } from './token.api';
+import {
+  addToken,
+  getTokens,
+  switchAccounts,
+  transferERC20,
+} from './token.api';
 
 export function useGetTokens(options) {
   return useQuery(['/token/getTokens'], getTokens, {
@@ -19,6 +24,12 @@ export function useAddToken(options) {
 export function useSwitchAccounts(options) {
   return useQuery(['/token/switchAccounts'], switchAccounts, {
     retry: false,
+    ...options,
+  });
+}
+
+export function useTransferERC20(options) {
+  return useMutation(['/token/transferERC20'], transferERC20, {
     ...options,
   });
 }

@@ -270,6 +270,14 @@ class Controller extends EventEmitter {
     const address = await this.tokenController.switchAccounts();
     return { address };
   };
+
+  // transfer erc20 token
+  transferERC20 = async (_, token) => {
+    const txResult = await this.tokenController.transferERC20(token);
+    return {
+      txResult,
+    };
+  };
 }
 
 export default Controller;

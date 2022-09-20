@@ -75,6 +75,7 @@ class TransactionController extends EventEmitter {
    * @param {object} txMeta
    * @param {string} txMeta.password - 사용자 패스워드
    * @param {string} txMeta.to - 받는 사람
+   * @param {string} txMeta.data - contract 호출 data
    * @param {number} txMeta.decimalValue - 보내는 코인/토큰 양 (DEC)
    * @param {number} txMeta.gas - MIN_GAS_LIMIT_DEC(21000)
    * @param {number} txMeta.gasPrice - ETH(KLAY) DEC
@@ -83,7 +84,7 @@ class TransactionController extends EventEmitter {
    * @returns {string} txResult - 트랜잭션 해쉬값(txHash)
    */
   async sendRawTransaction(txMeta) {
-    const { password, to, decimalValue, gasPrice } = txMeta;
+    const { password, to, decimalValue, gasPrice, data } = txMeta;
     try {
       console.log('txMeta: ', txMeta);
       const { accounts } = await this.txConfig;
@@ -125,6 +126,7 @@ class TransactionController extends EventEmitter {
         gasPrice: addHexPrefix(parseInt(gasPrice * 10 ** 18, 10).toString(16)), // eth to wei
         gasLimit: addHexPrefix(gasLimit),
         to,
+        data,
         value: addHexPrefix(parseInt(decimalValue * 10 ** 18, 10).toString(16)),
       };
       console.log('txParams: ', txParams);
