@@ -10,12 +10,7 @@ import Card from 'ui/components/atoms/card';
 import TextField from 'ui/components/atoms/text-field';
 import { THEME_COLOR } from 'ui/constants/colors';
 import { useSetProviderType } from 'ui/data/provider';
-import {
-  transferERC20,
-  useAddToken,
-  useGetTokens,
-  useSwitchAccounts,
-} from 'ui/data/token';
+import { useAddToken, useGetTokens, useSwitchAccounts } from 'ui/data/token';
 import { useTransactionStore } from 'ui/store';
 import shallow from 'zustand/shallow';
 
@@ -36,10 +31,9 @@ function Token() {
       getAccountTokenList();
     },
   });
-  const { setTokenData, setTo } = useTransactionStore(
+  const { setTokenData } = useTransactionStore(
     (state) => ({
       setTokenData: state.setTokenData,
-      setTo: state.setTo,
     }),
     shallow,
   );
@@ -48,17 +42,14 @@ function Token() {
     navigation('/');
   };
 
-  const onNextPageInputAddress = () => {
-    navigation('/transaction');
+  const onNextPageInputAddressToken = () => {
+    navigation('/transaction/input-address-token');
   };
 
-  const createTransferRawData = async (token) => {
+  const createTransferRawData = async (tokenData) => {
     try {
-      const rawData = await transferERC20(token);
-      console.log('createTransferRawData', rawData);
-      setTo(token.address);
-      setTokenData(rawData);
-      onNextPageInputAddress();
+      setTokenData(tokenData);
+      onNextPageInputAddressToken();
     } catch (e) {
       console.error(e);
     }

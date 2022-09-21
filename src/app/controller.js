@@ -272,8 +272,8 @@ class Controller extends EventEmitter {
   };
 
   // transfer erc20 token
-  transferERC20 = async (_, token) => {
-    const txResult = await this.tokenController.transferERC20(token);
+  transferERC20 = async (_, { receiver, amount }) => {
+    const txResult = await this.tokenController.transferERC20(receiver, amount);
     return {
       txResult,
     };
