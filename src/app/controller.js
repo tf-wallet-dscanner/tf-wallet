@@ -3,7 +3,9 @@ import EventEmitter from 'events';
 import { MAINNET_CHAIN_ID } from './constants/network';
 import { SECOND } from './constants/time';
 import { GasFeeController } from './controllers/gas/gas-fee-controller';
-import HistoryController from './controllers/history-controller';
+import HistoryController, {
+  HISTORY_EVENTS,
+} from './controllers/history-controller';
 import KeyringController from './controllers/keyring-controller';
 import ProviderController, {
   NETWORK_EVENTS,
@@ -13,7 +15,7 @@ import TransactionController from './controllers/transactions/transaction-contro
 import ExtensionStore from './lib/localstore';
 
 class Controller extends EventEmitter {
-  constructor() {
+  constructor(remotePort) {
     super();
     this.store = new ExtensionStore();
 
@@ -81,7 +83,17 @@ class Controller extends EventEmitter {
         NETWORK_EVENTS.NETWORK_DID_CHANGE,
       ),
     });
-    this.historyController.startPolling();
+
+    this.onEthHistoryChange = this.historyController.on.bind(
+      this.historyController,
+      HISTORY_EVENTS.TX_LIST_DID_CHANGE,
+    );
+
+    this.onEthHistoryChange(() => {
+      remotePort.postMessage({
+        ethTransactions: this.historyController.ethTransactions,
+      });
+    });
   }
 
   getLatestBlock = async () => {

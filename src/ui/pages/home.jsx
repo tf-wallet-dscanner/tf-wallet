@@ -108,6 +108,16 @@ function Home() {
       >
         Token
       </Button>
+      <Button
+        color={THEME_COLOR.WARNING}
+        className="my-5"
+        suffixIcon={<FaBeer />}
+        onClick={() => {
+          navigation('/eth-history');
+        }}
+      >
+        History
+      </Button>
     </Container>
   );
 }
