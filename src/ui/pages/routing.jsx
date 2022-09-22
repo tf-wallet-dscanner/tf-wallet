@@ -2,6 +2,7 @@ import React from 'react';
 import { Route, Routes } from 'react-router-dom';
 import { APP_STAGE } from 'ui/constants/environment';
 
+import EthHistory from './eth-history';
 import Home from './home';
 import ImportAccount from './import-account';
 import JsonFile from './json-file';
@@ -34,6 +35,7 @@ function Routing() {
       <Route path="/import-account" element={<ImportAccount />} />
       <Route path="/json-file" element={<JsonFile />} />
       <Route path="/token" element={<Token />} />
+      <Route path="/eth-history" element={<EthHistory />} />
     </Routes>
   );
 }

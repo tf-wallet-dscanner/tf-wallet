@@ -5,9 +5,6 @@ import getFetchWithTimeout from 'app/modules/fetch-with-timeout';
 import EventEmitter from 'events';
 import qs from 'qs';
 
-/**
- * @type {EtherscanApiType}
- */
 export const ETHERSCAN_API_TYPE = {
   TX_LIST: 'txlist',
   TOKEN_LIST: 'tokentx',
@@ -20,6 +17,12 @@ const defaultHistoryState = {
   ethTransactions: [],
   erc20transfers: [],
   erc721transfers: [],
+};
+
+export const HISTORY_EVENTS = {
+  TX_LIST_DID_CHANGE: 'txlistDidChange',
+  ERC20_LIST_DID_CHANGE: 'tokentxDidChange',
+  ERC721_LIST_DID_CHANGE: 'tokennefttxDidChange',
 };
 
 class HistoryController extends EventEmitter {
@@ -60,6 +63,7 @@ class HistoryController extends EventEmitter {
       startblock: 0,
       page: 1,
       sort: 'desc',
+      apikey: process.env.ETHERSCAN_API_KEY,
       ...queryParams,
     };
 
@@ -103,6 +107,7 @@ class HistoryController extends EventEmitter {
       this.#historyStore.updateState({
         ethTransactions: ethTxHistory,
       });
+      this.emit(HISTORY_EVENTS.TX_LIST_DID_CHANGE, ethTxHistory);
     } catch (e) {
       console.error('HistoryController - getEthTxHistoryByAddress Error - ', e);
     }
@@ -160,29 +165,29 @@ class HistoryController extends EventEmitter {
     let cb;
     switch (type) {
       case ETHERSCAN_API_TYPE.TX_LIST:
-        cb = this.getEthTxHistoryByAddress;
+        cb = this.getEthTxHistoryByAddress.bind(this);
         break;
       case ETHERSCAN_API_TYPE.TOKEN_LIST:
-        cb = this.getERC20TransferHistoryByAddress;
+        cb = this.getERC20TransferHistoryByAddress.bind(this);
         break;
       case ETHERSCAN_API_TYPE.TOKEN_NFT_LIST:
-        cb = this.getERC721TransferHistoryByAddress;
+        cb = this.getERC721TransferHistoryByAddress.bind(this);
         break;
       default:
-        cb = this.getEthTxHistoryByAddress;
+        cb = this.getEthTxHistoryByAddress.bind(this);
         break;
     }
 
     // TODO: ERC20, ERC721 polling 시나리오 필요
     cb();
     const pollingId = setInterval(cb, SECOND * 10);
-    this.#store.set({
+    this.#historyStore.updateState({
       historyPollingId: pollingId,
     });
   }
 
-  async stopPolling() {
-    const { historyPollingId } = await this.#config;
+  stopPolling() {
+    const { historyPollingId } = this.#historyStore.getState();
     clearInterval(historyPollingId);
   }
 
