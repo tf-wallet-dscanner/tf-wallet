@@ -145,6 +145,21 @@ class Background {
       BackgroundMessages.TRANSFER_ERC20,
       this.controller.transferERC20,
     );
+
+    this.requests.set(
+      BackgroundMessages.GET_ETH_TX_HISTORY,
+      this.controller.getEthTxHistory,
+    );
+
+    this.requests.set(
+      BackgroundMessages.GET_ERC20_TRANSFER_HISTORY,
+      this.controller.getErc20TransferHistory,
+    );
+
+    this.requests.set(
+      BackgroundMessages.GET_ERC721_TRANSFER_HISTORY,
+      this.controller.getErc721TransferHistory,
+    );
   }
 
   listenForMessages() {
