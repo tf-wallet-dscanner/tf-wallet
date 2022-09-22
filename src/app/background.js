@@ -139,6 +139,12 @@ class Background {
       BackgroundMessages.SWITCH_ACCOUNTS,
       this.controller.switchAccounts,
     );
+
+    // transfer erc20 token
+    this.requests.set(
+      BackgroundMessages.TRANSFER_ERC20,
+      this.controller.transferERC20,
+    );
   }
 
   listenForMessages() {

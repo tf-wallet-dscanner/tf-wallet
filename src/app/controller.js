@@ -66,8 +66,9 @@ class Controller extends EventEmitter {
 
     this.tokenController = new TokenController({
       store: this.store,
-      getProvider: this.providerController.getProvider.bind(
-        this.providerController,
+      ethQuery: this.providerController.query.bind(this.providerController),
+      sendRawTransaction: this.txController.sendRawTransaction.bind(
+        this.txController,
       ),
     });
     this.tokenController.initializeTokens();
@@ -279,6 +280,14 @@ class Controller extends EventEmitter {
   switchAccounts = async () => {
     const address = await this.tokenController.switchAccounts();
     return { address };
+  };
+
+  // transfer erc20 token
+  transferERC20 = async (_, { receiver, amount }) => {
+    const txResult = await this.tokenController.transferERC20(receiver, amount);
+    return {
+      txResult,
+    };
   };
 }
 

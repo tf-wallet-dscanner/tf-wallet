@@ -11,6 +11,7 @@ import Token from './token';
 import Transaction, {
   EstimateGas,
   InputAddress,
+  InputAddressToken,
   TxResult,
 } from './transaction';
 
@@ -25,6 +26,7 @@ function Routing() {
       <Route path="/provider" element={<Provider />} />
       <Route path="/transaction" element={<Transaction />}>
         <Route index element={<InputAddress />} />
+        <Route path="input-address-token" element={<InputAddressToken />} />
         <Route path="estimate-gas" element={<EstimateGas />} />
         <Route path="result/:txHash" element={<TxResult />} />
       </Route>

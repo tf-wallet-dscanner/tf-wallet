@@ -26,3 +26,11 @@ export async function switchAccounts() {
   );
   return address;
 }
+
+export async function transferERC20({ receiver, amount }) {
+  const { txResult } = await Messenger.sendMessageToBackground(
+    BackgroundMessages.TRANSFER_ERC20,
+    { receiver, amount },
+  );
+  return txResult;
+}
