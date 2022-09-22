@@ -23,4 +23,7 @@ export const BackgroundMessages = {
   TRANSFER_ERC20: 'transferERC20', // ERC20 토큰 전송하기 (sendRawTransaction)
   GET_GAS_FEE_ESTIMATES_START_POLLING: 'getGasFeeEstimatesAndStartPolling',
   GET_GAS_FEE_ESTIMATES: 'getGasFeeEstimates',
+  GET_ETH_TX_HISTORY: 'getEthTxHistory',
+  GET_ERC20_TRANSFER_HISTORY: 'getErc20TransferHistory',
+  GET_ERC721_TRANSFER_HISTORY: 'getErc721TransferHistory',
 };

@@ -3,6 +3,7 @@ import EventEmitter from 'events';
 import { MAINNET_CHAIN_ID } from './constants/network';
 import { SECOND } from './constants/time';
 import { GasFeeController } from './controllers/gas/gas-fee-controller';
+import HistoryController from './controllers/history-controller';
 import KeyringController from './controllers/keyring-controller';
 import ProviderController, {
   NETWORK_EVENTS,
@@ -72,6 +73,15 @@ class Controller extends EventEmitter {
       ),
     });
     this.tokenController.initializeTokens();
+
+    this.historyController = new HistoryController({
+      store: this.store,
+      onNetworkStateChange: this.providerController.on.bind(
+        this.providerController,
+        NETWORK_EVENTS.NETWORK_DID_CHANGE,
+      ),
+    });
+    this.historyController.startPolling();
   }
 
   getLatestBlock = async () => {
@@ -288,6 +298,21 @@ class Controller extends EventEmitter {
     return {
       txResult,
     };
+  };
+
+  getEthTxHistory = () => {
+    const { ethTransactions } = this.historyController;
+    return Promise.resolve(ethTransactions);
+  };
+
+  getErc20TransferHistory = () => {
+    const { erc20transfers } = this.historyController;
+    return Promise.resolve(erc20transfers);
+  };
+
+  getErc721TransferHistory = () => {
+    const { erc721transfers } = this.historyController;
+    return Promise.resolve(erc721transfers);
   };
 }
 
