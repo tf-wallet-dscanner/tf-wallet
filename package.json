@@ -16,7 +16,7 @@
     "prepack": "pinst --disable",
     "postpack": "pinst --enable",
     "audit:fix": "npm_config_yes=true npx yarn-audit-fix",
-    "deploy:erc20": "node deploy/deploy-erc20.js"
+    "deploy:erc20:ropsten": "node deploy/deploy-erc20.js ropsten TDKA TDKA 10000"
   },
   "lint-staged": {
     "src/**": [

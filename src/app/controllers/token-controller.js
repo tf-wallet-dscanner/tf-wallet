@@ -141,12 +141,11 @@ class TokenController {
    * @param {number} amount - 전송할 Token 개수
    * @returns
    */
-  async transferERC20(receiver, amount = 1) {
+  async transferERC20(receiver, amount) {
     // @TODO 화면 단에서 amount 받기 위해 navigation('/transaction-token'); 페이지 추가
     if (amount === 0) {
       console.log('amount is 0', amount);
     }
-    console.log('ERC20Transfer', receiver);
     const rawHexData = await this.encodeCall(
       'transfer',
       ['address', 'uint256'],

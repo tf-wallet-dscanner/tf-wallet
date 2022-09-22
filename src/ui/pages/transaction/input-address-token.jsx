@@ -11,9 +11,10 @@ function InputAddressToken() {
   const navigation = useNavigate();
   const [amount, setAmount] = useState('');
   const [receiver, setReceiver] = useState('');
-  const { setTo, setData, tokenData } = useTransactionStore(
+  const { setTo, setIsTransfer, setData, tokenData } = useTransactionStore(
     (state) => ({
       setTo: state.setTo,
+      setIsTransfer: state.setIsTransfer,
       setData: state.setData,
       tokenData: state.tokenData,
     }),
@@ -29,6 +30,7 @@ function InputAddressToken() {
       console.log('setTransferRawData', tokenData.address, receiver, amount);
       const rawData = await transferERC20({ receiver, amount });
       console.log('transferERC20 rawData', rawData);
+      setIsTransfer(true);
       setTo(tokenData.address);
       setData(rawData);
       onNextPage();

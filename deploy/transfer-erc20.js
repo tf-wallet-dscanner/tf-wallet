@@ -25,11 +25,11 @@ async function deploy() {
   try {
     const input = {
       network: process.argv[2], // ropsten
-      name: process.argv[3], // DKA
-      symbol: process.argv[4], // DKA
-      supply: process.argv[5], // ETH 단위
+      ca: process.argv[3], // ca address
+      to: process.argv[4], // to address
+      amount: process.argv[5], // amount, ETH 단위
     };
-    const supply = `${input.supply}000000000000000000`; // wei
+    const amount = `${input.amount}000000000000000000`; // wei
 
     const chainName = input.network;
     const chainId = NETWORK_CHAIN_ID[`${chainName}`];
@@ -40,31 +40,28 @@ async function deploy() {
     const deployerAcc = web3.eth.accounts.privateKeyToAccount(deployerPrivKey);
     const deployerAddr = deployerAcc.address;
 
-    const erc20Inst = new web3.eth.Contract(erc20.abi);
-    const deployFunc = erc20Inst.deploy({
-      data: erc20.bytecode,
-      arguments: [input.name, input.symbol, supply],
-    });
-    const deployData = deployFunc.encodeABI();
+    const erc20Inst = new web3.eth.Contract(erc20.abi, input.ca);
+    const transferFunc = erc20Inst.methods.transfer(input.to, amount);
+    const transferData = transferFunc.encodeABI();
 
     const txCurCnt = await web3.eth.getTransactionCount(deployerAddr);
 
     const rawTx = {
       from: deployerAddr,
+      to: input.ca,
       nonce: txCurCnt,
-      data: deployData,
-      gas: 4500000,
+      data: transferData,
+      gas: 500000,
       gasPrice: 20000000000, // 20 gwei
       chainId,
     };
 
     const cbHash = async function (txHash) {
-      console.log(`Deploy TX:['${txHash}'] Created!`);
+      console.log(`Transfer TX:['${txHash}'] Created!`);
     };
     const cbReceipt = async function (receipt) {
-      console.log(`Deploy TX:['${receipt.transactionHash}'] Done!`);
+      console.log(`Transfer TX:['${receipt.transactionHash}'] Done!`);
       console.log(`- BlockNumber:[${parseInt(receipt.blockNumber, 10)}]`);
-      console.log(`- contractAddress:[${receipt.contractAddress}]`);
       console.log(`- receipt:[${JSON.stringify(receipt)}]`);
     };
     const cbError = async function (error) {

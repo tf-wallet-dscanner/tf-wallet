@@ -20,6 +20,7 @@ const initialState = {
     estimatedGasFeeTimeBounds: {},
     gasEstimateType: GAS_ESTIMATE_TYPES.NONE,
   }, // gas estimate data
+  isTransfer: false,
   tokenData: {
     address: '',
     balance: '',
@@ -34,6 +35,7 @@ const createState = (set) => ({
   setValue: (decimalValue) => set(() => ({ value: decimalValue })),
   setEstimateData: (estimateData) => set(() => ({ estimateData })),
   setGasPrice: (gasPrice) => set(() => ({ gasPrice })),
+  setIsTransfer: (isTransfer) => set(() => ({ isTransfer })),
   setTokenData: (tokenData) => set(() => ({ tokenData })),
   setData: (data) => set(() => ({ data })),
   clearTxState: () => set(() => ({ ...initialState })),
