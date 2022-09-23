@@ -89,10 +89,14 @@ class Controller extends EventEmitter {
       HISTORY_EVENTS.TX_LIST_DID_CHANGE,
     );
 
-    this.onEthHistoryChange(() => {
-      remotePort.postMessage({
-        ethTransactions: this.historyController.ethTransactions,
-      });
+    this.onEthHistoryChange(async () => {
+      try {
+        remotePort.postMessage({
+          ethTransactions: this.historyController.ethTransactions,
+        });
+      } catch (e) {
+        console.warn(e);
+      }
     });
   }
 
