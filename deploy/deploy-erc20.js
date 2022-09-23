@@ -2,6 +2,7 @@
 const path = require('path');
 require('dotenv').config({ path: path.join(__dirname, '../.env') });
 const Web3 = require('web3');
+// eslint-disable-next-line import/no-unresolved
 const Tx = require('ethereumjs-tx').Transaction;
 const erc20 = require('../contracts/ERC20.json');
 
