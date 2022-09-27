@@ -105,6 +105,11 @@ class Controller extends EventEmitter {
       HISTORY_EVENTS.TX_LIST_DID_CHANGE,
     );
 
+    this.onKlaytnHistoryChange = this.historyController.on.bind(
+      this.historyController,
+      HISTORY_EVENTS.KLAYTN_TX_LIST_DID_CHANGE,
+    );
+
     this.onEthHistoryChange(async () => {
       try {
         remotePort.postMessage({
@@ -366,6 +371,11 @@ class Controller extends EventEmitter {
   getErc721TransferHistory = () => {
     const { erc721transfers } = this.historyController;
     return Promise.resolve(erc721transfers);
+  };
+
+  getKlaytnTxHistory = () => {
+    const { klaytnTransactions } = this.historyController;
+    return Promise.resolve(klaytnTransactions);
   };
 }
 
