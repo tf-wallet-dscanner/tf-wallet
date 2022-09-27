@@ -264,44 +264,6 @@ export function normalizeAndValidateTxParams(txParams, lowerCase = true) {
   return normalizedTxParams;
 }
 
-export const validateConfirmedExternalTransaction = ({
-  txMeta,
-  pendingTransactions,
-  confirmedTransactions,
-} = {}) => {
-  if (!txMeta || !txMeta.txParams) {
-    throw ethErrors.rpc.invalidParams(
-      '"txMeta" or "txMeta.txParams" is missing',
-    );
-  }
-  if (txMeta.status !== TRANSACTION_STATUSES.CONFIRMED) {
-    throw ethErrors.rpc.invalidParams(
-      'External transaction status should be "confirmed"',
-    );
-  }
-  const externalTxNonce = txMeta.txParams.nonce;
-  if (pendingTransactions && pendingTransactions.length > 0) {
-    const foundPendingTxByNonce = pendingTransactions.find(
-      (el) => el.txParams?.nonce === externalTxNonce,
-    );
-    if (foundPendingTxByNonce) {
-      throw ethErrors.rpc.invalidParams(
-        'External transaction nonce should not be in pending txs',
-      );
-    }
-  }
-  if (confirmedTransactions && confirmedTransactions.length > 0) {
-    const foundConfirmedTxByNonce = confirmedTransactions.find(
-      (el) => el.txParams?.nonce === externalTxNonce,
-    );
-    if (foundConfirmedTxByNonce) {
-      throw ethErrors.rpc.invalidParams(
-        'External transaction nonce should not be in confirmed txs',
-      );
-    }
-  }
-};
-
 /**
  * Returns a list of final states
  *

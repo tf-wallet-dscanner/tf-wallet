@@ -128,12 +128,13 @@ class NonceTracker {
     // calculate next nonce
     // we need to make sure our base count
     // and pending count are from the same block
-    const blockNumber = await this.blockTracker.getLatestBlock();
-    const baseCountBN = await this.ethQuery.getTransactionCount(
+    const blockNumber = await this.blockTracker().getLatestBlock();
+    const baseCountBN = await this.ethQuery(
+      'eth_getTransactionCount',
       address,
       blockNumber,
     );
-    const baseCount = baseCountBN.toNumber();
+    const baseCount = Number(baseCountBN);
     assert(
       Number.isInteger(baseCount),
       `nonce-tracker - baseCount is not an integer - got: (${typeof baseCount}) "${baseCount}"`,

@@ -11,14 +11,14 @@ import Messenger from 'app/messenger';
  * @param {number} txMeta.gasPrice - ETH(KLAY) DEC
  * @param {number} txMeta.maxFeePerGas - The maximum fee per gas that the transaction is willing to pay in total
  * @param {number} txMeta.maxPriorityFeePerGas - The maximum fee per gas to give miners to incentivize them to include the transaction (Priority fee)
- * @returns {string} txResult - 트랜잭션 해쉬값(txHash)
+ * @returns {string} txHash - 트랜잭션 해쉬값(txHash)
  */
 export async function sendRawTransaction(txMeta) {
-  const { txResult } = await Messenger.sendMessageToBackground(
+  const { txHash } = await Messenger.sendMessageToBackground(
     BackgroundMessages.SEND_RAW_TRANSACTION,
     txMeta,
   );
-  return txResult;
+  return txHash;
 }
 
 /**
@@ -44,4 +44,21 @@ export async function getNextNonce(address) {
     },
   );
   return nextNonce;
+}
+
+export async function setUnapprovedTx({ txParams }) {
+  const txMeta = await Messenger.sendMessageToBackground(
+    BackgroundMessages.SET_UNAPPROVED_TX,
+    {
+      txParams,
+    },
+  );
+  return txMeta;
+}
+
+export async function resetUnapprovedTx() {
+  const res = await Messenger.sendMessageToBackground(
+    BackgroundMessages.RESET_UNAPPROVED_TX,
+  );
+  return res;
 }

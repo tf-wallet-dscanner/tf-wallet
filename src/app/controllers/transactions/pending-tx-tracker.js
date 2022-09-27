@@ -57,9 +57,11 @@ export default class PendingTransactionTracker extends EventEmitter {
     const nonceGlobalLock = await this.nonceTracker.getGlobalLock();
     try {
       const pendingTxs = this.getPendingTransactions();
-      await Promise.all(
-        pendingTxs.map((txMeta) => this._checkPendingTx(txMeta)),
-      );
+      if (pendingTxs.length > 0) {
+        await Promise.all(
+          pendingTxs.map((txMeta) => this._checkPendingTx(txMeta)),
+        );
+      }
     } catch (err) {
       console.error(
         'PendingTransactionTracker - Error updating pending transactions',
@@ -197,17 +199,18 @@ export default class PendingTransactionTracker extends EventEmitter {
 
     try {
       const transactionReceipt = await this.ethQuery(
-        'getTransactionReceipt',
+        'eth_getTransactionReceipt',
         txHash,
       );
       if (transactionReceipt?.blockNumber) {
         const { baseFeePerGas, timestamp: blockTimestamp } =
           await this.ethQuery(
-            'getBlockByHash',
+            'eth_getBlockByHash',
             transactionReceipt?.blockHash,
             false,
           );
 
+        console.warn('tx:confirmed 실행');
         this.emit(
           'tx:confirmed',
           txId,
@@ -243,9 +246,12 @@ export default class PendingTransactionTracker extends EventEmitter {
       hash: txHash,
       txParams: { nonce, from },
     } = txMeta;
-    const networkNextNonce = await this.ethQuery('getTransactionCount', from);
+    const networkNextNonce = await this.ethQuery(
+      'eth_getTransactionCount',
+      from,
+    );
 
-    if (parseInt(nonce, 16) >= networkNextNonce.toNumber()) {
+    if (parseInt(nonce, 16) >= networkNextNonce) {
       return false;
     }
 

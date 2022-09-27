@@ -23,4 +23,6 @@ export const BackgroundMessages = {
   GET_GAS_FEE_ESTIMATES_START_POLLING: 'getGasFeeEstimatesAndStartPolling',
   GET_GAS_FEE_ESTIMATES: 'getGasFeeEstimates',
   GET_NEXT_NONCE: 'getNextNonce',
+  SET_UNAPPROVED_TX: 'setUnapprovedTx', // store에 currentNetworkTxList, unapproveTxs 추가
+  RESET_UNAPPROVED_TX: 'resetUnapprovedTx', // store unapproveTxs 초기화
 };

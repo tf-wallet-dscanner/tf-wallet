@@ -4,7 +4,9 @@ import { useMutation, useQuery } from 'react-query';
 import {
   getGasFeeEstimates,
   getNextNonce,
+  resetUnapprovedTx,
   sendRawTransaction,
+  setUnapprovedTx,
 } from './transaction.api';
 
 export function useSendRawTransaction(options) {
@@ -30,4 +32,16 @@ export function useGetNextNonce({ address }, options) {
       ...options,
     },
   );
+}
+
+export function useSetUnapprovedTx(options) {
+  return useMutation(['/transaction/setUnapprovedTx'], setUnapprovedTx, {
+    ...options,
+  });
+}
+
+export function useResetUnapprovedTx(options) {
+  return useMutation(['/transaction/resetUnapprovedTx'], resetUnapprovedTx, {
+    ...options,
+  });
 }

@@ -1,7 +1,7 @@
 export const readAddressAsContract = async (ethQuery, address) => {
   let contractCode;
   try {
-    contractCode = await ethQuery.getCode(address);
+    contractCode = await ethQuery('eth_getCode', address);
   } catch (e) {
     contractCode = null;
   }

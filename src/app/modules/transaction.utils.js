@@ -36,11 +36,17 @@ const erc20Interface = new ethers.utils.Interface(abiERC20);
 const erc721Interface = new ethers.utils.Interface(abiERC721);
 const erc1155Interface = new ethers.utils.Interface(abiERC1155);
 
-export function transactionMatchesNetwork(transaction, chainId, networkId) {
+export async function transactionMatchesNetwork(
+  transaction,
+  chainId,
+  networkId,
+) {
+  const tmpChainId = await chainId();
+  const tmpNetworkId = await networkId();
   if (typeof transaction.chainId !== 'undefined') {
-    return transaction.chainId === chainId;
+    return transaction.chainId === tmpChainId;
   }
-  return transaction.metamaskNetworkId === networkId;
+  return transaction.metamaskNetworkId === tmpNetworkId;
 }
 
 /**
@@ -136,10 +142,10 @@ export function parseStandardTokenTransactionData(data) {
  * at transaction creation.
  *
  * @param {Object} txParams - Parameters for the transaction
- * @param {EthQuery} query - EthQuery instance
+ * @param {EthQuery} ethQuery - EthQuery instance
  * @returns {InferTransactionTypeResult}
  */
-export async function determineTransactionType(txParams, query) {
+export async function determineTransactionType(txParams, ethQuery) {
   const { data, to } = txParams;
   let name;
   try {
@@ -166,7 +172,7 @@ export async function determineTransactionType(txParams, query) {
 
   if (!result) {
     const { contractCode: resultCode, isContractAddress } =
-      await readAddressAsContract(query, to);
+      await readAddressAsContract(ethQuery, to);
 
     contractCode = resultCode;
     result = isContractAddress

@@ -145,6 +145,18 @@ class Background {
       BackgroundMessages.GET_NEXT_NONCE,
       this.controller.getNextNonce,
     );
+
+    // set unapproved tx
+    this.requests.set(
+      BackgroundMessages.SET_UNAPPROVED_TX,
+      this.controller.setUnapprovedTx,
+    );
+
+    // reset unapproved tx
+    this.requests.set(
+      BackgroundMessages.RESET_UNAPPROVED_TX,
+      this.controller.resetUnapprovedTx,
+    );
   }
 
   listenForMessages() {
