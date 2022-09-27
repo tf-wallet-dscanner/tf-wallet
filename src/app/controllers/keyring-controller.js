@@ -44,8 +44,8 @@ class KeyringController {
   }
 
   // store vault update
-  async storeUpdateVault() {
-    const vault = await this.persistAllKeyrings();
+  async storeUpdateVault(password) {
+    const vault = await this.persistAllKeyrings(password);
     this.#setKeyringConfig({ vault });
   }
 
@@ -73,7 +73,7 @@ class KeyringController {
     if (isValid) {
       const accounts = await this.hdKeyring.initFromAccount(mnemonic);
       this.keyrings.push(this.hdKeyring);
-      await this.storeUpdateVault();
+      await this.storeUpdateVault(password);
       await this.addStoreAccounts(accounts[0]);
       return accounts;
     }
@@ -93,9 +93,6 @@ class KeyringController {
       return Promise.reject(new Error('Seed phrase is invalid.'));
     }
 
-    this.clearKeyrings();
-    await this.persistAllKeyrings();
-
     // add new keyring
     const keyring = new HdKeyring({
       mnemonic,
@@ -108,7 +105,7 @@ class KeyringController {
       throw new Error('KeyringController - First Account not found.');
 
     this.keyrings.push(keyring);
-    await this.storeUpdateVault();
+    await this.storeUpdateVault(password);
     await this.addStoreAccounts(accounts[0]);
     return accounts;
   }
@@ -276,7 +273,6 @@ class KeyringController {
    * @returns {string} accounts[0] - 계정 address 주소
    */
   async getImportAccountStrategy({ strategy, args }) {
-    this.#password = args.password;
     const privateKey = await accountImporter.importAccount(strategy, args);
 
     const keyring = new SimpleKeyring([privateKey]);
@@ -304,7 +300,6 @@ class KeyringController {
   // store에서 accounts 정보 가져오기
   async getStoreAccounts() {
     const storeAccounts = await this.#keyringStore.get('accounts');
-
     // storeAccounts 그대로 return하면 undefined 형태인데 undefined 형태로 return하면 ui에서 properties 관련 오류로 인해 null로 return 처리함
     return storeAccounts?.accounts ?? null;
   }
@@ -355,7 +350,6 @@ class KeyringController {
       (identy) => identy.address === selectedAddress,
     );
     accounts.identities[selectedIdx].lastSelected = new Date().getTime();
-
     this.#setKeyringConfig({
       accounts: {
         identities: accounts.identities,

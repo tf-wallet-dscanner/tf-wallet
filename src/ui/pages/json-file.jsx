@@ -89,6 +89,7 @@ function JsonFile() {
       <Card title="계정 가져오기" content={selectedAddress} />
       <select
         name="importType"
+        className="mb-2"
         onChange={(event) => setCurrentType(event.target.value)}
         value={currentType}
       >
@@ -100,21 +101,12 @@ function JsonFile() {
       </select>
 
       {currentType === 'Private Key' && (
-        <>
-          <TextField
-            placeholder="비공개 키 문자열을 넣으세요"
-            onChange={(e) => {
-              setImportPrivKey(e.target.value);
-            }}
-          />
-          <TextField
-            password
-            placeholder="비밀번호 입력"
-            onChange={(e) => {
-              setImportPassword(e.target.value);
-            }}
-          />
-        </>
+        <TextField
+          placeholder="비공개 키 문자열을 넣으세요"
+          onChange={(e) => {
+            setImportPrivKey(e.target.value);
+          }}
+        />
       )}
       {currentType === 'JSON File' && (
         <>
