@@ -2,6 +2,7 @@ import React from 'react';
 import { Route, Routes } from 'react-router-dom';
 import { APP_STAGE } from 'ui/constants/environment';
 
+import EthHistory from './eth-history';
 import Home from './home';
 import ImportAccount from './import-account';
 import JsonFile from './json-file';
@@ -11,6 +12,7 @@ import Token from './token';
 import Transaction, {
   EstimateGas,
   InputAddress,
+  InputAddressToken,
   TxResult,
 } from './transaction';
 
@@ -25,6 +27,7 @@ function Routing() {
       <Route path="/provider" element={<Provider />} />
       <Route path="/transaction" element={<Transaction />}>
         <Route index element={<InputAddress />} />
+        <Route path="input-address-token" element={<InputAddressToken />} />
         <Route path="estimate-gas" element={<EstimateGas />} />
         <Route path="result/:txHash" element={<TxResult />} />
       </Route>
@@ -32,6 +35,7 @@ function Routing() {
       <Route path="/import-account" element={<ImportAccount />} />
       <Route path="/json-file" element={<JsonFile />} />
       <Route path="/token" element={<Token />} />
+      <Route path="/eth-history" element={<EthHistory />} />
     </Routes>
   );
 }

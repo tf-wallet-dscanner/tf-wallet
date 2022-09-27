@@ -37,7 +37,7 @@ function Transaction() {
     if (estimateData) {
       setEstimateData(estimateData);
     }
-    return () => clearTxState();
+    // return () => clearTxState();
   }, [estimateData]);
 
   const onNextPage = () => {

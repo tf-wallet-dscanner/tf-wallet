@@ -1,8 +1,10 @@
+/* eslint-disable react/jsx-no-constructed-context-values */
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { ReactQueryDevtools } from 'react-query/devtools';
 import { HashRouter } from 'react-router-dom';
+import { PortStreamContext } from 'ui/store/port';
 import 'ui/styles/global.scss';
 import 'ui/utils/disable-console';
 import browser from 'webextension-polyfill';
@@ -19,14 +21,17 @@ queryClient.setDefaultOptions({
   },
 });
 
-browser.runtime.connect({ name: 'popup' });
+const port = browser.runtime.connect({ name: 'popup' });
+port.postMessage('connect react component!');
 
 const devtool = process.env.DEVTOOL;
 
 root.render(
   <HashRouter>
     <QueryClientProvider client={queryClient}>
-      <Routing />
+      <PortStreamContext.Provider value={{ port }}>
+        <Routing />
+      </PortStreamContext.Provider>
       {devtool && <ReactQueryDevtools initialIsOpen={false} />}
     </QueryClientProvider>
   </HashRouter>,

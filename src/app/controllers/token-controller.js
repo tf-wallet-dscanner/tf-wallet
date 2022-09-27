@@ -1,8 +1,8 @@
 import abi from 'ethereumjs-abi';
 
+// import abiERC20 from '../contracts/ERC20.json';
 import { isAddress, weiHexToEthDec } from '../lib/util';
 
-// import abiERC20 from '../contracts/ERC20.json';
 // import abiERC721 from '../contracts/ERC721.json';
 
 class TokenController {
@@ -25,7 +25,8 @@ class TokenController {
 
   constructor(opts = {}) {
     this.#store = opts.store;
-    this.getProvider = opts.getProvider;
+    this.ethQuery = opts.ethQuery;
+    this.sendRawTransaction = opts.sendRawTransaction;
     this.#tokenStore = this.getTokenStore();
     this.#accountStore = this.getStoreAccounts();
     this.tokens = []; // state에서 사용할 eoa 별 token list
@@ -123,59 +124,58 @@ class TokenController {
       // 기존 tokens에 존재하면 token 정보 수정
       const previousIndex = this.tokens.indexOf(previousEntry);
       this.tokens[previousIndex] = newEntry;
-      tokens[accounts.selectedAddress].splice(previousIndex, 1, newEntry);
-      await this.#setTokenList({ tokens });
+      await tokens[accounts.selectedAddress].splice(previousIndex, 1, newEntry);
     } else {
       // 신규 토큰 저장
       this.tokens.push(newEntry);
       await tokens[accounts.selectedAddress].push(newEntry);
-      await this.#setTokenList({ tokens });
     }
+    await this.#setTokenList({ tokens });
     return newEntry;
   }
 
   /**
-   * @TODO ethererumjs-abi를 통한 rawHexData 생성 함수 작성 필요
+   * ERC-20 Token Transfer RawData 생성 함수
+   *
+   * @param {string} receiver - 수신자 address
+   * @param {number} amount - 전송할 Token 개수
+   * @returns
    */
-  encodeCall(name, args, values) {
-    const methodId = abi.methodID(name, args).toString('hex');
-    const params = abi.rawEncode(args, values).toString('hex');
-    return `0x${methodId}${params}`;
+  async transferERC20(receiver, amount) {
+    // @TODO 화면 단에서 amount 받기 위해 navigation('/transaction-token'); 페이지 추가
+    if (amount === 0) {
+      console.log('amount is 0', amount);
+    }
+    const rawHexData = await this.encodeCall(
+      'transfer',
+      ['address', 'uint256'],
+      [receiver, amount],
+    );
+    return rawHexData;
   }
 
   /**
-   * Wrapper method to handle provider requests.
+   * ethererumjs-abi를 통한 rawHexData 생성
    *
-   * @param provider - provider object initialized with a JsonRpcEngine.
-   * @param method - Method to request.
-   * @param args - Arguments to send.
-   * @returns Promise resolving the request.
+   * @param {string} name - contract method name
+   * @param {Array<any>} typesList
+   * @param {Array<any>} valuesList
+   * @returns
    */
-  async query(provider, method, args) {
-    return new Promise((resolve, reject) => {
-      const cb = (err, res) => {
-        if (err) {
-          reject(err);
-          return;
-        }
-        resolve(res.result);
-      };
-      provider.sendAsync(
-        { id: 1, jsonrpc: '2.0', method, params: [args, 'latest'] },
-        cb,
-      );
-    });
+  async encodeCall(name, typesList, valuesList) {
+    const methodId = abi.methodID(name, typesList).toString('hex');
+    const params = abi.rawEncode(typesList, valuesList).toString('hex');
+    return `0x${methodId}${params}`;
   }
 
   /**
    * @TODO rawHexData 리팩토링 필요
    *
-   * @param address EOA
+   * @param address 잔액을 확인할 EOA
    * @param tokenCa ERC20 contract address
    */
   async #getTokenBalances(address, tokenCa) {
     if (!isAddress(tokenCa)) return 0;
-    const provider = this.getProvider();
     const sha3BalanceOf = '70a08231';
     const holder = address.slice(2);
     const rawHexData = `0x${sha3BalanceOf}000000000000000000000000${holder}`;
@@ -184,7 +184,8 @@ class TokenController {
       to: tokenCa,
       data: rawHexData,
     };
-    const amount = await this.query(provider, 'eth_call', params);
+
+    const amount = await this.ethQuery('eth_call', params, 'latest');
     return weiHexToEthDec(amount);
   }
 

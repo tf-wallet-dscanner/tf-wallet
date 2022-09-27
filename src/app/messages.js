@@ -20,9 +20,13 @@ export const BackgroundMessages = {
   GET_TOKENS: 'getTokens', // 선택된 계정의 token list 불러오기
   ADD_TOKEN: 'addToken', // Store에 추가된 token 정보 set (계정 별 token list 다름)
   SWITCH_ACCOUNTS: 'switchAccounts', // 변경된 Accounts로 token controller 재설정
+  TRANSFER_ERC20: 'transferERC20', // ERC20 토큰 전송하기 (sendRawTransaction)
   GET_GAS_FEE_ESTIMATES_START_POLLING: 'getGasFeeEstimatesAndStartPolling',
   GET_GAS_FEE_ESTIMATES: 'getGasFeeEstimates',
   GET_NEXT_NONCE: 'getNextNonce',
   SET_UNAPPROVED_TX: 'setUnapprovedTx', // store에 currentNetworkTxList, unapproveTxs 추가
   RESET_UNAPPROVED_TX: 'resetUnapprovedTx', // store unapproveTxs 초기화
+  GET_ETH_TX_HISTORY: 'getEthTxHistory',
+  GET_ERC20_TRANSFER_HISTORY: 'getErc20TransferHistory',
+  GET_ERC721_TRANSFER_HISTORY: 'getErc721TransferHistory',
 };

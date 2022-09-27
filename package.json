@@ -15,7 +15,8 @@
     "postinstall": "husky install",
     "prepack": "pinst --disable",
     "postpack": "pinst --enable",
-    "audit:fix": "npm_config_yes=true npx yarn-audit-fix"
+    "audit:fix": "npm_config_yes=true npx yarn-audit-fix",
+    "deploy:erc20:ropsten": "node deploy/deploy-erc20.js ropsten TDKA TDKA 10000"
   },
   "lint-staged": {
     "src/**": [
@@ -62,6 +63,7 @@
     "eth-json-rpc-infura": "^5.1.0",
     "eth-json-rpc-middleware": "^8.1.0",
     "ethereumjs-abi": "^0.6.8",
+    "ethereumjs-tx": "^2.1.2",
     "ethereumjs-util": "^7.0.10",
     "ethereumjs-wallet": "^1.0.2",
     "ethjs-unit": "^0.1.6",
@@ -86,6 +88,7 @@
     "postcss-preset-env": "^7.0.1",
     "prompts": "^2.4.2",
     "prop-types": "^15.8.1",
+    "qs": "^6.11.0",
     "react": "^18.1.0",
     "react-app-polyfill": "^3.0.0",
     "react-dev-utils": "^12.0.0",

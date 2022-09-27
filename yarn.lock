@@ -9067,6 +9067,23 @@ __metadata:
   languageName: node
   linkType: hard
 
+"ethereumjs-common@npm:^1.5.0":
+  version: 1.5.2
+  resolution: "ethereumjs-common@npm:1.5.2"
+  checksum: 3fc64faced268e0c61da50c5db76d18cfd44325d5706792f32ac8c85c0e800d52db284f042c3bd0623daf59b946176ef7dbea476d1b0252492137fa4549a3349
+  languageName: node
+  linkType: hard
+
+"ethereumjs-tx@npm:^2.1.2":
+  version: 2.1.2
+  resolution: "ethereumjs-tx@npm:2.1.2"
+  dependencies:
+    ethereumjs-common: ^1.5.0
+    ethereumjs-util: ^6.0.0
+  checksum: a5b607b4e125ed696d76a9e4db8a95e03a967323c66694912d799619b16fa43985336924221f9e7582dc1b09ff88a62116bf2290ee14d952bf7e6715e5728525
+  languageName: node
+  linkType: hard
+
 "ethereumjs-util@npm:^5.1.1, ethereumjs-util@npm:^5.1.2":
   version: 5.2.1
   resolution: "ethereumjs-util@npm:5.2.1"
@@ -16212,6 +16229,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"qs@npm:^6.11.0":
+  version: 6.11.0
+  resolution: "qs@npm:6.11.0"
+  dependencies:
+    side-channel: ^1.0.4
+  checksum: 6e1f29dd5385f7488ec74ac7b6c92f4d09a90408882d0c208414a34dd33badc1a621019d4c799a3df15ab9b1d0292f97c1dd71dc7c045e69f81a8064e5af7297
+  languageName: node
+  linkType: hard
+
 "qs@npm:~6.5.2":
   version: 6.5.3
   resolution: "qs@npm:6.5.3"
@@ -18776,6 +18802,7 @@ __metadata:
     eth-json-rpc-infura: ^5.1.0
     eth-json-rpc-middleware: ^8.1.0
     ethereumjs-abi: ^0.6.8
+    ethereumjs-tx: ^2.1.2
     ethereumjs-util: ^7.0.10
     ethereumjs-wallet: ^1.0.2
     ethjs-unit: ^0.1.6
@@ -18811,6 +18838,7 @@ __metadata:
     process: ^0.11.10
     prompts: ^2.4.2
     prop-types: ^15.8.1
+    qs: ^6.11.0
     react: ^18.1.0
     react-app-polyfill: ^3.0.0
     react-dev-utils: ^12.0.0

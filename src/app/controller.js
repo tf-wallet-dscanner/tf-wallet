@@ -3,6 +3,9 @@ import EventEmitter from 'events';
 import { MAINNET_CHAIN_ID } from './constants/network';
 import { SECOND } from './constants/time';
 import { GasFeeController } from './controllers/gas/gas-fee-controller';
+import HistoryController, {
+  HISTORY_EVENTS,
+} from './controllers/history-controller';
 import KeyringController from './controllers/keyring-controller';
 import ProviderController, {
   NETWORK_EVENTS,
@@ -12,7 +15,7 @@ import TransactionController from './controllers/transactions/transaction-contro
 import ExtensionStore from './lib/localstore';
 
 class Controller extends EventEmitter {
-  constructor() {
+  constructor(remotePort) {
     super();
     this.store = new ExtensionStore();
 
@@ -82,11 +85,35 @@ class Controller extends EventEmitter {
 
     this.tokenController = new TokenController({
       store: this.store,
-      getProvider: this.providerController.getProvider.bind(
-        this.providerController,
+      ethQuery: this.providerController.query.bind(this.providerController),
+      sendRawTransaction: this.txController.sendRawTransaction.bind(
+        this.txController,
       ),
     });
     this.tokenController.initializeTokens();
+
+    this.historyController = new HistoryController({
+      store: this.store,
+      onNetworkStateChange: this.providerController.on.bind(
+        this.providerController,
+        NETWORK_EVENTS.NETWORK_DID_CHANGE,
+      ),
+    });
+
+    this.onEthHistoryChange = this.historyController.on.bind(
+      this.historyController,
+      HISTORY_EVENTS.TX_LIST_DID_CHANGE,
+    );
+
+    this.onEthHistoryChange(async () => {
+      try {
+        remotePort.postMessage({
+          ethTransactions: this.historyController.ethTransactions,
+        });
+      } catch (e) {
+        console.warn(e);
+      }
+    });
   }
 
   getLatestBlock = async () => {
@@ -316,6 +343,29 @@ class Controller extends EventEmitter {
   resetUnapprovedTx = async () => {
     const res = await this.txController.resetUnapprovedTx();
     return res;
+  };  
+    
+  // transfer erc20 token
+  transferERC20 = async (_, { receiver, amount }) => {
+    const txResult = await this.tokenController.transferERC20(receiver, amount);
+    return {
+      txResult,
+    };
+  };
+
+  getEthTxHistory = () => {
+    const { ethTransactions } = this.historyController;
+    return Promise.resolve(ethTransactions);
+  };
+
+  getErc20TransferHistory = () => {
+    const { erc20transfers } = this.historyController;
+    return Promise.resolve(erc20transfers);
+  };
+
+  getErc721TransferHistory = () => {
+    const { erc721transfers } = this.historyController;
+    return Promise.resolve(erc721transfers);
   };
 }
 

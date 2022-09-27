@@ -17,18 +17,28 @@ import shallow from 'zustand/shallow';
 function EstimateGas() {
   const navigation = useNavigate();
   const [password, setPassword] = useState('');
-  const { to, decimalValue, gas, gasPrice, estimateData, setGasPrice } =
-    useTransactionStore(
-      (state) => ({
-        to: state.to,
-        decimalValue: state.value,
-        gas: state.gas,
-        gasPrice: state.gasPrice,
-        estimateData: state.estimateData,
-        setGasPrice: state.setGasPrice,
-      }),
-      shallow,
-    );
+  const {
+    to,
+    decimalValue,
+    gas,
+    gasPrice,
+    estimateData,
+    setGasPrice,
+    isTransfer,
+    data,
+  } = useTransactionStore(
+    (state) => ({
+      to: state.to,
+      decimalValue: state.value,
+      gas: state.gas,
+      gasPrice: state.gasPrice,
+      estimateData: state.estimateData,
+      setGasPrice: state.setGasPrice,
+      isTransfer: state.isTransfer,
+      data: state.data,
+    }),
+    shallow,
+  );
   const { mutate: sendTransaction } = useSendRawTransaction({
     onSuccess(txHash) {
       navigation(`/transaction/result/${txHash}`);
@@ -63,6 +73,8 @@ function EstimateGas() {
       gasPrice,
       maxFeePerGas,
       maxPriorityFeePerGas,
+      isTransfer,
+      data,
     });
   };
 
@@ -82,7 +94,7 @@ function EstimateGas() {
       return null;
     }
     const ethDec = gweiDecToETHDec(calculateGasPrice);
-    setGasPrice(ethDec);
+    setGasPrice(gasFeeEstimates[gasLevel].suggestedMaxFeePerGas);
 
     return ethDec;
   }, [gas, gasLevel, estimateData]);
