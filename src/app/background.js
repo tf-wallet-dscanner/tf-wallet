@@ -178,6 +178,11 @@ class Background {
       BackgroundMessages.GET_ERC721_TRANSFER_HISTORY,
       this.controller.getErc721TransferHistory,
     );
+
+    this.requests.set(
+      BackgroundMessages.GET_KLAYTN_TX_HISTORY,
+      this.controller.getKlaytnTxHistory,
+    );
   }
 
   listenForMessages() {

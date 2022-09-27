@@ -5,6 +5,7 @@ import {
   getErc20TransferHistory,
   getErc721TransferHistory,
   getEthTxHistory,
+  getKlaytnTxHistory,
 } from './history.api';
 
 export function useGetEthTxHistory(options) {
@@ -37,4 +38,12 @@ export function useGetErc721TransferHistory(options) {
       ...options,
     },
   );
+}
+
+export function useGetKlaytnTxHistory(options) {
+  return useQuery(['/history/getKlaytnTxHistory'], getKlaytnTxHistory, {
+    retry: false,
+    refetchInterval: SECOND * 10,
+    ...options,
+  });
 }

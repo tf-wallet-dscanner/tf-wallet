@@ -29,4 +29,5 @@ export const BackgroundMessages = {
   GET_ETH_TX_HISTORY: 'getEthTxHistory',
   GET_ERC20_TRANSFER_HISTORY: 'getErc20TransferHistory',
   GET_ERC721_TRANSFER_HISTORY: 'getErc721TransferHistory',
+  GET_KLAYTN_TX_HISTORY: 'getKlaytnTxHistory',
 };

@@ -9,7 +9,10 @@ import { useNavigate } from 'react-router-dom';
 import Button from 'ui/components/atoms/button';
 import Card from 'ui/components/atoms/card';
 import { THEME_COLOR } from 'ui/constants/colors';
-import { useGetEthTxHistory } from 'ui/data/history/history.hooks';
+import {
+  useGetEthTxHistory,
+  useGetKlaytnTxHistory,
+} from 'ui/data/history/history.hooks';
 import { useGetCurrentChainId, useSetProviderType } from 'ui/data/provider';
 import { PortStreamContext } from 'ui/store/port';
 
@@ -20,6 +23,7 @@ function EthHistory() {
     useGetCurrentChainId();
   const { data: bgEthTxHistory, refetch: refetchEthTxHistory } =
     useGetEthTxHistory();
+  const { data: klaytnTxHistory } = useGetKlaytnTxHistory();
   const { mutate } = useSetProviderType({
     onSuccess() {
       getCurrentChainId();
@@ -50,6 +54,8 @@ function EthHistory() {
       setEthTxHistory(bgEthTxHistory);
     }
   }, [bgEthTxHistory]);
+
+  console.log('klaytnTxHistory: ', klaytnTxHistory);
 
   return (
     <div className="p-4">

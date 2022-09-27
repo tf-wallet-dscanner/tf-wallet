@@ -24,3 +24,11 @@ export async function getErc721TransferHistory() {
   );
   return erc721transfers;
 }
+
+// klaytn 트랜잭션 내역 조회
+export async function getKlaytnTxHistory() {
+  const klaytnTransactions = await Messenger.sendMessageToBackground(
+    BackgroundMessages.GET_KLAYTN_TX_HISTORY,
+  );
+  return klaytnTransactions;
+}

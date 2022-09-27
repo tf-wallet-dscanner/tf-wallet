@@ -1,5 +1,9 @@
 import { ObservableStore } from '@metamask/obs-store';
-import { MAINNET } from 'app/constants/network';
+import {
+  INFURA_PROVIDER_TYPES,
+  KLAYTN_PROVIDER_TYPES,
+  MAINNET,
+} from 'app/constants/network';
 import { SECOND } from 'app/constants/time';
 import getFetchWithTimeout from 'app/modules/fetch-with-timeout';
 import EventEmitter from 'events';
@@ -11,18 +15,24 @@ export const ETHERSCAN_API_TYPE = {
   TOKEN_NFT_LIST: 'tokennfttx',
 };
 
+export const KLAYTON_API_TYPE = {
+  TX_LIST: 'klaytn_txlist',
+};
+
 const fetchWithTimeout = getFetchWithTimeout(SECOND * 30);
 
 const defaultHistoryState = {
   ethTransactions: [],
   erc20transfers: [],
   erc721transfers: [],
+  klaytnTransactions: [],
 };
 
 export const HISTORY_EVENTS = {
   TX_LIST_DID_CHANGE: 'txlistDidChange',
   ERC20_LIST_DID_CHANGE: 'tokentxDidChange',
   ERC721_LIST_DID_CHANGE: 'tokennefttxDidChange',
+  KLAYTN_TX_LIST_DID_CHANGE: 'klaytn_txlistDidChange',
 };
 
 class HistoryController extends EventEmitter {
@@ -38,7 +48,16 @@ class HistoryController extends EventEmitter {
     });
     onNetworkStateChange(async () => {
       await this.stopPolling();
-      this.startPolling();
+      const { type: network } = await this.#config;
+      const isInfura = INFURA_PROVIDER_TYPES.includes(network);
+      const isKlaytn = KLAYTN_PROVIDER_TYPES.includes(network);
+      const pollType = isInfura
+        ? ETHERSCAN_API_TYPE.TX_LIST
+        : isKlaytn
+        ? KLAYTON_API_TYPE.TX_LIST
+        : '';
+      console.log('pollType: ', pollType);
+      this.startPolling(pollType);
     });
   }
 
@@ -158,6 +177,45 @@ class HistoryController extends EventEmitter {
   }
 
   /**
+   * klaytn transaction 내역 조회
+   * @returns {Promise<void>} klaytn transaction history
+   */
+  async getKlaytnTxHistoryByAddress() {
+    try {
+      // TODO: endpoint, query, event type 등 수정 필요
+      const response = await fetch('https://api.spacex.land/graphql', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          query: `
+          {
+            company {
+              ceo
+            }
+            roadster {
+              apoapsis_au
+            }
+          }
+        `,
+        }),
+      });
+      const { data } = await response.json();
+      console.log('data: ', data);
+      this.#historyStore.updateState({
+        klaytnTransactions: [data],
+      });
+      this.emit(HISTORY_EVENTS.KLAYTN_TX_LIST_DID_CHANGE, [data]);
+    } catch (e) {
+      console.error(
+        'HistoryController - getKlaytnTxHistoryByAddress Error - ',
+        e,
+      );
+    }
+  }
+
+  /**
    *
    * @param {typeof ETHERSCAN_API_TYPE} type
    */
@@ -172,6 +230,9 @@ class HistoryController extends EventEmitter {
         break;
       case ETHERSCAN_API_TYPE.TOKEN_NFT_LIST:
         cb = this.getERC721TransferHistoryByAddress.bind(this);
+        break;
+      case KLAYTON_API_TYPE.TX_LIST:
+        cb = this.getKlaytnTxHistoryByAddress.bind(this);
         break;
       default:
         cb = this.getEthTxHistoryByAddress.bind(this);
@@ -223,6 +284,15 @@ class HistoryController extends EventEmitter {
   get erc721transfers() {
     const { erc721transfers } = this.#historyStore.getState();
     return erc721transfers;
+  }
+
+  /**
+   * klaytn transaction list
+   * @returns {Array<object>}
+   */
+  get klaytnTransactions() {
+    const { klaytnTransactions } = this.#historyStore.getState();
+    return klaytnTransactions;
   }
 }
 
