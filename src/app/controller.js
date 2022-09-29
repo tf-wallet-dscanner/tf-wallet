@@ -53,6 +53,9 @@ class Controller extends EventEmitter {
     this.txController = new TransactionController({
       store: this.store,
       ethQuery: this.providerController.query.bind(this.providerController),
+      getBlockTracker: this.providerController.getBlockTracker.bind(
+        this.providerController,
+      ),
       unlockKeyrings: this.keyringController.unlockKeyrings.bind(
         this.keyringController,
       ),
@@ -63,8 +66,21 @@ class Controller extends EventEmitter {
         this.providerController.getEIP1559Compatibility.bind(
           this.providerController,
         ),
-      getEIP1559GasFeeEstimates:
-        this.gasFeeController.fetchGasFeeEstimates.bind(this.gasFeeController),
+      txHistoryLimit: 60,
+      getNetworkId: this.providerController.getNetworkId.bind(
+        this.providerController,
+      ),
+      getCurrentChainId: () => {
+        return this.providerController.getCurrentChainId();
+      },
+    });
+    this.txController.initializeTransaction();
+
+    /**
+     * switchNetwork 시점에 store에 저장되어있던 unapproved 정보를 clear하기 위해 추가함
+     */
+    this.providerController.on(NETWORK_EVENTS.NETWORK_WILL_CHANGE, () => {
+      this.txController.txStateManager.clearUnapprovedTxs();
     });
 
     this.tokenController = new TokenController({
@@ -225,9 +241,9 @@ class Controller extends EventEmitter {
 
   // transaction send test
   sendRawTransaction = async (_, txMeta) => {
-    const txResult = await this.txController.sendRawTransaction(txMeta);
+    const txHash = await this.txController.sendRawTransaction(txMeta);
     return {
-      txResult,
+      txHash,
     };
   };
 
@@ -308,6 +324,27 @@ class Controller extends EventEmitter {
     return { address };
   };
 
+  // next nonce
+  getNextNonce = async (_, { address }) => {
+    const nonceLock = await this.txController.nonceTracker.getNonceLock(
+      address,
+    );
+    nonceLock.releaseLock();
+    return nonceLock.nextNonce;
+  };
+
+  // set unapproved tx
+  setUnapprovedTx = async (_, { txParams }) => {
+    const txMeta = await this.txController.setUnapprovedTx({ txParams });
+    return txMeta;
+  };
+
+  // reset unapproved tx
+  resetUnapprovedTx = async () => {
+    const res = await this.txController.resetUnapprovedTx();
+    return res;
+  };  
+    
   // transfer erc20 token
   transferERC20 = async (_, { receiver, amount }) => {
     const txResult = await this.tokenController.transferERC20(receiver, amount);

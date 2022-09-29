@@ -8,6 +8,7 @@ import {
   useGetStoreAccounts,
   useSetStoreSelectedAddress,
 } from 'ui/data/account/account.hooks';
+import { useGetNextNonce } from 'ui/data/transaction/transaction.hooks';
 
 function Home() {
   const navigation = useNavigate();
@@ -20,6 +21,11 @@ function Home() {
     onSuccess() {
       updateAccounts();
     },
+  });
+
+  // getNextNonce
+  const { data: nextNonce, refetch: updateNextNonce } = useGetNextNonce({
+    address: accounts?.selectedAddress,
   });
 
   // account change
@@ -108,6 +114,17 @@ function Home() {
       >
         Token
       </Button>
+      <Button
+        color={THEME_COLOR.INFO}
+        className="my-5"
+        suffixIcon={<FaBeer />}
+        onClick={updateNextNonce}
+      >
+        Next Nonce
+      </Button>
+
+      {nextNonce && <Card title="Next Nonce" content={nextNonce} />}
+      
       <Button
         color={THEME_COLOR.WARNING}
         className="my-5"

@@ -140,6 +140,24 @@ class Background {
       this.controller.switchAccounts,
     );
 
+    // next Nonce
+    this.requests.set(
+      BackgroundMessages.GET_NEXT_NONCE,
+      this.controller.getNextNonce,
+    );
+
+    // set unapproved tx
+    this.requests.set(
+      BackgroundMessages.SET_UNAPPROVED_TX,
+      this.controller.setUnapprovedTx,
+    );
+
+    // reset unapproved tx
+    this.requests.set(
+      BackgroundMessages.RESET_UNAPPROVED_TX,
+      this.controller.resetUnapprovedTx,
+    );
+
     // transfer erc20 token
     this.requests.set(
       BackgroundMessages.TRANSFER_ERC20,

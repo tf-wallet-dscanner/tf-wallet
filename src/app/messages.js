@@ -23,6 +23,9 @@ export const BackgroundMessages = {
   TRANSFER_ERC20: 'transferERC20', // ERC20 토큰 전송하기 (sendRawTransaction)
   GET_GAS_FEE_ESTIMATES_START_POLLING: 'getGasFeeEstimatesAndStartPolling',
   GET_GAS_FEE_ESTIMATES: 'getGasFeeEstimates',
+  GET_NEXT_NONCE: 'getNextNonce',
+  SET_UNAPPROVED_TX: 'setUnapprovedTx', // store에 currentNetworkTxList, unapproveTxs 추가
+  RESET_UNAPPROVED_TX: 'resetUnapprovedTx', // store unapproveTxs 초기화
   GET_ETH_TX_HISTORY: 'getEthTxHistory',
   GET_ERC20_TRANSFER_HISTORY: 'getErc20TransferHistory',
   GET_ERC721_TRANSFER_HISTORY: 'getErc721TransferHistory',

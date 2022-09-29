@@ -1,13 +1,16 @@
 import { GAS_ESTIMATE_TYPES, PRIORITY_LEVELS } from 'app/constants/gas';
 import { gweiDecToETHDec, makeCorrectNumber } from 'app/lib/util';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Box from 'ui/components/atoms/box';
 import Button from 'ui/components/atoms/button';
 import Card from 'ui/components/atoms/card';
 import TextField from 'ui/components/atoms/text-field';
 import { THEME_COLOR } from 'ui/constants/colors';
-import { useSendRawTransaction } from 'ui/data/transaction';
+import {
+  useResetUnapprovedTx,
+  useSendRawTransaction,
+} from 'ui/data/transaction';
 import { useTransactionStore } from 'ui/store';
 import shallow from 'zustand/shallow';
 
@@ -42,6 +45,7 @@ function EstimateGas() {
     },
   });
   const [gasLevel, setGasLevel] = useState(PRIORITY_LEVELS.MEDIUM);
+  const { mutate: resetUnapprovedTx } = useResetUnapprovedTx();
 
   const handleGasLevelChange = (event) => {
     setGasLevel(event.target.value);
@@ -99,6 +103,14 @@ function EstimateGas() {
     return <Card>네트워크 에러발생</Card>;
   }
 
+  // unmount 시점
+  useEffect(() => {
+    return () => {
+      // unApprovedTx 정보 초기화
+      resetUnapprovedTx();
+    };
+  }, []);
+
   return (
     <div>
       <label htmlFor="password">패스워드</label>
@@ -106,6 +118,7 @@ function EstimateGas() {
         password
         name="password"
         value={password}
+        placeholder="Account1번 패스워드 입력"
         onChange={(event) => setPassword(event.target.value)}
       />
       <Box>
