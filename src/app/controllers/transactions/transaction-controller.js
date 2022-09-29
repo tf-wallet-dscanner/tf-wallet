@@ -716,7 +716,8 @@ class TransactionController extends EventEmitter {
     await this.#setTxConfig({
       currentNetworkTxList: Object.values(transactions),
       unapprovedTxs:
-        transactions[lastTxId].status === TRANSACTION_STATUSES.UNAPPROVED
+        transactions &&
+        transactions[lastTxId]?.status === TRANSACTION_STATUSES.UNAPPROVED
           ? transactions[lastTxId]
           : {},
     });

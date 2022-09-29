@@ -1,3 +1,5 @@
+import { weiHexToEthDec } from 'app/lib/util';
+import { useMemo } from 'react';
 import { FaBeer } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 import Button from 'ui/components/atoms/button';
@@ -34,6 +36,16 @@ function Home() {
     updateSelectedAddress(selectedAddress);
   };
 
+  const currentBalance = useMemo(() => {
+    const balance =
+      accounts && accounts.identities
+        ? accounts?.identities.find(
+            (account) => account.address === accounts.selectedAddress,
+          )?.balance
+        : '0x0';
+    return parseFloat(weiHexToEthDec(balance)).toFixed(4);
+  }, [accounts]);
+
   return (
     <Container className="p-4">
       <Button
@@ -45,7 +57,7 @@ function Home() {
         Provider
       </Button>
 
-      {accounts && (
+      {accounts && accounts.identities && (
         <select
           className="w-full"
           name="accounts"
@@ -60,8 +72,11 @@ function Home() {
         </select>
       )}
 
-      {accounts && (
-        <Card title="Selected Address" content={accounts.selectedAddress} />
+      {accounts && accounts.identities && (
+        <>
+          <Card title="Selected Address" content={accounts.selectedAddress} />
+          <Card title="Balance" content={currentBalance} />
+        </>
       )}
 
       <Button

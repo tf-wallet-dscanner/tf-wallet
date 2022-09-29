@@ -109,27 +109,25 @@ function JsonFile() {
         />
       )}
       {currentType === 'JSON File' && (
-        <>
-          <FileInput
-            readAs="text"
-            onLoad={(event) => setImportFileInput(event.target.result)}
-            style={{
-              padding: '20px 0px 12px 15%',
-              fontSize: '15px',
-              display: 'flex',
-              justifyContent: 'center',
-              width: '100%',
-            }}
-          />
-          <TextField
-            password
-            placeholder="비밀번호 입력"
-            onChange={(e) => {
-              setImportPassword(e.target.value);
-            }}
-          />
-        </>
+        <FileInput
+          readAs="text"
+          onLoad={(event) => setImportFileInput(event.target.result)}
+          style={{
+            padding: '20px 0px 12px 15%',
+            fontSize: '15px',
+            display: 'flex',
+            justifyContent: 'center',
+            width: '100%',
+          }}
+        />
       )}
+      <TextField
+        password
+        placeholder="비밀번호 입력"
+        onChange={(e) => {
+          setImportPassword(e.target.value);
+        }}
+      />
       <Button onClick={refetchImportStrategy} color={THEME_COLOR.SUCCESS}>
         가져오기
       </Button>
