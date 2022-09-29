@@ -178,7 +178,7 @@ class TransactionController extends EventEmitter {
    * @param {bool}   txMeta.isTransfer - token transfer 트랜잭션 여부
    * @param {string} txMeta.data - contract 호출 data
    * @param {number} txMeta.decimalValue - 보내는 코인/토큰 양 (DEC)
-   * @param {number} txMeta.gas - MIN_GAS_LIMIT_DEC(21000)
+   * @param {number} txMeta.gas - MIN_GAS_LIMIT_DEC
    * @param {number} txMeta.gasPrice - ETH(KLAY) DEC
    * @param {number} txMeta.maxFeePerGas - The maximum fee per gas that the transaction is willing to pay in total
    * @param {number} txMeta.maxPriorityFeePerGas - The maximum fee per gas to give miners to incentivize them to include the transaction (Priority fee)
@@ -209,6 +209,8 @@ class TransactionController extends EventEmitter {
       let gasLimit;
       if (isTransfer) {
         gasLimit = '0000FDE8'; // 65000
+      } else if (txMeta.gas) {
+        gasLimit = parseInt(txMeta.gas, 10).toString(16);
       } else {
         const txGasUtil = new TxGasUtil({
           ethQuery: this.ethQuery.bind(this.ethQuery),

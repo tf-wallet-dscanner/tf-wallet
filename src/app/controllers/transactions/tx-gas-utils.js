@@ -67,6 +67,7 @@ export default class TxGasUtil {
     // to skip those balance checks. We check balance elsewhere. We also delete
     // maxFeePerGas and maxPriorityFeePerGas to support EIP-1559 txs.
     delete txParams.password;
+    delete txParams.isTransfer;
     delete txParams.gasPrice;
     delete txParams.maxFeePerGas;
     delete txParams.maxPriorityFeePerGas;

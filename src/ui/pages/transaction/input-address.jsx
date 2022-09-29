@@ -1,4 +1,5 @@
 import { addHexPrefix } from 'ethereumjs-util';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Button from 'ui/components/atoms/button';
 import TextField from 'ui/components/atoms/text-field';
@@ -19,9 +20,11 @@ function InputAddress() {
     }),
     shallow,
   );
+  const [value, setValue] = useState(decimalValue);
 
   const { mutate: unApprovedTx } = useSetUnapprovedTx({
     onSuccess() {
+      setDecimalValue(Number(value));
       navigation('estimate-gas');
     },
   });
@@ -31,9 +34,9 @@ function InputAddress() {
     const txParams = {
       to,
       gasLimit: addHexPrefix(gas.toString(16)),
-      gasPrice: '0x0',
+      gasPrice: '0x00',
       value: addHexPrefix(parseInt(decimalValue * 10 ** 18, 10).toString(16)),
-      type: '0x0',
+      type: '0x00',
     };
     unApprovedTx({ txParams });
   };
@@ -51,8 +54,8 @@ function InputAddress() {
       <TextField
         type="text"
         name="decimalValue"
-        value={decimalValue}
-        onChange={(event) => setDecimalValue(Number(event.target.value))}
+        value={value}
+        onChange={(event) => setValue(event.target.value)}
       />
       <Button
         className="mb-6"

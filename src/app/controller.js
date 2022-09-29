@@ -348,8 +348,8 @@ class Controller extends EventEmitter {
   resetUnapprovedTx = async () => {
     const res = await this.txController.resetUnapprovedTx();
     return res;
-  };  
-    
+  };
+
   // transfer erc20 token
   transferERC20 = async (_, { receiver, amount }) => {
     const txResult = await this.tokenController.transferERC20(receiver, amount);
