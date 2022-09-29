@@ -87,14 +87,15 @@ function EstimateGas() {
     ) {
       const { suggestedMaxFeePerGas } = gasFeeEstimates[gasLevel];
       calculateGasPrice = gas * parseFloat(suggestedMaxFeePerGas);
+      setGasPrice(suggestedMaxFeePerGas);
     } else if (gasEstimateType === GAS_ESTIMATE_TYPES.ETH_GASPRICE) {
       const { gasPrice: _gasPrice } = gasFeeEstimates;
       calculateGasPrice = gas * parseFloat(_gasPrice);
+      setGasPrice(_gasPrice);
     } else {
       return null;
     }
     const ethDec = gweiDecToETHDec(calculateGasPrice);
-    setGasPrice(gasFeeEstimates[gasLevel].suggestedMaxFeePerGas);
 
     return ethDec;
   }, [gas, gasLevel, estimateData]);

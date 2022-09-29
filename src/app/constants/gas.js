@@ -26,7 +26,7 @@ export const GWEI = 'gwei';
 
 export const MIN_GAS_PRICE_DEC = 0;
 export const MIN_GAS_PRICE_HEX = MIN_GAS_PRICE_DEC.toString(16);
-export const MIN_GAS_LIMIT_DEC = 21000;
+export const MIN_GAS_LIMIT_DEC = 31000;
 export const MAX_GAS_LIMIT_DEC = 7920027;
 export const MIN_GAS_LIMIT_HEX = MIN_GAS_LIMIT_DEC.toString(16);
 

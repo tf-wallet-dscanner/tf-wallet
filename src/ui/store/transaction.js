@@ -8,13 +8,13 @@ import create from 'zustand';
 import logger from './middlewares/logger';
 
 const initialState = {
-  nonce: '0x0',
+  nonce: '0x00',
   from: '',
   to: '',
   gas: MIN_GAS_LIMIT_DEC,
   gasPrice: MIN_GAS_PRICE_DEC,
   value: 0, // 0.1ETH === 100000000000000000 wei
-  data: '0x0',
+  data: '0x00',
   estimateData: {
     gasFeeEstimates: {},
     estimatedGasFeeTimeBounds: {},
