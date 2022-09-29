@@ -81,6 +81,9 @@ class Controller extends EventEmitter {
      */
     this.providerController.on(NETWORK_EVENTS.NETWORK_WILL_CHANGE, () => {
       this.txController.txStateManager.clearUnapprovedTxs();
+      this.keyringController.updateStoreSelectedAddress(
+        this.store.accounts?.selectedAddress,
+      );
     });
 
     this.tokenController = new TokenController({

@@ -273,6 +273,7 @@ class KeyringController {
    * @returns {string} accounts[0] - 계정 address 주소
    */
   async getImportAccountStrategy({ strategy, args }) {
+    this.#password = args.password;
     const privateKey = await accountImporter.importAccount(strategy, args);
 
     const keyring = new SimpleKeyring([privateKey]);
@@ -311,25 +312,22 @@ class KeyringController {
     // skip if already exists
     if (
       accounts &&
+      accounts.identities &&
       accounts.identities.find((account) => account.address === address)
     ) {
       console.log('skip if already exists');
       return;
     }
 
-    const identities = !accounts ? [] : accounts.identities;
-
-    const currentBalance = await this.ethQuery(
-      'eth_getBalance',
-      address,
-      'latest',
-    );
+    const identities =
+      !accounts || !accounts.identities ? [] : accounts.identities;
+    const balance = await this.updateGetBalance(address);
 
     // add address data
     identities.push({
       address,
       name: `Account ${identities.length + 1}`,
-      balance: currentBalance,
+      balance,
       lastSelected: new Date().getTime(),
     });
 
@@ -342,20 +340,40 @@ class KeyringController {
   }
 
   // store update selectedAddress
-  async updateStoreSelectedAddress(selectedAddress) {
+  async updateStoreSelectedAddress(address) {
     const accounts = await this.getStoreAccounts();
+    const selectedAddress = address ?? accounts?.selectedAddress;
 
     // lastSelected time update
-    const selectedIdx = accounts.identities.findIndex(
-      (identy) => identy.address === selectedAddress,
-    );
-    accounts.identities[selectedIdx].lastSelected = new Date().getTime();
+    const selectedIdx =
+      accounts && accounts.identities
+        ? accounts.identities.findIndex(
+            (identy) => identy.address === selectedAddress,
+          )
+        : 0;
+    if (accounts && accounts.identities[selectedIdx]) {
+      accounts.identities[selectedIdx].lastSelected = new Date().getTime();
+      accounts.identities[selectedIdx].balance = await this.updateGetBalance(
+        selectedAddress,
+      );
+    }
+
     this.#setKeyringConfig({
       accounts: {
-        identities: accounts.identities,
+        identities: accounts?.identities,
         selectedAddress,
       },
     });
+  }
+
+  async updateGetBalance(address) {
+    const accounts = await this.getStoreAccounts();
+    const currentBalance = await this.ethQuery(
+      'eth_getBalance',
+      address ?? accounts.selectedAddress,
+      'latest',
+    );
+    return currentBalance;
   }
 
   /**
