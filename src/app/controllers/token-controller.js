@@ -149,7 +149,7 @@ class TokenController {
     const rawHexData = await this.encodeCall(
       'transfer',
       ['address', 'uint256'],
-      [receiver, amount],
+      [receiver, String(amount * 10 ** 18)],
     );
     return rawHexData;
   }
