@@ -220,7 +220,13 @@ class TransactionController extends EventEmitter {
         const txGasUtil = new TxGasUtil({
           ethQuery: this.ethQuery.bind(this.ethQuery),
         });
-        gasLimit = await txGasUtil.estimateTxGas(paramsForGasEstimate);
+        const estimateGasLimit = await txGasUtil.estimateTxGas(
+          paramsForGasEstimate,
+        );
+
+        if (parseInt(gasLimit, 16) < parseInt(estimateGasLimit, 16)) {
+          gasLimit = estimateGasLimit;
+        }
       } else if (txMeta.gas) {
         gasLimit = parseInt(txMeta.gas, 10).toString(16);
       } else {
