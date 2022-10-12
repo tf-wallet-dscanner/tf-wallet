@@ -29,10 +29,12 @@ export const MIN_GAS_PRICE_HEX = MIN_GAS_PRICE_DEC.toString(16);
 export const MIN_GAS_LIMIT_DEC = 31000;
 export const MAX_GAS_LIMIT_DEC = 7920027;
 export const MIN_GAS_LIMIT_HEX = MIN_GAS_LIMIT_DEC.toString(16);
-
+const ONE_HUNDRED_THOUSAND = 100000;
 export const GAS_LIMITS = {
   // maximum gasLimit of a simple send
   SIMPLE: addHexPrefix(MIN_GAS_LIMIT_HEX),
+  // a base estimate for token transfers.
+  BASE_TOKEN_ESTIMATE: addHexPrefix(ONE_HUNDRED_THOUSAND.toString(16)),
 };
 
 /**

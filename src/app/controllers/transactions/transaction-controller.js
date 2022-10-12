@@ -1,6 +1,7 @@
 import Common from '@ethereumjs/common';
 import { Transaction, TransactionFactory } from '@ethereumjs/tx';
 import { METAMASK_CONTROLLER_EVENTS, ORIGIN_METAMASK } from 'app/constants/app';
+import { GAS_LIMITS } from 'app/constants/gas';
 import {
   CHAIN_ID_TO_NETWORK_ID_MAP,
   HARDFORKS,
@@ -208,7 +209,18 @@ class TransactionController extends EventEmitter {
 
       let gasLimit;
       if (isTransfer) {
-        gasLimit = '0000FDE8'; // 65000
+        gasLimit = GAS_LIMITS.BASE_TOKEN_ESTIMATE;
+        const paramsForGasEstimate = {
+          from: accounts.selectedAddress,
+          gas: gasLimit,
+          to,
+          data,
+          decimalValue,
+        };
+        const txGasUtil = new TxGasUtil({
+          ethQuery: this.ethQuery.bind(this.ethQuery),
+        });
+        gasLimit = await txGasUtil.estimateTxGas(paramsForGasEstimate);
       } else if (txMeta.gas) {
         gasLimit = parseInt(txMeta.gas, 10).toString(16);
       } else {
