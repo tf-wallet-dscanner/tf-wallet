@@ -3,9 +3,6 @@ export const HARDFORKS = {
   LONDON: 'london',
 };
 
-export const ROPSTEN = 'ropsten';
-export const RINKEBY = 'rinkeby';
-export const KOVAN = 'kovan';
 export const MAINNET = 'mainnet';
 export const GOERLI = 'goerli';
 export const LOCALHOST = 'localhost';
@@ -14,19 +11,13 @@ export const BAOBAB = 'baobab';
 export const NETWORK_TYPE_RPC = 'rpc';
 
 export const MAINNET_NETWORK_ID = '1';
-export const ROPSTEN_NETWORK_ID = '3';
-export const RINKEBY_NETWORK_ID = '4';
 export const GOERLI_NETWORK_ID = '5';
-export const KOVAN_NETWORK_ID = '42';
 export const CYPRESS_NETWORK_ID = '8217';
 export const BAOBAB_NETWORK_ID = '1001';
 export const LOCALHOST_NETWORK_ID = '155';
 
 export const MAINNET_CHAIN_ID = '0x1';
-export const ROPSTEN_CHAIN_ID = '0x3';
-export const RINKEBY_CHAIN_ID = '0x4';
 export const GOERLI_CHAIN_ID = '0x5';
-export const KOVAN_CHAIN_ID = '0x2a';
 export const CYPRESS_CHAIN_ID = '0x2019';
 export const BAOBAB_CHAIN_ID = '0x3e9';
 export const LOCALHOST_CHAIN_ID = '0x9B';
@@ -37,9 +28,6 @@ export const LOCALHOST_CHAIN_ID = '0x9B';
  */
 export const MAX_SAFE_CHAIN_ID = 4503599627370476;
 
-export const ROPSTEN_DISPLAY_NAME = 'Ropsten';
-export const RINKEBY_DISPLAY_NAME = 'Rinkeby';
-export const KOVAN_DISPLAY_NAME = 'Kovan';
 export const MAINNET_DISPLAY_NAME = 'Ethereum Mainnet';
 export const GOERLI_DISPLAY_NAME = 'Goerli';
 export const CYPRESS_DISPLAY_NAME = 'Cypress';
@@ -52,31 +40,16 @@ export const getRpcUrl = ({ network }) =>
 export const getKlaytnRpcUrl = ({ network }) =>
   `https://public-node-api.klaytnapi.com/v1/${network}`;
 
-export const ROPSTEN_RPC_URL = getRpcUrl({ network: ROPSTEN });
-export const RINKEBY_RPC_URL = getRpcUrl({ network: RINKEBY });
-export const KOVAN_RPC_URL = getRpcUrl({ network: KOVAN });
 export const MAINNET_RPC_URL = getRpcUrl({ network: MAINNET });
 export const GOERLI_RPC_URL = getRpcUrl({ network: GOERLI });
 export const CYPRESS_RPC_URL = getKlaytnRpcUrl({ network: CYPRESS });
 export const BAOBAB_RPC_URL = getKlaytnRpcUrl({ network: BAOBAB });
 export const LOCALHOST_RPC_URL = 'http://localhost:8545';
 
-export const INFURA_PROVIDER_TYPES = [ROPSTEN, RINKEBY, KOVAN, MAINNET, GOERLI];
+export const INFURA_PROVIDER_TYPES = [MAINNET, GOERLI];
 export const KLAYTN_PROVIDER_TYPES = [CYPRESS, BAOBAB];
 
 export const NETWORK_TYPE_TO_ID_MAP = {
-  [ROPSTEN]: {
-    networkId: ROPSTEN_NETWORK_ID,
-    chainId: ROPSTEN_CHAIN_ID,
-  },
-  [RINKEBY]: {
-    networkId: RINKEBY_NETWORK_ID,
-    chainId: RINKEBY_CHAIN_ID,
-  },
-  [KOVAN]: {
-    networkId: KOVAN_NETWORK_ID,
-    chainId: KOVAN_CHAIN_ID,
-  },
   [GOERLI]: {
     networkId: GOERLI_NETWORK_ID,
     chainId: GOERLI_CHAIN_ID,
@@ -100,27 +73,18 @@ export const NETWORK_TYPE_TO_ID_MAP = {
 };
 
 export const NETWORK_TO_NAME_MAP = {
-  [ROPSTEN]: ROPSTEN_DISPLAY_NAME,
-  [RINKEBY]: RINKEBY_DISPLAY_NAME,
-  [KOVAN]: KOVAN_DISPLAY_NAME,
   [MAINNET]: MAINNET_DISPLAY_NAME,
   [GOERLI]: GOERLI_DISPLAY_NAME,
   [CYPRESS]: CYPRESS_DISPLAY_NAME,
   [BAOBAB]: BAOBAB_DISPLAY_NAME,
   [LOCALHOST]: LOCALHOST_DISPLAY_NAME,
 
-  [ROPSTEN_NETWORK_ID]: ROPSTEN_DISPLAY_NAME,
-  [RINKEBY_NETWORK_ID]: RINKEBY_DISPLAY_NAME,
-  [KOVAN_NETWORK_ID]: KOVAN_DISPLAY_NAME,
   [GOERLI_NETWORK_ID]: GOERLI_DISPLAY_NAME,
   [MAINNET_NETWORK_ID]: MAINNET_DISPLAY_NAME,
   [CYPRESS_NETWORK_ID]: CYPRESS_DISPLAY_NAME,
   [BAOBAB_NETWORK_ID]: BAOBAB_DISPLAY_NAME,
   [LOCALHOST_NETWORK_ID]: LOCALHOST_DISPLAY_NAME,
 
-  [ROPSTEN_CHAIN_ID]: ROPSTEN_DISPLAY_NAME,
-  [RINKEBY_CHAIN_ID]: RINKEBY_DISPLAY_NAME,
-  [KOVAN_CHAIN_ID]: KOVAN_DISPLAY_NAME,
   [GOERLI_CHAIN_ID]: GOERLI_DISPLAY_NAME,
   [MAINNET_CHAIN_ID]: MAINNET_DISPLAY_NAME,
   [CYPRESS_CHAIN_ID]: CYPRESS_DISPLAY_NAME,
@@ -136,9 +100,6 @@ export const CHAIN_ID_TO_TYPE_MAP = Object.entries(
 }, {});
 
 export const CHAIN_ID_TO_RPC_URL_MAP = {
-  [ROPSTEN_CHAIN_ID]: ROPSTEN_RPC_URL,
-  [RINKEBY_CHAIN_ID]: RINKEBY_RPC_URL,
-  [KOVAN_CHAIN_ID]: KOVAN_RPC_URL,
   [GOERLI_CHAIN_ID]: GOERLI_RPC_URL,
   [MAINNET_CHAIN_ID]: MAINNET_RPC_URL,
   [CYPRESS_CHAIN_ID]: CYPRESS_RPC_URL,
