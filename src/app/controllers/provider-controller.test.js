@@ -1,11 +1,11 @@
 import {
+  GOERLI,
+  GOERLI_CHAIN_ID,
+  GOERLI_RPC_URL,
   MAINNET,
   MAINNET_CHAIN_ID,
   MAINNET_RPC_URL,
   NETWORK_TYPE_RPC,
-  ROPSTEN,
-  ROPSTEN_CHAIN_ID,
-  ROPSTEN_RPC_URL,
 } from 'app/constants/network';
 import MockStore from 'app/mocks/MockStore';
 
@@ -36,13 +36,13 @@ describe('ProviderController', () => {
     });
 
     describe('Set infura provider', () => {
-      it('provider should ropsten network', async () => {
-        providerController.setProviderType('0x3');
+      it('provider should GOERLI network', async () => {
+        providerController.setProviderType('0x5');
         const config = await providerController.providerConfig;
         expect(config).toEqual({
-          type: ROPSTEN,
-          rpcUrl: ROPSTEN_RPC_URL,
-          chainId: ROPSTEN_CHAIN_ID,
+          type: GOERLI,
+          rpcUrl: GOERLI_RPC_URL,
+          chainId: GOERLI_CHAIN_ID,
         });
       });
     });
