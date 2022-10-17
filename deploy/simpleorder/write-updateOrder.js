@@ -1,10 +1,9 @@
 /* eslint-disable func-names */
 const path = require('path');
-require('dotenv').config({ path: path.join(__dirname, '../.env') });
-const Web3 = require('web3');
+require('dotenv').config({ path: path.join(__dirname, '../../.env') });
+const Caver = require('caver-js');
 // eslint-disable-next-line import/no-unresolved
-const Tx = require('ethereumjs-tx').Transaction;
-const erc20 = require('../contracts/ERC20.json');
+const contract = require('../../contracts/simpleOrder.json');
 
 const NETWORK_CHAIN_ID = {
   mainnet: 0x1,
@@ -12,48 +11,49 @@ const NETWORK_CHAIN_ID = {
   cypress: 0x2019,
   baobab: 0x3e9,
 };
-const infuraProjectId = process.env.INFURA_PROJECT_ID;
 const deployerPrivKey = process.env.DEPLOY_PRIVKEY;
 
-const getRpcUrl = ({ network }) =>
-  `https://${network}.infura.io/v3/${infuraProjectId}`;
 const getKlaytnRpcUrl = ({ network }) =>
   `https://public-node-api.klaytnapi.com/v1/${network}`;
 
-async function deploy() {
+async function execution() {
   try {
     const input = {
-      network: process.argv[2], // ropsten
-      name: process.argv[3], // DKA
-      symbol: process.argv[4], // DKA
-      supply: process.argv[5], // ETH 단위
+      network: process.argv[2], // baobab
+      ca: process.argv[3],
+      strOrderId: process.argv[4], // orderId
+      code: process.argv[5], // code
     };
-    const supply = `${input.supply}000000000000000000`; // wei
 
     const chainName = input.network;
     const chainId = NETWORK_CHAIN_ID[`${chainName}`];
-    const web3 = new Web3(
-      new Web3.providers.HttpProvider(getRpcUrl({ network: chainName })),
-    );
+    const caver = new Caver(getKlaytnRpcUrl({ network: chainName }));
 
-    const deployerAcc = web3.eth.accounts.privateKeyToAccount(deployerPrivKey);
+    const deployerAcc =
+      caver.klay.accounts.privateKeyToAccount(deployerPrivKey);
     const deployerAddr = deployerAcc.address;
 
-    const erc20Inst = new web3.eth.Contract(erc20.abi);
-    const deployFunc = erc20Inst.deploy({
-      data: erc20.bytecode,
-      arguments: [input.name, input.symbol, supply],
-    });
+    const contractInst = await caver.contract.create(contract.abi, input.ca);
+    const deployFunc = await contractInst.methods.updateOrder(
+      input.strOrderId,
+      input.code,
+    );
     const deployData = deployFunc.encodeABI();
 
-    const txCurCnt = await web3.eth.getTransactionCount(deployerAddr);
+    const keyring = await caver.wallet.keyring.create(
+      deployerAddr,
+      deployerPrivKey,
+    );
+    const txCurCnt = await caver.rpc.klay.getTransactionCount(deployerAddr);
+    await caver.wallet.add(keyring);
 
     const rawTx = {
       from: deployerAddr,
+      to: input.ca,
       nonce: txCurCnt,
       data: deployData,
-      gas: 4500000,
-      gasPrice: 20000000000, // 20 gwei
+      gas: 7500000,
+      // gasPrice: 20000000000, // caverjs 에서 잡아주는 듯
       chainId,
     };
 
@@ -70,14 +70,11 @@ async function deploy() {
       console.log(`Error:['${error}']`);
     };
 
-    const tx = new Tx(rawTx, { chain: chainName });
-    const signKey = Buffer.from(deployerPrivKey, 'hex');
-    tx.sign(signKey);
-    const serialized = tx.serialize();
-    const rawData = `0x${serialized.toString('hex')}`;
+    const tx = caver.transaction.smartContractExecution.create(rawTx);
+    await caver.wallet.sign(keyring.address, tx);
 
-    await web3.eth
-      .sendSignedTransaction(rawData)
+    await caver.rpc.klay
+      .sendRawTransaction(tx)
       .on('transactionHash', async function (txHash) {
         await cbHash(txHash);
       })
@@ -92,4 +89,4 @@ async function deploy() {
   }
 }
 
-deploy();
+execution();

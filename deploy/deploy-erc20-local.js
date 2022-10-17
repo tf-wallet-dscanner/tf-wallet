@@ -9,8 +9,6 @@ const erc20 = require('../contracts/ERC20.json');
 
 const NETWORK_CHAIN_ID = {
   mainnet: 0x1,
-  ropsten: 0x3,
-  rinkeby: 0x4,
   goerli: 0x5,
   localhost: 0x9b,
   cypress: 0x2019,
