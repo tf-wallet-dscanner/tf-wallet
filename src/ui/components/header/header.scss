@@ -1,0 +1,15 @@
+.header {
+  @apply flex flex-row justify-between items-center p-3 bg-[#F4F3EB];
+
+  &__logo {
+    & > img {
+      @apply w-10 h-10;
+    }
+  }
+
+  &__provider {
+    &-select {
+      @apply select select-bordered w-full max-w-xs focus:outline-none;
+    }
+  }
+}
