@@ -14,7 +14,6 @@ function Intro() {
   useEffect(() => {
     if (!isLoading) {
       const accountsToString = JSON.stringify(accounts);
-      console.log('JSON.stringify(accounts): ', accountsToString);
       if (!isEmpty(JSON.parse(accountsToString))) {
         navigation('/unlock');
       } else {

@@ -9,14 +9,14 @@
  */
 import { ComposedStore, ObservableStore } from '@metamask/obs-store';
 import {
+  BAOBAB,
+  BAOBAB_CHAIN_ID,
+  BAOBAB_RPC_URL,
   CHAIN_ID_TO_RPC_URL_MAP,
   CHAIN_ID_TO_TYPE_MAP,
   INFURA_PROVIDER_TYPES,
   KLAYTN_PROVIDER_TYPES,
   LOCALHOST,
-  MAINNET,
-  MAINNET_CHAIN_ID,
-  MAINNET_RPC_URL,
   NETWORK_TYPE_RPC,
   NETWORK_TYPE_TO_ID_MAP,
 } from 'app/constants/network';
@@ -57,9 +57,9 @@ export const NETWORK_EVENTS = {
 };
 
 const defaultProviderConfig = {
-  type: MAINNET,
-  rpcUrl: MAINNET_RPC_URL,
-  chainId: MAINNET_CHAIN_ID,
+  type: BAOBAB,
+  rpcUrl: BAOBAB_RPC_URL,
+  chainId: BAOBAB_CHAIN_ID,
 };
 
 const defaultNetworkDetailsState = {
