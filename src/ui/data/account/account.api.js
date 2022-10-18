@@ -36,6 +36,15 @@ export async function importAccount({ mnemonic, password }) {
   return accounts;
 }
 
+// 계정 복구
+export async function verifyPassword({ password }) {
+  const accounts = await Messenger.sendMessageToBackground(
+    BackgroundMessages.VERIFY_PASSWORD,
+    { password },
+  );
+  return accounts;
+}
+
 // privateKey 추출
 export async function getExportPrivateKey({ address, password }) {
   const privateKey = await Messenger.sendMessageToBackground(

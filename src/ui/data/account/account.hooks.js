@@ -12,6 +12,7 @@ import {
   importAccount,
   newAccount,
   setStoreSelectedAddress,
+  verifyPassword,
 } from './account.api';
 
 // 신규 니모닉 얻기
@@ -50,6 +51,19 @@ export function useImportAccount(options) {
     retry: false,
     ...options,
   });
+}
+
+// 패스워드 확인
+export function useGetVerifyPassword({ password }, options) {
+  return useQuery(
+    ['/account/verifyPassword', { password }],
+    () => verifyPassword({ password }),
+    {
+      retry: false,
+      enabled: false,
+      ...options,
+    },
+  );
 }
 
 // 개인키 추출

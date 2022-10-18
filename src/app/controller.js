@@ -185,6 +185,13 @@ class Controller extends EventEmitter {
     return accounts;
   };
 
+  // 사용자 입력 패스워드를 통해 잠금 해제
+  verifyPassword = async (_, { password }) => {
+    // 비밀번호 검증
+    const verifyResult = await this.keyringController.verifyPassword(password);
+    return verifyResult;
+  };
+
   // 비공개키 추출
   getExportPrivateKey = async (_, { address, password }) => {
     // 비밀번호 검증
