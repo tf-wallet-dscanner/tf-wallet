@@ -9,6 +9,7 @@ export const BackgroundMessages = {
   GET_MNEMONIC_VALIDATE_BG: 'getMnemonicValidate', // 니모닉 검증값 얻기
   NEW_ACCOUNT_BG: 'newAccount', // 새 계정 생성
   IMPORT_ACCOUNT_BG: 'importAccount', // 계정 복구
+  VERIFY_PASSWORD: 'verifyPassword', // 패스워드 확인
   GET_EXPORT_PRIVATE_KEY_BG: 'getExportPrivateKey', // 비공개키 추출
   GET_EXPORT_PUBLIC_KEY_BG: 'getExportPublicKey', // 공개키 추출
   GET_EXPORT_KEYSTORE_V3_BG: 'getExportKeystoreV3', // 키스토어 V3 추출

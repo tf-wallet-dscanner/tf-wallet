@@ -69,6 +69,12 @@ class Background {
       this.controller.importAccount,
     );
 
+    // 패스워드 확인
+    this.requests.set(
+      BackgroundMessages.VERIFY_PASSWORD,
+      this.controller.verifyPassword,
+    );
+
     // 비공개키 추출
     this.requests.set(
       BackgroundMessages.GET_EXPORT_PRIVATE_KEY_BG,

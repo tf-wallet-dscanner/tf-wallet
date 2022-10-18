@@ -14,6 +14,7 @@ import './text-field.scss';
 function TextField({
   password,
   className,
+  placeholder = '',
   onChange,
   prefixIcon,
   suffixIcon,
@@ -31,6 +32,7 @@ function TextField({
           className="text-field__input"
           onChange={onChange}
           type={password ? 'password' : 'text'}
+          placeholder={placeholder}
           {...textFieldProps}
         />
         {suffixIcon && (

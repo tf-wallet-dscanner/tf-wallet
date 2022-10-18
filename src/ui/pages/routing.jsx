@@ -1,10 +1,13 @@
-import React from 'react';
 import { Route, Routes } from 'react-router-dom';
 import { APP_STAGE } from 'ui/constants/environment';
 
+import ConfirmMnemonic from './confirm-mnemonic';
+import CreateMnemonic from './create-mnemonic';
+import CreatePassword from './create-password';
 import EthHistory from './eth-history';
 import Home from './home';
 import ImportAccount from './import-account';
+import Intro from './intro';
 import JsonFile from './json-file';
 import NewAccount from './new-account';
 import Provider from './provider';
@@ -15,6 +18,9 @@ import Transaction, {
   InputAddressToken,
   TxResult,
 } from './transaction';
+import Unlock from './unlock';
+import Welcome from './welcome';
+import WelcomeSuccess from './welcome-success';
 
 if (APP_STAGE === 'local') {
   require('../mocks');
@@ -23,7 +29,15 @@ if (APP_STAGE === 'local') {
 function Routing() {
   return (
     <Routes>
-      <Route path="/" element={<Home />} />
+      <Route path="/" element={<Intro />}>
+        <Route path="welcome" element={<Welcome />} />
+        <Route path="create-password/:mode" element={<CreatePassword />} />
+        <Route path="create-mnemonic" element={<CreateMnemonic />} />
+        <Route path="confirm-mnemonic" element={<ConfirmMnemonic />} />
+        <Route path="welcome-success" element={<WelcomeSuccess />} />
+        <Route path="unlock" element={<Unlock />} />
+      </Route>
+      <Route path="/home" element={<Home />} />
       <Route path="/provider" element={<Provider />} />
       <Route path="/transaction" element={<Transaction />}>
         <Route index element={<InputAddress />} />

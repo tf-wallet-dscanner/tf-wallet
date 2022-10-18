@@ -346,12 +346,13 @@ class KeyringController {
 
     // lastSelected time update
     const selectedIdx =
-      accounts && accounts.identities
+      accounts && accounts?.identities
         ? accounts.identities.findIndex(
             (identy) => identy.address === selectedAddress,
           )
         : 0;
-    if (accounts && accounts.identities[selectedIdx]) {
+
+    if (accounts && accounts?.identities && accounts?.identities[selectedIdx]) {
       accounts.identities[selectedIdx].lastSelected = new Date().getTime();
       accounts.identities[selectedIdx].balance = await this.updateGetBalance(
         selectedAddress,
