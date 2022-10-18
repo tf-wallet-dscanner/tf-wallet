@@ -11,7 +11,7 @@ const NETWORK_CHAIN_ID = {
   cypress: 0x2019,
   baobab: 0x3e9,
 };
-const deployerPrivKey = process.env.DEPLOY_PRIVKEY;
+const privkey = process.env.DEPLOY_PRIVKEY;
 
 const getKlaytnRpcUrl = ({ network }) =>
   `https://public-node-api.klaytnapi.com/v1/${network}`;
@@ -29,39 +29,35 @@ async function execution() {
     const chainId = NETWORK_CHAIN_ID[`${chainName}`];
     const caver = new Caver(getKlaytnRpcUrl({ network: chainName }));
 
-    const deployerAcc =
-      caver.klay.accounts.privateKeyToAccount(deployerPrivKey);
-    const deployerAddr = deployerAcc.address;
+    const acc = caver.klay.accounts.privateKeyToAccount(privkey);
+    const addr = acc.address;
 
     const contractInst = await caver.contract.create(contract.abi, input.ca);
-    const deployFunc = await contractInst.methods.updateOrder(
+    const func = await contractInst.methods.updateOrder(
       input.strOrderId,
       input.code,
     );
-    const deployData = deployFunc.encodeABI();
+    const funcData = func.encodeABI();
 
-    const keyring = await caver.wallet.keyring.create(
-      deployerAddr,
-      deployerPrivKey,
-    );
-    const txCurCnt = await caver.rpc.klay.getTransactionCount(deployerAddr);
+    const keyring = await caver.wallet.keyring.create(addr, privkey);
+    const txCurCnt = await caver.rpc.klay.getTransactionCount(addr);
     await caver.wallet.add(keyring);
 
     const rawTx = {
-      from: deployerAddr,
+      from: addr,
       to: input.ca,
       nonce: txCurCnt,
-      data: deployData,
+      data: funcData,
       gas: 7500000,
       // gasPrice: 20000000000, // caverjs 에서 잡아주는 듯
       chainId,
     };
 
     const cbHash = async function (txHash) {
-      console.log(`Deploy TX:['${txHash}'] Created!`);
+      console.log(`Excution TX:['${txHash}'] Created!`);
     };
     const cbReceipt = async function (receipt) {
-      console.log(`Deploy TX:['${receipt.transactionHash}'] Done!`);
+      console.log(`Excution TX:['${receipt.transactionHash}'] Done!`);
       console.log(`- BlockNumber:[${parseInt(receipt.blockNumber, 10)}]`);
       console.log(`- contractAddress:[${receipt.contractAddress}]`);
       console.log(`- receipt:[${JSON.stringify(receipt)}]`);
