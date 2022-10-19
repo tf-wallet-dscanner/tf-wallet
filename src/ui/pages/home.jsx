@@ -1,4 +1,5 @@
 import { Outlet, useNavigate } from 'react-router-dom';
+import AccountView from 'ui/components/account-view/account-view';
 import Header from 'ui/components/header';
 
 function Home() {
@@ -7,6 +8,7 @@ function Home() {
   return (
     <main className="home">
       <Header />
+      <AccountView />
       <Outlet />
     </main>
   );

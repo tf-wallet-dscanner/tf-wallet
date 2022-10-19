@@ -37,7 +37,9 @@ function Routing() {
         <Route path="welcome-success" element={<WelcomeSuccess />} />
         <Route path="unlock" element={<Unlock />} />
       </Route>
-      <Route path="/home" element={<Home />} />
+      <Route path="/home" element={<Home />}>
+        {/* <Route index element={<InputAddress />} /> */}
+      </Route>
       <Route path="/provider" element={<Provider />} />
       <Route path="/transaction" element={<Transaction />}>
         <Route index element={<InputAddress />} />

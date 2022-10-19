@@ -1,0 +1,19 @@
+.dropdown-menu {
+  @apply absolute right-0 top-0 #{!important};
+
+  &__icon {
+    @apply inline-block p-4 text-right cursor-pointer;
+
+    & svg {
+      @apply inline w-8 h-8 text-white;
+    }
+  }
+
+  &__contents {
+    @apply menu absolute p-2 shadow bg-base-100 w-[175px] -mt-4 mr-2.5 opacity-0 invisible;
+
+    &.open {
+      @apply opacity-100 visible;
+    }
+  }
+}
