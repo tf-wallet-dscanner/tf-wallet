@@ -15,10 +15,10 @@ function Tooltip({
   children,
   ...tooltipProps
 }) {
-  const tooltipClassName = classnames('tooltip', className);
-  const tooltipPlacement = `tooltip__message-${placement}`;
+  const tooltipClassName = classnames('atoms__tooltip', className);
+  const tooltipPlacement = `atoms__tooltip__message-${placement}`;
   const tooltipMessageClassName = classnames(
-    'tooltip__message',
+    'atoms__tooltip__message',
     tooltipPlacement,
   );
 

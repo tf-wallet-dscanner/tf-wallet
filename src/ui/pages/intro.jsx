@@ -23,7 +23,7 @@ function Intro() {
   }, [isLoading, accounts]);
 
   return (
-    <main className="flex flex-col items-center h-screen p-5 bg-[#05486E]">
+    <main className="flex flex-col items-center h-screen p-5">
       <section>
         <Mascot />
       </section>
