@@ -185,6 +185,7 @@ class KeyringController {
 
   // 비밀번호 검증 (vault)
   async verifyPassword(password) {
+    this.#password = password;
     const { vault: encryptedVault } = await this.#keyringStore.get('vault');
     if (!encryptedVault) {
       throw new Error('Cannot unlock without a previous vault.');
@@ -425,7 +426,7 @@ class KeyringController {
   }
 
   // unlock keyrings
-  async unlockKeyrings(password) {
+  async unlockKeyrings() {
     const { vault: encryptedVault } = await this.#keyringStore.get('vault');
 
     if (!encryptedVault) {
@@ -433,8 +434,7 @@ class KeyringController {
     }
 
     await this.clearKeyrings();
-    const vault = await this.encryptor.decrypt(password, encryptedVault);
-    this.#password = password;
+    const vault = await this.encryptor.decrypt(this.#password, encryptedVault);
     await Promise.all(vault.map(this._restoreKeyring.bind(this)));
   }
 

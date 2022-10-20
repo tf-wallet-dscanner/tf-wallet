@@ -1,3 +1,5 @@
+const plugin = require('tailwindcss/plugin');
+
 module.exports = {
   darkMode: 'class',
   content: ['./public/**/*.html', './src/**/*.{js,jsx,ts,tsx}'],
@@ -15,6 +17,7 @@ module.exports = {
         warning: '#ff9800',
         info: '#03a9f4',
         success: '#4caf50',
+        'dark-blue': '#043653',
       },
       backgroundColor: {
         error: '#fdeded',
@@ -67,6 +70,15 @@ module.exports = {
     require('@tailwindcss/forms'),
     require('@tailwindcss/typography'),
     require('daisyui'),
+    plugin(({ addComponents }) => {
+      addComponents({
+        '.text-shorten': {
+          overflow: 'hidden',
+          textOverflow: 'ellipsis',
+          whiteSpace: 'nowrap',
+        },
+      });
+    }),
   ],
   daisyui: {
     themes: false,

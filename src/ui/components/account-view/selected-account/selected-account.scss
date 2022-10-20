@@ -2,6 +2,6 @@
   @apply p-4 text-white text-center;
 
   &__eoa {
-    @apply border-2 border-solid border-[#7c8dcc] rounded cursor-pointer mt-1 p-1;
+    @apply border-2 border-solid border-[#7c8dcc] rounded cursor-pointer mt-1 p-1 hover:bg-[#4c444c];
   }
 }
