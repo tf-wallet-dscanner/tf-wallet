@@ -2,6 +2,8 @@
   @apply flex flex-row justify-between items-center p-3 bg-[#F4F3EB];
 
   &__logo {
+    @apply cursor-pointer;
+
     & > img {
       @apply w-10 h-10;
     }
