@@ -1,5 +1,6 @@
 import classnames from 'classnames';
 
+import Box from '../box';
 import './container.scss';
 
 const DEFAULT_TAG = 'div';
@@ -15,7 +16,7 @@ function Container({ as, className, children, ...containerProps }) {
 
   return (
     <Tag className={containerClassName} {...containerProps}>
-      <div className="atoms__container-wrapper">{children}</div>
+      <Box className="atoms__container-wrapper">{children}</Box>
     </Tag>
   );
 }

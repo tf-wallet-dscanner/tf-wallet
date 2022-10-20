@@ -174,7 +174,6 @@ class TransactionController extends EventEmitter {
   /**
    * 코인/토큰 보내기
    * @param {object} txMeta
-   * @param {string} txMeta.password - 사용자 패스워드
    * @param {string} txMeta.to - 받는 사람
    * @param {bool}   txMeta.isTransfer - token transfer 트랜잭션 여부
    * @param {string} txMeta.data - contract 호출 data
@@ -186,7 +185,7 @@ class TransactionController extends EventEmitter {
    * @returns {string} txHash - 트랜잭션 해쉬값(txHash)
    */
   async sendRawTransaction(txMeta) {
-    const { password, to, decimalValue, gasPrice, isTransfer, data } = txMeta;
+    const { to, decimalValue, gasPrice, isTransfer, data } = txMeta;
     try {
       console.log('txMeta: ', txMeta);
       const { accounts } = await this.txConfig;
@@ -196,7 +195,7 @@ class TransactionController extends EventEmitter {
       }
 
       // keyring restore
-      await this.unlockKeyrings(password);
+      await this.unlockKeyrings();
 
       // nonce tracker (nextNonce)
       const nonceLock = await this.nonceTracker.getNonceLock(

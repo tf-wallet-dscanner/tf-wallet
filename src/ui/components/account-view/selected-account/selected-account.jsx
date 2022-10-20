@@ -1,8 +1,11 @@
 import { SECOND } from 'app/constants/time';
 import { useMemo } from 'react';
+import { MdContentCopy } from 'react-icons/md';
 import { useCopyToClipboard, useToggle } from 'react-use';
+import Box from 'ui/components/atoms/box';
 import Toast from 'ui/components/atoms/toast';
 import Tooltip from 'ui/components/atoms/tooltip';
+import Typography from 'ui/components/atoms/typography';
 
 import './selected-account.scss';
 
@@ -26,15 +29,19 @@ function SelectedAccount({ selectedEOA }) {
   };
 
   return (
-    <section className="selected-account">
-      <h1 className="text-2xl">{selectedEOA?.name ?? 'Account 1'}</h1>
+    <Box className="selected-account">
+      <Typography as="h1" className="text-2xl">
+        {selectedEOA?.name ?? 'Account 1'}
+      </Typography>
       <Tooltip className="mx-auto" message={selectedEOA?.address ?? '0x0'}>
-        <h4
+        <Typography
+          as="h4"
           className="selected-account__eoa"
           onClick={() => copyAddress(selectedEOA?.address)}
         >
           {ellipsisAddress}
-        </h4>
+          <MdContentCopy className="inline ml-2" />
+        </Typography>
       </Tooltip>
       {value && (
         <Toast isShow={isShow} severity="success" contents="copied!!" />
@@ -46,7 +53,7 @@ function SelectedAccount({ selectedEOA }) {
           contents="Unable to copy value!"
         />
       )}
-    </section>
+    </Box>
   );
 }
 

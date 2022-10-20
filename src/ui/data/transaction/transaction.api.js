@@ -4,7 +4,6 @@ import Messenger from 'app/messenger';
 /**
  * 코인/토큰 보내기
  * @param {object} txMeta
- * @param {string} txMeta.password - 사용자 패스워드
  * @param {string} txMeta.to - 받는 사람
  * @param {number} txMeta.decimalValue - 보내는 코인/토큰 양 (DEC)
  * @param {number} txMeta.gas - DEC
