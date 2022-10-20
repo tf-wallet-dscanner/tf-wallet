@@ -3,34 +3,30 @@ import {
   NETWORK_TO_NAME_MAP,
   NETWORK_TYPE_TO_ID_MAP,
 } from 'app/constants/network';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import DkaLogo from 'ui/assets/dka_logo.png';
-import { useGetCurrentChainId, useSetProviderType } from 'ui/data/provider';
 
 import './header.scss';
 
-function Header() {
+function Header({ currentChainId, changeProviderType }) {
   const navigation = useNavigate();
-  const { data: currentChainId, refetch: getCurrentChainId } =
-    useGetCurrentChainId();
-  const { mutate } = useSetProviderType({
-    onSuccess() {
-      getCurrentChainId();
-    },
-  });
+  const { pathname } = useLocation();
 
   const handleProviderTypeChange = (event) => {
     const { value: chainId } = event.target;
-    mutate(chainId);
+    changeProviderType(chainId);
   };
 
   const sortedNetworkList = Object.values(NETWORK_TYPE_TO_ID_MAP).sort(
     (a, b) => Number(b.networkId) - Number(a.networkId),
   );
 
+  const canChangeProvider =
+    !pathname.includes('assets') && !pathname.includes('history');
+
   return (
     <header className="header">
-      <div className="header__logo" onClick={() => navigation('/home')}>
+      <div className="header__logo" onClick={() => navigation('/home/assets')}>
         <img src={DkaLogo} alt="logo" />
       </div>
       <div className="header__provider">
@@ -40,6 +36,7 @@ function Header() {
           onChange={handleProviderTypeChange}
           defaultValue={BAOBAB_CHAIN_ID}
           value={currentChainId}
+          disabled={canChangeProvider}
         >
           {sortedNetworkList.map(({ chainId }, index) => (
             <option key={index} value={chainId}>

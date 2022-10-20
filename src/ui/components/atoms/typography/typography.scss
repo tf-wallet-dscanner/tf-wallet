@@ -1,6 +1,3 @@
 .typography {
-  font-size: inherit;
-  font-weight: inherit;
-  color: inherit;
-  font-style: inherit;
+  @apply text-white;
 }
