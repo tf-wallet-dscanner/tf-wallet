@@ -5,11 +5,10 @@ import ConfirmMnemonic from './confirm-mnemonic';
 import CreateMnemonic from './create-mnemonic';
 import CreatePassword from './create-password';
 import EthHistory from './eth-history';
+import ExportAccount from './export-account';
 import Home from './home';
 import ImportAccount from './import-account';
 import Intro from './intro';
-import JsonFile from './json-file';
-import NewAccount from './new-account';
 import Token from './token';
 import Transaction, {
   EstimateGas,
@@ -46,9 +45,8 @@ function Routing() {
         </Route>
       </Route>
       <Route path="/tx-success/:txHash" element={<TxResult />} />
-      <Route path="/new-account" element={<NewAccount />} />
       <Route path="/import-account" element={<ImportAccount />} />
-      <Route path="/json-file" element={<JsonFile />} />
+      <Route path="/export-account" element={<ExportAccount />} />
       <Route path="/token" element={<Token />} />
       <Route path="/eth-history" element={<EthHistory />} />
     </Routes>

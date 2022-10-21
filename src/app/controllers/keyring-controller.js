@@ -81,6 +81,15 @@ class KeyringController {
     return null;
   }
 
+  // 계정 추가
+  async addAccounts() {
+    this.unlockKeyrings();
+    console.warn('keyringcontroll addAccounts!!!!', this.hdKeyring);
+    const hexWallets = await this.hdKeyring.addAccounts();
+    console.warn('hexWallets: ', hexWallets);
+    return hexWallets;
+  }
+
   // 계정 복구
   async createNewVaultAndRestore({ password, mnemonic }) {
     this.#password = password;
@@ -270,11 +279,10 @@ class KeyringController {
   /**
    * 계정 가져오기
    * @param {string} strategy - import 유형 (Private Key, JSON File)
-   * @param {Object} args - { password: 비밀번호, privateKey || fileContents: 타입에 따라 비공개 키 or JSON File }
+   * @param {Object} args - { keystore password: 비밀번호, privateKey || fileContents: 타입에 따라 비공개 키 or JSON File }
    * @returns {string} accounts[0] - 계정 address 주소
    */
   async getImportAccountStrategy({ strategy, args }) {
-    this.#password = args.password;
     const privateKey = await accountImporter.importAccount(strategy, args);
 
     const keyring = new SimpleKeyring([privateKey]);

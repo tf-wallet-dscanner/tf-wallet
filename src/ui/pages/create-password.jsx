@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate, useOutletContext, useParams } from 'react-router-dom';
 import { useMount } from 'react-use';
+import Box from 'ui/components/atoms/box';
 import Button from 'ui/components/atoms/button';
 import TextField from 'ui/components/atoms/text-field';
 
@@ -24,9 +25,9 @@ function CreatePassword() {
   });
 
   return (
-    <form className="create-password">
+    <Box as="article" className="create-password">
       <TextField
-        className="bg-white mb-4"
+        className="mb-4 bg-white"
         type="password"
         name="password"
         value={password}
@@ -34,7 +35,7 @@ function CreatePassword() {
         onChange={(event) => setPassword(event.target.value)}
       />
       <TextField
-        className="bg-white mb-4"
+        className="mb-4 bg-white"
         type="password"
         name="confirmPassword"
         value={confirmPassword}
@@ -49,7 +50,7 @@ function CreatePassword() {
       >
         다음
       </Button>
-    </form>
+    </Box>
   );
 }
 

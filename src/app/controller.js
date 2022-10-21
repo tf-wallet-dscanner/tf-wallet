@@ -176,6 +176,12 @@ class Controller extends EventEmitter {
     return accounts;
   };
 
+  // 니모닉으로 계정 추가
+  addAccounts = async () => {
+    const accounts = await this.keyringController.addAccounts();
+    return accounts;
+  };
+
   // 계정 복구
   importAccount = async (_, { password, mnemonic }) => {
     const accounts = await this.keyringController.createNewVaultAndRestore({

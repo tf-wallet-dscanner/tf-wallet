@@ -77,6 +77,14 @@ module.exports = {
           textOverflow: 'ellipsis',
           whiteSpace: 'nowrap',
         },
+        '.svg-white': {
+          color: 'white',
+          stroke: 'white',
+          '& path': {
+            color: 'white',
+            stroke: 'white',
+          },
+        },
       });
     }),
   ],

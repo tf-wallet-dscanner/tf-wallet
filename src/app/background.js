@@ -63,6 +63,12 @@ class Background {
       this.controller.newAccount,
     );
 
+    // 기존 니모닉으로 계정 추가
+    this.requests.set(
+      BackgroundMessages.ADD_ACCOUNTS,
+      this.controller.addAccounts,
+    );
+
     // 계정 복구
     this.requests.set(
       BackgroundMessages.IMPORT_ACCOUNT_BG,

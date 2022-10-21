@@ -3,6 +3,7 @@ import { useEffect } from 'react';
 import { useNavigate, useOutletContext } from 'react-router-dom';
 import { useCopyToClipboard, useToggle } from 'react-use';
 import Alert from 'ui/components/atoms/alert';
+import Box from 'ui/components/atoms/box';
 import Button from 'ui/components/atoms/button';
 import Toast from 'ui/components/atoms/toast';
 import { useGetNewMnemonic } from 'ui/data/account/account.hooks';
@@ -30,7 +31,7 @@ function CreateMnemonic() {
   }, [mnemonic]);
 
   return (
-    <form className="create-mnemonic">
+    <Box as="article" className="create-mnemonic">
       <Alert
         className="mb-2"
         severity="warning"
@@ -59,7 +60,7 @@ function CreateMnemonic() {
       >
         다음
       </Button>
-    </form>
+    </Box>
   );
 }
 
