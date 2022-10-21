@@ -1,5 +1,4 @@
-// import { useEffect } from 'react';
-import { useEffect, useMemo } from 'react';
+import { useEffect } from 'react';
 import { FiSend } from 'react-icons/fi';
 import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { useMount } from 'react-use';
@@ -19,17 +18,11 @@ function Home() {
   const { data: currentChainId, refetch: getCurrentChainId } =
     useGetCurrentChainId();
   const { data: accounts, refetch: updateAccounts } = useGetStoreAccounts();
-  const { mutate: updateSelectedAddress } = useSetStoreSelectedAddress({
-    onSuccess() {
-      updateAccounts();
-    },
-  });
+  const { mutateAsync: updateSelectedAddress } = useSetStoreSelectedAddress();
 
-  const selectedEOA = useMemo(() => {
-    return accounts?.identities?.find(
-      ({ address }) => accounts?.selectedAddress === address,
-    );
-  }, [accounts]);
+  const selectedEOA = accounts?.identities?.find(
+    ({ address }) => accounts?.selectedAddress === address,
+  );
 
   const { mutate: changeProviderType } = useSetProviderType({
     onSuccess() {
@@ -37,8 +30,9 @@ function Home() {
     },
   });
 
-  const handleAccountChange = (selectedAddress) => {
-    updateSelectedAddress(selectedAddress);
+  const handleAccountChange = async (selectedAddress) => {
+    await updateSelectedAddress(selectedAddress);
+    await updateAccounts();
   };
 
   useMount(() => {
@@ -46,10 +40,10 @@ function Home() {
   });
 
   useEffect(() => {
-    if (selectedEOA) {
-      updateSelectedAddress(selectedEOA?.address);
+    if (accounts) {
+      updateSelectedAddress(selectedEOA?.address).then(() => updateAccounts());
     }
-  }, [currentChainId, selectedEOA]);
+  }, [currentChainId, accounts]);
 
   const isShowSendTransactionButton =
     pathname.includes('assets') || pathname.includes('history');

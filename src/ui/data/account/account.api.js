@@ -27,6 +27,14 @@ export async function newAccount({ mnemonic, password }) {
   return accounts;
 }
 
+// 계정 추가
+export async function addAccounts() {
+  const accounts = await Messenger.sendMessageToBackground(
+    BackgroundMessages.ADD_ACCOUNTS,
+  );
+  return accounts;
+}
+
 // 계정 복구
 export async function importAccount({ mnemonic, password }) {
   const accounts = await Messenger.sendMessageToBackground(
@@ -51,6 +59,7 @@ export async function getExportPrivateKey({ address, password }) {
     BackgroundMessages.GET_EXPORT_PRIVATE_KEY_BG,
     { address, password },
   );
+  console.warn('privateKey: ', privateKey);
   return privateKey;
 }
 

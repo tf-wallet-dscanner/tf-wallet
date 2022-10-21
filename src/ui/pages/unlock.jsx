@@ -3,6 +3,7 @@ import { isEmpty } from 'lodash';
 import { useEffect, useState } from 'react';
 import { useNavigate, useOutletContext } from 'react-router-dom';
 import { useMount } from 'react-use';
+import Box from 'ui/components/atoms/box';
 import Button from 'ui/components/atoms/button';
 import TextField from 'ui/components/atoms/text-field';
 import Toast from 'ui/components/atoms/toast';
@@ -34,15 +35,24 @@ function Unlock() {
     }
   }, [data]);
 
+  const handleEnter = (event) => {
+    const { key } = event;
+
+    if (key === 'Enter') {
+      refetch();
+    }
+  };
+
   return (
-    <form className="unlock">
+    <Box as="article" className="unlock">
       <TextField
-        className="bg-white mb-4"
+        className="mb-4 bg-white"
         type="password"
         name="password"
         value={password}
         placeholder="패스워드"
         onChange={(event) => setPassword(event.target.value)}
+        onKeyUp={handleEnter}
       />
       <Button
         type="button"
@@ -58,7 +68,7 @@ function Unlock() {
           contents="패스워드를 확인해주세요"
         />
       )}
-    </form>
+    </Box>
   );
 }
 

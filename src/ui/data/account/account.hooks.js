@@ -1,6 +1,7 @@
 import { useMutation, useQuery } from 'react-query';
 
 import {
+  addAccounts,
   getExportKeystoreV3,
   getExportPrivateKey,
   getExportPublicKey,
@@ -40,6 +41,14 @@ export function useGetMnemonicValidate({ mnemonic }, options) {
 // 신규 계정 생성
 export function useNewAccount(options) {
   return useMutation(['/account/newAccount'], newAccount, {
+    retry: false,
+    ...options,
+  });
+}
+
+// 계정 추가
+export function useAddAccounts(options) {
+  return useMutation(['/account/addAccounts'], addAccounts, {
     retry: false,
     ...options,
   });

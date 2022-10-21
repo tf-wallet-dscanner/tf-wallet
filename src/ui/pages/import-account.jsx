@@ -1,149 +1,137 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { GrFormClose } from 'react-icons/gr';
 import { useNavigate } from 'react-router-dom';
 import FileInput from 'react-simple-file-input';
+import Box from 'ui/components/atoms/box';
 import Button from 'ui/components/atoms/button';
-import Card from 'ui/components/atoms/card';
+import Container from 'ui/components/atoms/container';
 import TextField from 'ui/components/atoms/text-field';
-import { THEME_COLOR } from 'ui/constants/colors';
+import Typography from 'ui/components/atoms/typography';
 import {
-  useGetExportPrivateKey,
-  useGetExportPublicKey,
-  useGetKeystoreToPrivKey,
-  useImportAccount,
+  useAddAccounts,
+  useGetImportAccountStrategy,
 } from 'ui/data/account/account.hooks';
 
 function NewAccount() {
   const navigation = useNavigate();
-  const [recoverySeed, setRecoverySeed] = useState(''); // 복구 구문 textarae
-  const [recoveryPassword, setRecoveryPassword] = useState(''); // 복구 재설정 패스워드
+  const [importPrivKey, setImportPrivKey] = useState(''); // 비공개키 type일 때 비공개키 정보
+  const [importFileInput, setImportFileInput] = useState(''); // json file type일 때 file 정보
+  const [importFileName, setImportFileName] = useState(''); // json file type일 때 file 정보
+  const [importPassword, setImportPassword] = useState(''); // import 시 필요한 password 정보
 
-  const [addressToPrivPub, setAddressToPrivPub] = useState(''); // 비공개/공개키 추출위한 address
-  const [passwordToPrivPub, setPasswordToPrivPub] = useState(''); // 비공개/공개키 추출위한 패스워드
-
-  const [keystoreInput, setKeystoreInput] = useState(''); // keystore file 정보
-  const [keystorePassword, setKeystorePassword] = useState(''); // keystore file 패스워드
-
-  // 계정 복구
-  const { data: recoveryAccount, mutate: mutateRecoveryAccount } =
-    useImportAccount();
-
-  // 비공개 추출
-  const { data: exportPrivKey, refetch: refetchExportPrivKey } =
-    useGetExportPrivateKey({
-      address: addressToPrivPub,
-      password: passwordToPrivPub,
-    });
-
-  // 공개키 추출
-  const { data: exportPubKey, refetch: refetchExportPubKey } =
-    useGetExportPublicKey({
-      address: addressToPrivPub,
-      password: passwordToPrivPub,
-    });
-
-  // keystore.json(V3) -> privateKey 추출
-  const { data: keystoreToPrivKey, refetch: refetchKeystoreToPrivKey } =
-    useGetKeystoreToPrivKey({
-      fileContents: keystoreInput,
-      password: keystorePassword,
-    });
-
-  const handleRecoveryAccount = () => {
-    mutateRecoveryAccount({
-      mnemonic: recoverySeed,
-      password: recoveryPassword,
-    });
+  const handleFileChange = (event) => {
+    setImportFileName(event.name);
   };
 
-  const onNextPage = () => {
-    navigation('/');
-  };
+  const { mutate: addAccounts } = useAddAccounts({
+    onSuccess() {
+      navigation(-1);
+    },
+  });
+  /**
+   * import 타입에 따른 계정 가져오기
+   * @param {string} strategy - import 유형 (Private Key, JSON File)
+   * @param {object} args - { password: 비밀번호, privateKey || fileContents: 타입에 따라 비공개 키 or JSON File }
+   * @returns {string} selectedAddress - 주소값
+   */
+  const {
+    data: newAddressByPrivateKey,
+    refetch: refetchImportStrategyByPrivateKey,
+  } = useGetImportAccountStrategy({
+    strategy: 'Private Key',
+    args: {
+      privateKey: importPrivKey,
+    },
+  });
+
+  const {
+    data: newAddressByKeystoreFile,
+    refetch: refetchImportStrategyByKeystoreFile,
+  } = useGetImportAccountStrategy({
+    strategy: 'JSON File',
+    args: {
+      password: importPassword,
+      fileContents: importFileInput,
+    },
+  });
+
+  useEffect(() => {
+    if (newAddressByPrivateKey || newAddressByKeystoreFile) {
+      navigation(-1);
+    }
+  }, [newAddressByPrivateKey, newAddressByKeystoreFile]);
 
   return (
-    <div style={{ padding: 16 }}>
-      <Button className="mb-3" onClick={onNextPage}>
-        Home
-      </Button>
-
-      <textarea
-        id="importMnemonicInput"
-        style={{ width: '100%' }}
-        placeholder="니모닉 구문 입력"
-        onChange={(e) => {
-          setRecoverySeed(e.target.value);
-        }}
-      />
-      <TextField
-        password
-        placeholder="새 비밀번호 입력"
-        onChange={(e) => {
-          setRecoveryPassword(e.target.value);
-        }}
-      />
-      <Button onClick={handleRecoveryAccount} color={THEME_COLOR.SUCCESS}>
-        계정 복구
-      </Button>
-      {recoveryAccount && (
-        <Card title="복구 계정" content={recoveryAccount[0]} />
-      )}
-
-      <Card title="Address로 비공개/공개키 추출" />
-      <TextField
-        placeholder="주소값 입력"
-        onChange={(e) => {
-          setAddressToPrivPub(e.target.value);
-        }}
-      />
-      <TextField
-        password
-        placeholder="비밀번호 입력"
-        onChange={(e) => {
-          setPasswordToPrivPub(e.target.value);
-        }}
-      />
-      <Button
-        className="mb-1"
-        onClick={refetchExportPrivKey}
-        color={THEME_COLOR.INFO}
-      >
-        비공개키 추출
-      </Button>
-      <Button onClick={refetchExportPubKey} color={THEME_COLOR.WARNING}>
-        공개키 추출
-      </Button>
-      {exportPrivKey && <Card title="비공개키" content={exportPrivKey} />}
-      {exportPubKey && <Card title="공개키" content={exportPubKey} />}
-
-      <Card title="keystore.json(V3) -> 비공개키 추출" />
-      <FileInput
-        readAs="text"
-        onLoad={(event) => setKeystoreInput(event.target.result)}
-        style={{
-          padding: '20px 0px 12px 15%',
-          fontSize: '15px',
-          display: 'flex',
-          justifyContent: 'center',
-          width: '100%',
-        }}
-      />
-      <TextField
-        password
-        placeholder="keystore 비밀번호 입력"
-        onChange={(e) => {
-          setKeystorePassword(e.target.value);
-        }}
-      />
-      <Button
-        className="mb-1"
-        onClick={refetchKeystoreToPrivKey}
-        color={THEME_COLOR.INFO}
-      >
-        비공개키 추출
-      </Button>
-      {keystoreToPrivKey && (
-        <Card title="비공개키" content={keystoreToPrivKey.privKey} />
-      )}
-    </div>
+    <Container className="import-account">
+      <Box className="fixed top-0 right-0 p-2" onClick={() => navigation(-1)}>
+        <GrFormClose className="cursor-pointer svg-white text-32" />
+      </Box>
+      <Box className="mt-6 mb-2">
+        <Button
+          type="button"
+          className="font-bold text-base !bg-dark-blue"
+          onClick={addAccounts}
+        >
+          계정 추가
+        </Button>
+      </Box>
+      <Box as="hr" className="my-4" />
+      <Box>
+        <Typography as="h1" className="pb-4 text-xl">
+          외부 계정 import
+        </Typography>
+        <TextField
+          password
+          className="mb-3 bg-white"
+          placeholder="Private Key 입력"
+          onChange={(e) => {
+            setImportPrivKey(e.target.value);
+          }}
+        />
+        <Button
+          type="button"
+          className="font-bold text-base !bg-dark-blue"
+          onClick={refetchImportStrategyByPrivateKey}
+        >
+          계정 추가
+        </Button>
+      </Box>
+      <Box className="py-8" />
+      <Box>
+        <Typography
+          as="label"
+          className="w-3/5 cursor-pointer btn"
+          htmlFor="import-account__file-uploader"
+        >
+          Keystore 파일 선택
+        </Typography>
+        <Typography className="w-2/5 ml-2 text-shorten">
+          {importFileName}
+        </Typography>
+        <FileInput
+          id="import-account__file-uploader"
+          className="invisible"
+          readAs="text"
+          onLoad={(event) => setImportFileInput(event.target.result)}
+          onChange={handleFileChange}
+        />
+        <TextField
+          password
+          className="mb-4 bg-white"
+          placeholder="Keystore 비밀번호 입력"
+          onChange={(e) => {
+            setImportPassword(e.target.value);
+          }}
+        />
+        <Button
+          type="button"
+          className="font-bold text-base !bg-dark-blue"
+          onClick={refetchImportStrategyByKeystoreFile}
+        >
+          계정 추가
+        </Button>
+      </Box>
+    </Container>
   );
 }
 

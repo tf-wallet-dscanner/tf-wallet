@@ -3,6 +3,7 @@ import { isEmpty } from 'lodash';
 import { useEffect, useState } from 'react';
 import { useNavigate, useOutletContext } from 'react-router-dom';
 import { useToggle } from 'react-use';
+import Box from 'ui/components/atoms/box';
 import Button from 'ui/components/atoms/button';
 import Toast from 'ui/components/atoms/toast';
 import {
@@ -59,7 +60,7 @@ function ConfirmMnemonic() {
   }, [accountsData, recoveryAccount]);
 
   return (
-    <form className="confirm-mnemonic">
+    <Box as="article" className="confirm-mnemonic">
       <textarea
         className="w-full h-[150px] rounded-md mb-2"
         value={confirmMnemonic}
@@ -85,7 +86,7 @@ function ConfirmMnemonic() {
         severity="error"
         contents="니모닉코드를 확인해주세요"
       />
-    </form>
+    </Box>
   );
 }
 
