@@ -40,10 +40,12 @@ function Home() {
   });
 
   useEffect(() => {
-    if (accounts) {
-      updateSelectedAddress(selectedEOA?.address).then(() => updateAccounts());
+    if (accounts?.selectedAddress) {
+      updateSelectedAddress(selectedEOA?.address).then(() => {
+        updateAccounts();
+      });
     }
-  }, [currentChainId, accounts]);
+  }, [currentChainId, accounts?.selectedAddress]);
 
   const isShowSendTransactionButton =
     pathname.includes('assets') || pathname.includes('history');

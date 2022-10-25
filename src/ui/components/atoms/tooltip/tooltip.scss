@@ -3,11 +3,11 @@
 
   &:hover &__message,
   &:active &__message {
-    @apply opacity-100;
+    @apply visible opacity-100;
   }
 
   &__message {
-    @apply absolute w-fit z-10 text-white p-1 rounded opacity-0 transition;
+    @apply absolute w-fit z-10 text-white p-1 rounded opacity-0 invisible transition;
 
     &-bottom {
       @apply right-1/2 translate-x-1/2 translate-y-3 bg-tooltip;

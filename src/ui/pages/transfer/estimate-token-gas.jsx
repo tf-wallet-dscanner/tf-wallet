@@ -19,7 +19,7 @@ import {
 import { useTransactionStore } from 'ui/store';
 import shallow from 'zustand/shallow';
 
-function EstimateGas() {
+function EstimateTokenGas() {
   const _MIN_GAS_LIMIT_DEC = 21000;
   const navigation = useNavigate();
   const {
@@ -323,4 +323,4 @@ function EstimateGas() {
   );
 }
 
-export default EstimateGas;
+export default EstimateTokenGas;

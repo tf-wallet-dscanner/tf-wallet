@@ -1,4 +1,5 @@
 import classnames from 'classnames';
+import { forwardRef } from 'react';
 
 import './box.scss';
 
@@ -10,11 +11,11 @@ const DEFAULT_TAG = 'div';
  * @param as(ElementType?): 다형성 태그를 위한 element string type
  * @param className(string?): add class
  */
-function Box({ as, className, children, ...boxProps }) {
+function Box({ as, className, children, ...boxProps }, ref) {
   const Tag = as || DEFAULT_TAG;
   const boxClassName = classnames('box', className);
   return (
-    <Tag className={boxClassName} {...boxProps}>
+    <Tag ref={ref} className={boxClassName} {...boxProps}>
       {children}
     </Tag>
   );
@@ -22,4 +23,4 @@ function Box({ as, className, children, ...boxProps }) {
 
 Box.displayName = 'Box';
 
-export default Box;
+export default forwardRef(Box);

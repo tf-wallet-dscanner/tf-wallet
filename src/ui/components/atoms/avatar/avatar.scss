@@ -1,0 +1,7 @@
+.atoms__avatar {
+  @apply avatar;
+
+  &-wrapper {
+    @apply w-6 rounded-full;
+  }
+}

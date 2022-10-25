@@ -1,9 +1,11 @@
 import { Route, Routes } from 'react-router-dom';
 import { APP_STAGE } from 'ui/constants/environment';
 
+import Assets from './assets';
 import ConfirmMnemonic from './confirm-mnemonic';
 import CreateMnemonic from './create-mnemonic';
 import CreatePassword from './create-password';
+import CreateToken from './create-token';
 import EthHistory from './eth-history';
 import ExportAccount from './export-account';
 import Home from './home';
@@ -13,9 +15,10 @@ import Token from './token';
 import Transaction, {
   EstimateGas,
   InputAddress,
-  InputAddressToken,
   TxResult,
 } from './transaction';
+import Transfer, { InputAddressToken } from './transfer';
+import EstimateTokenGas from './transfer/estimate-token-gas';
 import Unlock from './unlock';
 import Welcome from './welcome';
 import WelcomeSuccess from './welcome-success';
@@ -36,17 +39,21 @@ function Routing() {
         <Route path="unlock" element={<Unlock />} />
       </Route>
       <Route path="/home" element={<Home />}>
-        <Route path="assets" element={<div>assets</div>} />
+        <Route path="assets" element={<Assets />} />
         <Route path="history" element={<div>history</div>} />
         <Route path="transaction" element={<Transaction />}>
           <Route index element={<InputAddress />} />
-          <Route path="input-address-token" element={<InputAddressToken />} />
           <Route path="estimate-gas" element={<EstimateGas />} />
+        </Route>
+        <Route path="transfer/:ca" element={<Transfer />}>
+          <Route index element={<InputAddressToken />} />
+          <Route path="estimate-token-gas" element={<EstimateTokenGas />} />
         </Route>
       </Route>
       <Route path="/tx-success/:txHash" element={<TxResult />} />
       <Route path="/import-account" element={<ImportAccount />} />
       <Route path="/export-account" element={<ExportAccount />} />
+      <Route path="/create-token" element={<CreateToken />} />
       <Route path="/token" element={<Token />} />
       <Route path="/eth-history" element={<EthHistory />} />
     </Routes>

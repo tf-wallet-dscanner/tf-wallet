@@ -4,25 +4,37 @@ import { useNavigate } from 'react-router-dom';
 import Box from 'ui/components/atoms/box';
 import Button from 'ui/components/atoms/button';
 import TextField from 'ui/components/atoms/text-field';
-import { useSetUnapprovedTx } from 'ui/data/transaction/transaction.hooks';
+import { transferERC20 } from 'ui/data/token';
+import { useSetUnapprovedTx } from 'ui/data/transaction';
 import useNumeric from 'ui/hooks/useNumeric';
 import { useTransactionStore } from 'ui/store';
 import shallow from 'zustand/shallow';
 
-function InputAddress() {
+function InputAddressToken() {
   const navigation = useNavigate();
-  const { to, setTo, gas, decimalValue, setDecimalValue, clearTxState } =
-    useTransactionStore(
-      (state) => ({
-        to: state.to,
-        gas: state.gas,
-        setTo: state.setTo,
-        decimalValue: state.value,
-        setDecimalValue: state.setValue,
-        clearTxState: state.clearTxState,
-      }),
-      shallow,
-    );
+  const {
+    to,
+    gas,
+    setTo,
+    setIsTransfer,
+    setData,
+    decimalValue,
+    setDecimalValue,
+    clearTxState,
+  } = useTransactionStore(
+    (state) => ({
+      to: state.to,
+      gas: state.gas,
+      setTo: state.setTo,
+      decimalValue: state.value,
+      setDecimalValue: state.setValue,
+      clearTxState: state.clearTxState,
+      setIsTransfer: state.setIsTransfer,
+      setData: state.setData,
+      tokenData: state.tokenData,
+    }),
+    shallow,
+  );
   const [value, handleNumericValue] = useNumeric('');
 
   const handleCancel = () => {
@@ -33,12 +45,23 @@ function InputAddress() {
   const { mutate: unApprovedTx } = useSetUnapprovedTx({
     onSuccess() {
       setDecimalValue(Number(value));
-      navigation('estimate-gas');
+      navigation('estimate-token-gas');
     },
   });
 
+  const setTransferRawData = async () => {
+    try {
+      const rawData = await transferERC20({ to, decimalValue });
+      setIsTransfer(true);
+      setData(rawData);
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
   // 일단 Legacy 버전 진행
-  const updateUnApprovedTx = () => {
+  const updateUnApprovedTx = async () => {
+    await setTransferRawData();
     const txParams = {
       to,
       gasLimit: addHexPrefix(gas.toString(16)),
@@ -89,4 +112,4 @@ function InputAddress() {
   );
 }
 
-export default InputAddress;
+export default InputAddressToken;
