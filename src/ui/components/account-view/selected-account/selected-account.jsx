@@ -1,17 +1,26 @@
 import { SECOND } from 'app/constants/time';
 import { useMemo } from 'react';
 import { MdContentCopy } from 'react-icons/md';
+import { useParams } from 'react-router-dom';
 import { useCopyToClipboard, useToggle } from 'react-use';
 import Box from 'ui/components/atoms/box';
 import Toast from 'ui/components/atoms/toast';
 import Tooltip from 'ui/components/atoms/tooltip';
 import Typography from 'ui/components/atoms/typography';
+import { useGetTokens } from 'ui/data/token';
 
 import './selected-account.scss';
 
 function SelectedAccount({ selectedEOA }) {
+  const params = useParams();
+  const { data: accountTokenList } = useGetTokens();
   const [{ value, error }, copyToClipboard] = useCopyToClipboard();
   const [isShow, toggle] = useToggle(false);
+
+  console.log('accountTokenList: ', accountTokenList);
+  const selectedToken = accountTokenList?.find(
+    (token) => token?.address === params?.ca,
+  );
   const ellipsisAddress = useMemo(() => {
     if (selectedEOA) {
       const { address } = selectedEOA;
@@ -26,6 +35,20 @@ function SelectedAccount({ selectedEOA }) {
     copyToClipboard(eoa);
     toggle();
     setTimeout(toggle, SECOND);
+  };
+
+  const renderContractAddress = () => {
+    if (params?.ca) {
+      return (
+        <Box className="selected-account__contract">
+          <Typography>Token Address</Typography>
+          <Typography>{params?.ca}</Typography>
+          {selectedToken && (
+            <Typography>{`${selectedToken.balance} ${selectedToken.symbol}`}</Typography>
+          )}
+        </Box>
+      );
+    }
   };
 
   return (
@@ -43,6 +66,7 @@ function SelectedAccount({ selectedEOA }) {
           <MdContentCopy className="inline ml-2" />
         </Typography>
       </Tooltip>
+      {renderContractAddress()}
       {value && (
         <Toast isShow={isShow} severity="success" contents="copied!!" />
       )}

@@ -108,17 +108,24 @@ class TokenController {
    * @returns Current token list.
    */
   async addToken(address, symbol, decimals, image) {
+    console.warn('address: ', address);
+    console.warn('symbol: ', symbol);
+    console.warn('decimals: ', decimals);
     const { accounts } = await this.getStoreAccounts();
+    console.warn('accounts: ', accounts);
     if (!accounts) {
       throw new Error('accounts store data not exist.');
     }
     const { tokens } = await this.getTokenStore();
+    console.warn('tokens: ', tokens);
 
     const newEntry = { address, symbol, decimals, image };
+    console.warn('newEntry: ', newEntry);
 
     const previousEntry = this.tokens.find(
       (token) => token.address.toLowerCase() === address.toLowerCase(),
     );
+    console.warn('previousEntry: ', previousEntry);
 
     if (previousEntry) {
       // 기존 tokens에 존재하면 token 정보 수정

@@ -4,4 +4,8 @@
   &__eoa {
     @apply border-2 border-solid border-[#7c8dcc] rounded cursor-pointer mt-1 p-1 hover:bg-[#4c444c];
   }
+
+  &__contract {
+    @apply flex flex-col mt-2 text-left;
+  }
 }

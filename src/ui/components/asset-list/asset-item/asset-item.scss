@@ -1,0 +1,11 @@
+.asset-item {
+  @apply grid grid-cols-2 py-4 items-center border-b-[1px] border-solid border-[#cecece];
+
+  &__balance {
+    @apply flex justify-center items-center;
+  }
+
+  &__transfer-btn {
+    @apply cursor-pointer;
+  }
+}
