@@ -10,7 +10,7 @@ import useNumeric from 'ui/hooks/useNumeric';
 
 function CreateToken() {
   const navigation = useNavigate();
-  const [contractAdderss, setContractAdderss] = useState('');
+  const [tokenAddress, setContractAdderss] = useState('');
   const [symbol, setSymbol] = useState('');
   const [decimals, handleNumericValue] = useNumeric('');
 
@@ -22,7 +22,7 @@ function CreateToken() {
   });
 
   const addToken = () => {
-    mutate({ contractAdderss, symbol, decimals });
+    mutate({ tokenAddress, symbol, decimals });
   };
 
   return (
@@ -34,7 +34,7 @@ function CreateToken() {
         <TextField
           className="mb-3 bg-white"
           placeholder="추가할 토큰 CA 주소 입력"
-          value={contractAdderss}
+          value={tokenAddress}
           onChange={(event) => setContractAdderss(event.target.value)}
         />
         <TextField

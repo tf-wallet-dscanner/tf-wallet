@@ -8,7 +8,6 @@ function Assets() {
   const navigation = useNavigate();
 
   const { data: accountTokenList } = useGetTokens();
-
   return (
     <Box className="mt-8">
       <Box className="grid grid-cols-2">
