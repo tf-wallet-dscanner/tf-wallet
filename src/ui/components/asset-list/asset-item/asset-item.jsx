@@ -16,7 +16,6 @@ import './asset-item.scss';
  */
 function AssetItem({ address, symbol, balance, image }) {
   const navigation = useNavigate();
-
   return (
     <Box as="li" className="asset-item">
       <Box className="asset-item__balance">
@@ -26,7 +25,9 @@ function AssetItem({ address, symbol, balance, image }) {
       </Box>
       <Box
         className="asset-item__transfer-btn"
-        onClick={() => navigation(`/home/transfer/${address}`)}
+        onClick={() => {
+          navigation(`/home/transfer/${address}`);
+        }}
       >
         <Typography>[ 토큰 보내기 ]</Typography>
       </Box>

@@ -89,11 +89,7 @@ class Controller extends EventEmitter {
     this.tokenController = new TokenController({
       store: this.store,
       ethQuery: this.providerController.query.bind(this.providerController),
-      sendRawTransaction: this.txController.sendRawTransaction.bind(
-        this.txController,
-      ),
     });
-    this.tokenController.initializeTokens();
 
     this.historyController = new HistoryController({
       store: this.store,
@@ -179,6 +175,7 @@ class Controller extends EventEmitter {
   // 니모닉으로 계정 추가
   addAccounts = async () => {
     const accounts = await this.keyringController.addAccounts();
+    this.tokenController.initializeTokens();
     return accounts;
   };
 
@@ -188,6 +185,7 @@ class Controller extends EventEmitter {
       password,
       mnemonic,
     });
+    this.tokenController.initializeTokens();
     return accounts;
   };
 
@@ -195,6 +193,7 @@ class Controller extends EventEmitter {
   verifyPassword = async (_, { password }) => {
     // 비밀번호 검증
     const verifyResult = await this.keyringController.verifyPassword(password);
+    this.tokenController.initializeTokens();
     return verifyResult;
   };
 

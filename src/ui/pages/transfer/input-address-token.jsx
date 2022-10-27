@@ -1,57 +1,42 @@
-import { addHexPrefix } from 'ethereumjs-util';
 import { isEmpty } from 'lodash';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import Box from 'ui/components/atoms/box';
 import Button from 'ui/components/atoms/button';
 import TextField from 'ui/components/atoms/text-field';
 import { transferERC20 } from 'ui/data/token';
-import { useSetUnapprovedTx } from 'ui/data/transaction';
+// import { useSetUnapprovedTx } from 'ui/data/transaction';
 import useNumeric from 'ui/hooks/useNumeric';
 import { useTransactionStore } from 'ui/store';
 import shallow from 'zustand/shallow';
 
 function InputAddressToken() {
   const navigation = useNavigate();
-  const {
-    to,
-    gas,
-    setTo,
-    setIsTransfer,
-    setData,
-    decimalValue,
-    setDecimalValue,
-    clearTxState,
-  } = useTransactionStore(
-    (state) => ({
-      to: state.to,
-      gas: state.gas,
-      setTo: state.setTo,
-      decimalValue: state.value,
-      setDecimalValue: state.setValue,
-      clearTxState: state.clearTxState,
-      setIsTransfer: state.setIsTransfer,
-      setData: state.setData,
-      tokenData: state.tokenData,
-    }),
-    shallow,
-  );
-  const [value, handleNumericValue] = useNumeric('');
+  const { ca } = useParams();
+  const { to, setTo, setIsTransfer, setData, clearTxState } =
+    useTransactionStore(
+      (state) => ({
+        to: state.to,
+        setTo: state.setTo,
+        clearTxState: state.clearTxState,
+        setIsTransfer: state.setIsTransfer,
+        setData: state.setData,
+      }),
+      shallow,
+    );
+  const [amount, handleNumericAmount] = useNumeric('');
 
   const handleCancel = () => {
     clearTxState();
     navigation(-1);
   };
 
-  const { mutate: unApprovedTx } = useSetUnapprovedTx({
-    onSuccess() {
-      setDecimalValue(Number(value));
-      navigation('estimate-token-gas');
-    },
-  });
-
   const setTransferRawData = async () => {
     try {
-      const rawData = await transferERC20({ to, decimalValue });
+      const rawData = await transferERC20({
+        receiver: to,
+        amount,
+      });
+      setTo(ca);
       setIsTransfer(true);
       setData(rawData);
     } catch (e) {
@@ -59,20 +44,30 @@ function InputAddressToken() {
     }
   };
 
-  // 일단 Legacy 버전 진행
+  /**
+   * unApprovedTx 활용 방법을 알지 못해 일단 주석 처리
+   *
+   */
+  // const { mutate: unApprovedTx } = useSetUnapprovedTx({
+  //   onSuccess() {
+  //     setDecimalValue(Number(value));
+  //   },
+  // });
+
   const updateUnApprovedTx = async () => {
     await setTransferRawData();
-    const txParams = {
-      to,
-      gasLimit: addHexPrefix(gas.toString(16)),
-      gasPrice: '0x00',
-      value: addHexPrefix(parseInt(decimalValue * 10 ** 18, 10).toString(16)),
-      type: '0x00',
-    };
-    unApprovedTx({ txParams });
+    // const txParams = {
+    //   to: tokenData.address,
+    //   gasPrice: '0x00',
+    //   value: '0x00',
+    //   type: '0x00',
+    //   data: '0x00',
+    // };
+    // unApprovedTx({ txParams });
+    navigation('estimate-token-gas');
   };
 
-  const enableNextBtn = isEmpty(to) || Number(value) <= 0;
+  const enableNextBtn = isEmpty(to) || Number(amount) <= 0;
 
   return (
     <Box>
@@ -89,9 +84,9 @@ function InputAddressToken() {
         type="text"
         name="decimalValue"
         defaultValue=""
-        value={value}
-        placeholder="전송할 금액 입력"
-        onChange={handleNumericValue}
+        value={amount}
+        placeholder="전송할 토큰 수량 입력"
+        onChange={handleNumericAmount}
       />
       <Box className="grid grid-cols-2 gap-3">
         <Button

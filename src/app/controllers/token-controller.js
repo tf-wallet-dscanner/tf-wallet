@@ -23,7 +23,6 @@ class TokenController {
   constructor(opts = {}) {
     this.#store = opts.store;
     this.ethQuery = opts.ethQuery;
-    this.sendRawTransaction = opts.sendRawTransaction;
     this.#tokenStore = this.getTokenStore();
     this.#accountStore = this.getStoreAccounts();
     this.tokens = []; // state에서 사용할 각각의 eoa 별 token list
@@ -33,23 +32,29 @@ class TokenController {
    * 어플리케이션 실행 시 실행되는 함수, #tokenStore.tokens 세팅
    */
   async initializeTokens() {
-    const storeAll = await this.getStoreAll();
-    const { accounts } = await this.#accountStore;
-
-    if (!accounts) {
-      throw new Error('accounts store data not exist.');
-    }
-    if (!storeAll.tokens) {
-      // 초기 1회만 호출
-      const newAddress = {
-        tokens: {
-          [`${accounts.selectedAddress}`]: this.tokens,
-        },
-      };
-      await this.#setTokenList(newAddress);
-    } else {
-      // 기존에 로그인한 경우가 있다면 store에 있는 tokens 정보들을 세팅
-      this.tokens = storeAll.tokens[accounts.selectedAddress];
+    try {
+      const storeAll = await this.getStoreAll();
+      if (!storeAll) {
+        throw new Error('All store data not exist.');
+      }
+      const { accounts } = await this.getStoreAccounts();
+      if (!accounts) {
+        throw new Error('accounts store data not exist.');
+      }
+      if (!storeAll.tokens) {
+        // 초기 1회만 호출
+        const newAddress = {
+          tokens: {
+            [`${accounts.selectedAddress}`]: this.tokens,
+          },
+        };
+        await this.#setTokenList(newAddress);
+      } else {
+        // 기존에 로그인한 경우가 있다면 store에 있는 tokens 정보들을 세팅
+        this.tokens = storeAll.tokens[accounts.selectedAddress];
+      }
+    } catch (e) {
+      console.log('Error initializeTokens ::', e);
     }
   }
 
@@ -80,19 +85,23 @@ class TokenController {
    * @returns list of token for the selectedAddress token.
    */
   async getTokens() {
-    let tokens = null;
-    const { accounts } = await this.getStoreAccounts();
-    if (this.tokens.length > 0) {
-      const promiseTokenList = this.tokens.map(async (token) => {
-        const balance = await this.#getTokenBalances(
-          accounts.selectedAddress,
-          token.address,
-        );
-        return { ...token, balance };
-      });
-      tokens = await Promise.all(promiseTokenList);
+    try {
+      let tokens = null;
+      const { accounts } = await this.getStoreAccounts();
+      if (this.tokens.length > 0) {
+        const promiseTokenList = this.tokens.map(async (token) => {
+          const balance = await this.#getTokenBalances(
+            accounts.selectedAddress,
+            token.address,
+          );
+          return { ...token, balance };
+        });
+        tokens = await Promise.all(promiseTokenList);
+      }
+      return tokens;
+    } catch (e) {
+      console.log('Error getTokens ::', e);
     }
-    return tokens;
   }
 
   /**
@@ -106,40 +115,48 @@ class TokenController {
   /**
    * Adds a token to the stored token list.
    *
-   * @param address - Hex address of the token contract.
+   * @param tokenAddress - Hex address of the token contract.
    * @param symbol - Symbol of the token.
    * @param decimals - Number of decimals the token uses.
    * @param image - Image of the token.
    * @returns Added token.
    */
-  async addToken(address, symbol, decimals, image) {
-    if (!address) {
-      throw new Error('Invaild contract address.');
-    }
-    const { accounts } = await this.getStoreAccounts();
+  async addToken(tokenAddress, symbol, decimals, image) {
+    try {
+      if (!tokenAddress) {
+        throw new Error('Invaild contract address.');
+      }
+      const { accounts } = await this.getStoreAccounts();
 
-    if (!accounts) {
-      throw new Error('accounts store data not exist.');
-    }
-    const { tokens } = await this.getTokenStore();
+      if (!accounts) {
+        throw new Error('accounts store data not exist.');
+      }
+      const { tokens } = await this.getTokenStore();
+      const newEntry = {
+        address: tokenAddress,
+        symbol,
+        decimals,
+        image: `https://placeimg.com/192/192/people`,
+      };
+      const previousEntry = this.tokens.find(
+        (token) => token.address.toLowerCase() === tokenAddress.toLowerCase(),
+      );
 
-    const newEntry = { address, symbol, decimals, image };
-    const previousEntry = this.tokens.find(
-      (token) => token.address.toLowerCase() === address.toLowerCase(),
-    );
-
-    if (previousEntry) {
-      // 기존 tokens에 존재하면 token 정보 수정
-      const previousIndex = this.tokens.indexOf(previousEntry);
-      this.tokens[previousIndex] = newEntry;
-      await tokens[accounts.selectedAddress].splice(previousIndex, 1, newEntry);
-    } else {
-      // 신규 토큰 저장
-      this.tokens.push(newEntry);
-      await tokens[accounts.selectedAddress].push(newEntry);
+      if (previousEntry) {
+        // 기존 tokens에 존재하면 token 정보 수정
+        const previousIndex = this.tokens.indexOf(previousEntry);
+        this.tokens[previousIndex] = newEntry;
+        tokens[accounts.selectedAddress].splice(previousIndex, 1, newEntry);
+      } else {
+        // 신규 토큰 저장
+        this.tokens.push(newEntry);
+        tokens[accounts.selectedAddress].push(newEntry);
+      }
+      await this.#setTokenList({ tokens });
+      return newEntry;
+    } catch (e) {
+      console.log('Error addToken ::', e);
     }
-    await this.#setTokenList({ tokens });
-    return newEntry;
   }
 
   /**
@@ -192,7 +209,6 @@ class TokenController {
       to: tokenCa,
       data: rawHexData,
     };
-
     const amount = await this.ethQuery('eth_call', params, 'latest');
     return weiHexToEthDec(amount);
   }
@@ -212,7 +228,7 @@ class TokenController {
    */
   async getStoreAccounts() {
     const result = await this.#store.get('accounts');
-    return result;
+    return result ?? null;
   }
 
   /**
@@ -220,7 +236,7 @@ class TokenController {
    */
   async getTokenStore() {
     const result = await this.#store.get('tokens');
-    return result;
+    return result ?? null;
   }
 
   /**

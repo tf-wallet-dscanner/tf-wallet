@@ -82,7 +82,6 @@ function EstimateTokenGas() {
       maxFeePerGas = suggestedMaxFeePerGas;
       maxPriorityFeePerGas = suggestedMaxPriorityFeePerGas;
     }
-
     sendTransaction({
       to,
       decimalValue,
