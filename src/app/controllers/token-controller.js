@@ -1,9 +1,6 @@
 import abi from 'ethereumjs-abi';
 
-// import abiERC20 from '../contracts/ERC20.json';
 import { isAddress, weiHexToEthDec } from '../lib/util';
-
-// import abiERC721 from '../contracts/ERC721.json';
 
 class TokenController {
   #store; // extension store object
@@ -19,7 +16,7 @@ class TokenController {
    *   }
    * }
    */
-  #tokenStore; // keyrings eoa들의 모든 token list
+  #tokenStore; // local store Account 들의 모든 token list
 
   #accountStore;
 
@@ -29,7 +26,7 @@ class TokenController {
     this.sendRawTransaction = opts.sendRawTransaction;
     this.#tokenStore = this.getTokenStore();
     this.#accountStore = this.getStoreAccounts();
-    this.tokens = []; // state에서 사용할 eoa 별 token list
+    this.tokens = []; // state에서 사용할 각각의 eoa 별 token list
   }
 
   /**
@@ -38,17 +35,21 @@ class TokenController {
   async initializeTokens() {
     const storeAll = await this.getStoreAll();
     const { accounts } = await this.#accountStore;
+
     if (!accounts) {
       throw new Error('accounts store data not exist.');
     }
-    // 처음 한번만 호출
     if (!storeAll.tokens) {
+      // 초기 1회만 호출
       const newAddress = {
         tokens: {
           [`${accounts.selectedAddress}`]: this.tokens,
         },
       };
       await this.#setTokenList(newAddress);
+    } else {
+      // 기존에 로그인한 경우가 있다면 store에 있는 tokens 정보들을 세팅
+      this.tokens = storeAll.tokens[accounts.selectedAddress];
     }
   }
 
@@ -74,20 +75,24 @@ class TokenController {
   }
 
   /**
-   * tokenStore 내에서 store.accounts.selectAddress 와 매칭된 주소의 token 저장
+   * tokenStore 내에서 store.accounts.selectedAddress 와 매칭된 주소의 token 정보를 반환
+   *
+   * @returns list of token for the selectedAddress token.
    */
   async getTokens() {
+    let tokens = null;
     const { accounts } = await this.getStoreAccounts();
     if (this.tokens.length > 0) {
-      this.tokens.forEach(async (token, index) => {
+      const promiseTokenList = this.tokens.map(async (token) => {
         const balance = await this.#getTokenBalances(
           accounts.selectedAddress,
           token.address,
         );
-        Object.assign(this.tokens[index], { ...this.tokens[index], balance });
+        return { ...token, balance };
       });
+      tokens = await Promise.all(promiseTokenList);
     }
-    return this.tokens;
+    return tokens;
   }
 
   /**
@@ -105,27 +110,23 @@ class TokenController {
    * @param symbol - Symbol of the token.
    * @param decimals - Number of decimals the token uses.
    * @param image - Image of the token.
-   * @returns Current token list.
+   * @returns Added token.
    */
   async addToken(address, symbol, decimals, image) {
-    console.warn('address: ', address);
-    console.warn('symbol: ', symbol);
-    console.warn('decimals: ', decimals);
+    if (!address) {
+      throw new Error('Invaild contract address.');
+    }
     const { accounts } = await this.getStoreAccounts();
-    console.warn('accounts: ', accounts);
+
     if (!accounts) {
       throw new Error('accounts store data not exist.');
     }
     const { tokens } = await this.getTokenStore();
-    console.warn('tokens: ', tokens);
 
     const newEntry = { address, symbol, decimals, image };
-    console.warn('newEntry: ', newEntry);
-
     const previousEntry = this.tokens.find(
       (token) => token.address.toLowerCase() === address.toLowerCase(),
     );
-    console.warn('previousEntry: ', previousEntry);
 
     if (previousEntry) {
       // 기존 tokens에 존재하면 token 정보 수정
