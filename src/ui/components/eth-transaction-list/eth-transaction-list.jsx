@@ -9,8 +9,6 @@ import EthTransactionItem from './eth-transaction-item';
  * @returns {ReactElement}
  */
 function EthTransactionList({ transactionList }) {
-  console.warn('transactionList: ', transactionList);
-
   const renderEthTransactionList = transactionList?.map((tx) => (
     <EthTransactionItem key={tx.hash} {...tx} />
   ));

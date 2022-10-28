@@ -88,7 +88,7 @@ class TokenController {
     try {
       let tokens = null;
       const { accounts } = await this.getStoreAccounts();
-      if (this.tokens.length > 0) {
+      if (this.tokens?.length > 0) {
         const promiseTokenList = this.tokens.map(async (token) => {
           const balance = await this.#getTokenBalances(
             accounts.selectedAddress,
@@ -138,7 +138,7 @@ class TokenController {
         decimals,
         image: `https://placeimg.com/192/192/people`,
       };
-      const previousEntry = this.tokens.find(
+      const previousEntry = this.tokens?.find(
         (token) => token.address.toLowerCase() === tokenAddress.toLowerCase(),
       );
 

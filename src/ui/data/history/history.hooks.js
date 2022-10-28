@@ -1,5 +1,5 @@
 import { SECOND } from 'app/constants/time';
-import { useQuery } from 'react-query';
+import { useQueries, useQuery } from 'react-query';
 
 import {
   getErc20TransferHistory,
@@ -18,7 +18,7 @@ export function useGetEthTxHistory(options) {
 
 export function useGetErc20TransferHistory({ contractAddress }, options) {
   return useQuery(
-    ['/history/getErc20TransferHistory'],
+    ['/history/getErc20TransferHistory', contractAddress],
     () => getErc20TransferHistory(contractAddress),
     {
       retry: false,
@@ -28,9 +28,23 @@ export function useGetErc20TransferHistory({ contractAddress }, options) {
   );
 }
 
+export function useGetErc20TransferHistories({ tokens }, options) {
+  if (!tokens) return;
+
+  return useQueries(
+    tokens?.map((token) => {
+      return {
+        queryKey: ['/history/getErc20TransferHistories', token.address],
+        queryFn: () => getErc20TransferHistory(token.address),
+        ...options,
+      };
+    }),
+  );
+}
+
 export function useGetErc721TransferHistory({ contractAddress }, options) {
   return useQuery(
-    ['/history/getErc721TransferHistory'],
+    ['/history/getErc721TransferHistory', contractAddress],
     () => getErc721TransferHistory(contractAddress),
     {
       retry: false,
