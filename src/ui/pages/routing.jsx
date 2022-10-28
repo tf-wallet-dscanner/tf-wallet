@@ -10,7 +10,6 @@ import ExportAccount from './export-account';
 import Home from './home';
 import ImportAccount from './import-account';
 import Intro from './intro';
-import Token from './token';
 import Transaction, {
   EstimateGas,
   InputAddress,
@@ -54,7 +53,6 @@ function Routing() {
       <Route path="/import-account" element={<ImportAccount />} />
       <Route path="/export-account" element={<ExportAccount />} />
       <Route path="/create-token" element={<CreateToken />} />
-      <Route path="/token" element={<Token />} />
     </Routes>
   );
 }

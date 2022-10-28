@@ -12,10 +12,11 @@ import Typography from 'ui/components/atoms/typography';
 import EthTransactionList from 'ui/components/eth-transaction-list';
 import KlayTransactionList from 'ui/components/klay-transaction-list';
 import {
-  useGetErc20TransferHistory,
+  useGetErc20TransferHistories,
   useGetEthTxHistory,
   useGetKlaytnTxHistory,
 } from 'ui/data/history/history.hooks';
+import { useGetTokens } from 'ui/data/token';
 
 function TxHistory() {
   const navigation = useNavigate();
@@ -25,14 +26,15 @@ function TxHistory() {
   const isKlaytnNetwork =
     currentChainId === CYPRESS_CHAIN_ID || currentChainId === BAOBAB_CHAIN_ID;
 
+  const { data: tokens } = useGetTokens();
   const { data: ethTxList } = useGetEthTxHistory({
     enabled: isEthereumNetwork,
   });
-  const { data: ethErc20List } = useGetErc20TransferHistory({
-    contractAddress: '0xF1a203B2f20247498ccE62DFB76Fd761e64815ED',
-    // enabled: isEthereumNetwork,
-    enabled: false,
+  const erc20Queries = useGetErc20TransferHistories({
+    tokens,
+    enabled: isEthereumNetwork,
   });
+
   const { data: klaytnTxHistory } = useGetKlaytnTxHistory({
     enabled: isKlaytnNetwork,
   });
@@ -41,19 +43,31 @@ function TxHistory() {
     const txList = [];
 
     if (!isEmpty(ethTxList)) {
-      txList.push(...ethTxList);
+      for (const tx of ethTxList) {
+        if (parseInt(tx.value, 10) !== 0) {
+          txList.push(tx);
+        }
+      }
     }
 
-    // if (!isEmpty(ethErc20List)) {
-    //   txList.push(...ethErc20List);
-    // }
+    if (!isEmpty(erc20Queries)) {
+      for (const { data: erc20Histories } of erc20Queries) {
+        if (!isEmpty(erc20Histories)) {
+          for (const token of erc20Histories) {
+            if (!token.from.startsWith('0x00')) {
+              txList.push(token);
+            }
+          }
+        }
+      }
+    }
 
     if (!isEmpty(txList)) {
       return txList.sort((a, b) => b.timeStamp - a.timeStamp);
     }
 
     return txList;
-  }, [ethTxList, ethErc20List]);
+  }, [ethTxList, erc20Queries]);
 
   return (
     <Box className="mt-4">
@@ -73,7 +87,7 @@ function TxHistory() {
       </Box>
       <Box className="text-center">
         {isEthereumNetwork && (
-          <EthTransactionList transactionList={ethTxList} />
+          <EthTransactionList transactionList={ethereumTransactionList} />
         )}
         {isKlaytnNetwork && (
           <KlayTransactionList transactionList={klaytnTxHistory} />
