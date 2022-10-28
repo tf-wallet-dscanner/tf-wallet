@@ -31,6 +31,7 @@ module.exports = {
         tooltip: '#3e3434',
       },
       spacing: {
+        0.5: '0.125rem',
         1.25: '0.3125rem', // 5px
         2.5: '0.625rem', // 10px
         4.5: '1.125rem', // 18px

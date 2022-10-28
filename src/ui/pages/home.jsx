@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { FiSend } from 'react-icons/fi';
+import { MdOutlineCallMade } from 'react-icons/md';
 import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { useMount } from 'react-use';
 import AccountView from 'ui/components/account-view';
@@ -64,17 +64,22 @@ function Home() {
       <hr className="mb-4" />
       <Balance balance={selectedEOA?.balance ?? '0x0'} />
       {isShowSendTransactionButton && (
-        <section
-          className="flex flex-col justify-center items-center mt-2 mb-4 cursor-pointer text-[#F4F3EB]"
-          onClick={() => navigation('transaction')}
-        >
-          <i className="border-[1px] border-solid border-[#565151] rounded-full bg-[#565151] p-1 mb-1">
-            <FiSend className="text-2xl" />
+        <section className="flex flex-col justify-center items-center mt-2 mb-4 text-[#F4F3EB]">
+          <i
+            className="border-[1px] border-solid border-[#565151] rounded-full bg-[#565151] p-1 mb-1 cursor-pointer"
+            onClick={() => navigation('transaction')}
+          >
+            <MdOutlineCallMade className="text-2xl" />
           </i>
           <span>보내기</span>
         </section>
       )}
-      <Outlet />
+      <Outlet
+        context={{
+          currentChainId,
+          selectedEOA,
+        }}
+      />
     </main>
   );
 }

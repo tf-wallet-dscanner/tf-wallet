@@ -11,30 +11,30 @@ import {
 export function useGetEthTxHistory(options) {
   return useQuery(['/history/getEthTxHistory'], getEthTxHistory, {
     retry: false,
-    refetchInterval: SECOND * 10,
+    refetchInterval: SECOND * 5,
     ...options,
   });
 }
 
-export function useGetErc20TransferHistory(options) {
+export function useGetErc20TransferHistory({ contractAddress }, options) {
   return useQuery(
     ['/history/getErc20TransferHistory'],
-    getErc20TransferHistory,
+    () => getErc20TransferHistory(contractAddress),
     {
       retry: false,
-      refetchInterval: SECOND * 10,
+      refetchInterval: SECOND * 5,
       ...options,
     },
   );
 }
 
-export function useGetErc721TransferHistory(options) {
+export function useGetErc721TransferHistory({ contractAddress }, options) {
   return useQuery(
     ['/history/getErc721TransferHistory'],
-    getErc721TransferHistory,
+    () => getErc721TransferHistory(contractAddress),
     {
       retry: false,
-      refetchInterval: SECOND * 10,
+      refetchInterval: SECOND * 5,
       ...options,
     },
   );
@@ -43,7 +43,7 @@ export function useGetErc721TransferHistory(options) {
 export function useGetKlaytnTxHistory(options) {
   return useQuery(['/history/getKlaytnTxHistory'], getKlaytnTxHistory, {
     retry: false,
-    refetchInterval: SECOND * 10,
+    refetchInterval: SECOND * 5,
     ...options,
   });
 }

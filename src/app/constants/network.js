@@ -58,18 +58,18 @@ export const NETWORK_TYPE_TO_ID_MAP = {
     networkId: MAINNET_NETWORK_ID,
     chainId: MAINNET_CHAIN_ID,
   },
-  [CYPRESS]: {
-    networkId: CYPRESS_NETWORK_ID,
-    chainId: CYPRESS_CHAIN_ID,
-  },
+  // [CYPRESS]: {
+  //   networkId: CYPRESS_NETWORK_ID,
+  //   chainId: CYPRESS_CHAIN_ID,
+  // },
   [BAOBAB]: {
     networkId: BAOBAB_NETWORK_ID,
     chainId: BAOBAB_CHAIN_ID,
   },
-  [LOCALHOST]: {
-    networkId: LOCALHOST_NETWORK_ID,
-    chainId: LOCALHOST_CHAIN_ID,
-  },
+  // [LOCALHOST]: {
+  //   networkId: LOCALHOST_NETWORK_ID,
+  //   chainId: LOCALHOST_CHAIN_ID,
+  // },
 };
 
 export const NETWORK_TO_NAME_MAP = {

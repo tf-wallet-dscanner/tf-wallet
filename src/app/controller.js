@@ -15,7 +15,7 @@ import TransactionController from './controllers/transactions/transaction-contro
 import ExtensionStore from './lib/localstore';
 
 class Controller extends EventEmitter {
-  constructor(remotePort) {
+  constructor() {
     super();
     this.store = new ExtensionStore();
 
@@ -109,15 +109,15 @@ class Controller extends EventEmitter {
       HISTORY_EVENTS.KLAYTN_TX_LIST_DID_CHANGE,
     );
 
-    this.onEthHistoryChange(async () => {
-      try {
-        remotePort.postMessage({
-          ethTransactions: this.historyController.ethTransactions,
-        });
-      } catch (e) {
-        console.warn(e);
-      }
-    });
+    // this.onEthHistoryChange(async () => {
+    //   try {
+    //     remotePort.postMessage({
+    //       ethTransactions: this.historyController.ethTransactions,
+    //     });
+    //   } catch (e) {
+    //     console.warn(e);
+    //   }
+    // });
   }
 
   getLatestBlock = async () => {
@@ -373,22 +373,30 @@ class Controller extends EventEmitter {
     };
   };
 
-  getEthTxHistory = () => {
+  getEthTxHistory = async () => {
+    await this.historyController.getEthTxHistoryByAddress();
     const { ethTransactions } = this.historyController;
     return Promise.resolve(ethTransactions);
   };
 
-  getErc20TransferHistory = () => {
+  getErc20TransferHistory = async (_, { contractAddress }) => {
+    await this.historyController.getERC20TransferHistoryByAddress(
+      contractAddress,
+    );
     const { erc20transfers } = this.historyController;
     return Promise.resolve(erc20transfers);
   };
 
-  getErc721TransferHistory = () => {
+  getErc721TransferHistory = async (_, { contractAddress }) => {
+    await this.historyController.getERC721TransferHistoryByAddress(
+      contractAddress,
+    );
     const { erc721transfers } = this.historyController;
     return Promise.resolve(erc721transfers);
   };
 
-  getKlaytnTxHistory = () => {
+  getKlaytnTxHistory = async () => {
+    await this.historyController.getKlaytnTxHistoryByAddress();
     const { klaytnTransactions } = this.historyController;
     return Promise.resolve(klaytnTransactions);
   };

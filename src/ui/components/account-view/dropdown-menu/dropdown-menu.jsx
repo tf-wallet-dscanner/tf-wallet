@@ -23,7 +23,7 @@ function DropdownMenu({ accounts, handleAccountChange }) {
     setIsOpen(true);
   };
 
-  const accounsList = useMemo(() => {
+  const accountsList = useMemo(() => {
     return accounts?.identities?.map(({ address, name }) => (
       <Box
         key={address}
@@ -53,7 +53,7 @@ function DropdownMenu({ accounts, handleAccountChange }) {
           open: isOpen,
         })}
       >
-        <Box as="li" onClick={() => null}>
+        <Box as="li">
           <Typography as="label" htmlFor="dropdown-menu__account__modal">
             계정 변경
           </Typography>
@@ -85,7 +85,7 @@ function DropdownMenu({ accounts, handleAccountChange }) {
             </Typography>
           </Box>
           <Box as="hr" className="mt-2 mb-4" />
-          {accounsList}
+          {accountsList}
         </Box>
       </Box>
     </Box>
