@@ -13,7 +13,21 @@ const type = 'HD Key Tree';
 class HdKeyring extends SimpleKeyring {
   constructor(opts = {}) {
     super();
+    this.type = type;
     this.deserialize(opts);
+  }
+
+  serialize() {
+    const mnemonicAsBuffer =
+      typeof this.opts.mnemonic === 'string'
+        ? Buffer.from(this.opts.mnemonic, 'utf8')
+        : this.opts.mnemonic;
+    console.log('mnemonicAsBuffer', this.opts.mnemonic, mnemonicAsBuffer);
+    return Promise.resolve({
+      mnemonic: Array.from(mnemonicAsBuffer.values()),
+      numberOfAccounts: this.wallets.length,
+      hdPath: this.hdPath,
+    });
   }
 
   deserialize(opts = {}) {
@@ -57,21 +71,35 @@ class HdKeyring extends SimpleKeyring {
     return isValid;
   }
 
-  // 니모닉 return 전에 체크할거 체크 (root 여부, validate)
+  /**
+   * Sets appropriate properties for the keyring based on the given
+   * BIP39-compliant mnemonic.
+   *
+   * @param {string} mnemonic - A seed phrase represented
+   * as a string. Mnemonic input passed as type buffer or array of UTF-8 bytes must be NFKD normalized.
+   */
   initFromMnemonic(mnemonic) {
+    // 니모닉 return 전에 체크할거 체크 (root 여부, validate)
     if (this.root) {
       throw new Error(
         'Eth-Hd-Keyring: Secret recovery phrase already provided',
       );
     }
+    if (typeof mnemonic !== 'string') {
+      this.mnemonic = Buffer.from(mnemonic, 'utf8').toString();
+    } else if (Array.isArray(mnemonic)) {
+      this.mnemonic = Buffer.from(mnemonic).toString();
+    } else {
+      this.mnemonic = mnemonic;
+    }
     // validate before initializing
-    const isValid = bip39.validateMnemonic(mnemonic);
+    const isValid = this.validateMnemonic(this.mnemonic);
     if (!isValid) {
       throw new Error(
         'Eth-Hd-Keyring: Invalid secret recovery phrase provided',
       );
     }
-    return mnemonic;
+    return this.mnemonic;
   }
 
   // create account init
@@ -86,9 +114,12 @@ class HdKeyring extends SimpleKeyring {
     this.hdWallet = hdkey.fromMasterSeed(seed);
     this.root = this.hdWallet.derivePath(this.hdPath);
 
+    console.log('this.opts.numberOfAccounts', this.opts.numberOfAccounts);
     // 계정 추가
-    const accounts = await this.addAccounts();
-    return accounts;
+    if (this.opts.numberOfAccounts) {
+      const accounts = await this.addAccounts(this.opts.numberOfAccounts);
+      return accounts;
+    }
   }
 
   addAccounts(numberOfAccounts = 1) {

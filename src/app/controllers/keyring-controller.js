@@ -83,11 +83,40 @@ class KeyringController {
 
   // 계정 추가
   async addAccounts() {
-    this.unlockKeyrings();
-    console.warn('keyringcontroll addAccounts!!!!', this.hdKeyring);
-    const hexWallets = await this.hdKeyring.addAccounts();
-    console.warn('hexWallets: ', hexWallets);
-    return hexWallets;
+    try {
+      await this.unlockKeyrings();
+      const primaryKeyring = this.getKeyringsByType('HD Key Tree')[0];
+      if (!primaryKeyring) {
+        throw new Error('MetamaskController - No HD Key Tree found');
+      }
+      const keyState = await this.addNewAccount(primaryKeyring);
+
+      console.log('keyState accounts', keyState);
+      await this.addStoreAccounts(keyState);
+      return keyState;
+    } catch (e) {
+      console.log('Error addAccounts ::', e);
+    }
+  }
+
+  /**
+   * Add New Account
+   *
+   * Calls the `addAccounts` method on the given keyring,
+   * and then saves those changes.
+   *
+   * @param {Keyring} selectedKeyring - The currently selected keyring.
+   * @returns {Promise<Object>} A Promise that resolves to the state.
+   */
+  addNewAccount(selectedKeyring) {
+    return (
+      selectedKeyring
+        .addAccounts(1)
+        // .then(this.persistAllKeyrings.bind(this))
+        .then(this.storeUpdateVault(this.#password))
+    );
+    // .then(this._updateMemStoreKeyrings.bind(this));
+    // .then(this.fullUpdate.bind(this));
   }
 
   // 계정 복구
@@ -114,6 +143,7 @@ class KeyringController {
       throw new Error('KeyringController - First Account not found.');
 
     this.keyrings.push(keyring);
+    console.log('restore @@@@@ ', this.keyrings);
     await this.storeUpdateVault(password);
     await this.addStoreAccounts(accounts[0]);
     return accounts;
@@ -121,30 +151,36 @@ class KeyringController {
 
   // 키링 배열을 직렬화하고 사용자가 입력한 password로 암호화하여 저장소에 저장
   async persistAllKeyrings(password = this.#password) {
-    if (typeof password !== 'string') {
-      return Promise.reject(
-        new Error('KeyringController - password is not a string'),
-      );
-    }
+    try {
+      if (typeof password !== 'string') {
+        return Promise.reject(
+          new Error('KeyringController - password is not a string'),
+        );
+      }
 
-    this.#password = password;
-    const serializedKeyrings = await Promise.all(
-      this.keyrings.map(async (keyring) => {
-        const serializedKeyringArray = await Promise.all([
-          keyring.type,
-          keyring.serialize(),
-        ]);
-        return {
-          type: serializedKeyringArray[0],
-          data: serializedKeyringArray[1],
-        };
-      }),
-    );
-    const encryptedString = await this.encryptor.encrypt(
-      this.#password,
-      serializedKeyrings,
-    );
-    return encryptedString;
+      this.#password = password;
+      const serializedKeyrings = await Promise.all(
+        this.keyrings.map(async (keyring) => {
+          console.log('serialized in:', this.keyrings, keyring);
+          const serializedKeyringArray = await Promise.all([
+            keyring.type,
+            keyring.serialize(),
+          ]);
+          return {
+            type: serializedKeyringArray[0],
+            data: serializedKeyringArray[1],
+          };
+        }),
+      );
+      console.log('persistAllKeyrings', serializedKeyrings);
+      const encryptedString = await this.encryptor.encrypt(
+        this.#password,
+        serializedKeyrings,
+      );
+      return encryptedString;
+    } catch (e) {
+      console.log('Error persistAllKeyrings ::', e);
+    }
   }
 
   // 키링 clear
@@ -317,7 +353,7 @@ class KeyringController {
   // store add address
   async addStoreAccounts(address) {
     const accounts = await this.getStoreAccounts();
-
+    console.log('store accounts ', accounts);
     // skip if already exists
     if (
       accounts &&
@@ -436,13 +472,13 @@ class KeyringController {
   // unlock keyrings
   async unlockKeyrings() {
     const { vault: encryptedVault } = await this.#keyringStore.get('vault');
-
     if (!encryptedVault) {
       throw new Error('Cannot unlock without a previous vault.');
     }
 
     await this.clearKeyrings();
     const vault = await this.encryptor.decrypt(this.#password, encryptedVault);
+    console.log('unlockKeyrings vault', vault);
     await Promise.all(vault.map(this._restoreKeyring.bind(this)));
   }
 
