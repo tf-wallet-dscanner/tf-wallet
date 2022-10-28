@@ -6,7 +6,6 @@ import ConfirmMnemonic from './confirm-mnemonic';
 import CreateMnemonic from './create-mnemonic';
 import CreatePassword from './create-password';
 import CreateToken from './create-token';
-import EthHistory from './eth-history';
 import ExportAccount from './export-account';
 import Home from './home';
 import ImportAccount from './import-account';
@@ -19,6 +18,7 @@ import Transaction, {
 } from './transaction';
 import Transfer, { InputAddressToken } from './transfer';
 import EstimateTokenGas from './transfer/estimate-token-gas';
+import TxHistory from './tx-history';
 import Unlock from './unlock';
 import Welcome from './welcome';
 import WelcomeSuccess from './welcome-success';
@@ -40,7 +40,7 @@ function Routing() {
       </Route>
       <Route path="/home" element={<Home />}>
         <Route path="assets" element={<Assets />} />
-        <Route path="history" element={<div>history</div>} />
+        <Route path="history" element={<TxHistory />} />
         <Route path="transaction" element={<Transaction />}>
           <Route index element={<InputAddress />} />
           <Route path="estimate-gas" element={<EstimateGas />} />
@@ -55,7 +55,6 @@ function Routing() {
       <Route path="/export-account" element={<ExportAccount />} />
       <Route path="/create-token" element={<CreateToken />} />
       <Route path="/token" element={<Token />} />
-      <Route path="/eth-history" element={<EthHistory />} />
     </Routes>
   );
 }

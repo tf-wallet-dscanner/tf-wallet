@@ -1,5 +1,5 @@
-import React from 'react';
 import { useNavigate } from 'react-router-dom';
+import Box from 'ui/components/atoms/box';
 import Button from 'ui/components/atoms/button';
 
 function Welcome() {
@@ -10,7 +10,7 @@ function Welcome() {
   };
 
   return (
-    <form className="welcome">
+    <Box className="welcome">
       <Button
         type="button"
         className="mb-6 font-bold text-base !bg-dark-blue"
@@ -25,7 +25,7 @@ function Welcome() {
       >
         Restore Wallet
       </Button>
-    </form>
+    </Box>
   );
 }
 

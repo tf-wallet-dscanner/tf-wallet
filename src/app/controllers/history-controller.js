@@ -35,6 +35,8 @@ export const HISTORY_EVENTS = {
   KLAYTN_TX_LIST_DID_CHANGE: 'klaytn_txlistDidChange',
 };
 
+const EXPLORER_API_URL = 'http://dknote.net:19903/graphql';
+
 class HistoryController extends EventEmitter {
   #store;
 
@@ -47,7 +49,7 @@ class HistoryController extends EventEmitter {
       ...defaultHistoryState,
     });
     onNetworkStateChange(async () => {
-      await this.stopPolling();
+      this.stopPolling();
       const { type: network } = await this.#config;
       const isInfura = INFURA_PROVIDER_TYPES.includes(network);
       const isKlaytn = KLAYTN_PROVIDER_TYPES.includes(network);
@@ -56,8 +58,7 @@ class HistoryController extends EventEmitter {
         : isKlaytn
         ? KLAYTON_API_TYPE.TX_LIST
         : '';
-      console.log('pollType: ', pollType);
-      this.startPolling(pollType);
+      // this.startPolling(pollType);
     });
   }
 
@@ -180,25 +181,48 @@ class HistoryController extends EventEmitter {
    * klaytn transaction 내역 조회
    * @returns {Promise<void>} klaytn transaction history
    */
-  async getKlaytnTxHistoryByAddress() {
+  async getKlaytnTxHistoryByAddress(page = 1, size = 10) {
     try {
-      // TODO: endpoint, query, event type 등 수정 필요
-      const response = await fetch('https://api.spacex.land/graphql', {
+      const {
+        accounts: { selectedAddress },
+      } = await this.#config;
+      const response = await fetch(EXPLORER_API_URL, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
           query: `
-          {
-            company {
-              ceo
+            query transactionHistoryByEOA($accountAddress: String!, $page: Int!, $size: Int!) {
+              getTransactionListByAccountAddress(accountAddress: $accountAddress, page: $page, size: $size){
+                list {
+                  id
+                  result {
+                    blockNumber
+                    hash: transactionHash
+                    from
+                    to
+                    gas
+                    gasPrice
+                    gasPriceToFormat
+                    effectiveGasPrice
+                    effectiveGasPriceToFormat
+                    gasUsed
+                    txFee
+                    nonce
+                    status
+                    amount
+                    timestamp
+                  }
+                }
+              }
             }
-            roadster {
-              apoapsis_au
-            }
-          }
-        `,
+          `,
+          variables: {
+            accountAddress: selectedAddress,
+            page,
+            size,
+          },
         }),
       });
       const { data } = await response.json();
