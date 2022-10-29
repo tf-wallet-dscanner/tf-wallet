@@ -68,6 +68,7 @@ class KeyringController {
     this.#password = password;
 
     this.hdKeyring = new HdKeyring();
+
     const isValid = this.hdKeyring.validateMnemonic(mnemonic);
 
     if (isValid) {
@@ -90,9 +91,7 @@ class KeyringController {
         throw new Error('MetamaskController - No HD Key Tree found');
       }
       const keyState = await this.addNewAccount(primaryKeyring);
-
-      console.log('keyState accounts', keyState);
-      await this.addStoreAccounts(keyState);
+      await this.addStoreAccounts(keyState[0]);
       return keyState;
     } catch (e) {
       console.log('Error addAccounts ::', e);
@@ -109,14 +108,9 @@ class KeyringController {
    * @returns {Promise<Object>} A Promise that resolves to the state.
    */
   addNewAccount(selectedKeyring) {
-    return (
-      selectedKeyring
-        .addAccounts(1)
-        // .then(this.persistAllKeyrings.bind(this))
-        .then(this.storeUpdateVault(this.#password))
-    );
-    // .then(this._updateMemStoreKeyrings.bind(this));
-    // .then(this.fullUpdate.bind(this));
+    return selectedKeyring
+      .addAccounts(1)
+      .then(this.storeUpdateVault(this.#password));
   }
 
   // 계정 복구
@@ -143,7 +137,6 @@ class KeyringController {
       throw new Error('KeyringController - First Account not found.');
 
     this.keyrings.push(keyring);
-    console.log('restore @@@@@ ', this.keyrings);
     await this.storeUpdateVault(password);
     await this.addStoreAccounts(accounts[0]);
     return accounts;
@@ -161,7 +154,6 @@ class KeyringController {
       this.#password = password;
       const serializedKeyrings = await Promise.all(
         this.keyrings.map(async (keyring) => {
-          console.log('serialized in:', this.keyrings, keyring);
           const serializedKeyringArray = await Promise.all([
             keyring.type,
             keyring.serialize(),
@@ -172,7 +164,6 @@ class KeyringController {
           };
         }),
       );
-      console.log('persistAllKeyrings', serializedKeyrings);
       const encryptedString = await this.encryptor.encrypt(
         this.#password,
         serializedKeyrings,
@@ -353,7 +344,6 @@ class KeyringController {
   // store add address
   async addStoreAccounts(address) {
     const accounts = await this.getStoreAccounts();
-    console.log('store accounts ', accounts);
     // skip if already exists
     if (
       accounts &&
@@ -478,7 +468,6 @@ class KeyringController {
 
     await this.clearKeyrings();
     const vault = await this.encryptor.decrypt(this.#password, encryptedVault);
-    console.log('unlockKeyrings vault', vault);
     await Promise.all(vault.map(this._restoreKeyring.bind(this)));
   }
 

@@ -22,7 +22,6 @@ class HdKeyring extends SimpleKeyring {
       typeof this.opts.mnemonic === 'string'
         ? Buffer.from(this.opts.mnemonic, 'utf8')
         : this.opts.mnemonic;
-    console.log('mnemonicAsBuffer', this.opts.mnemonic, mnemonicAsBuffer);
     return Promise.resolve({
       mnemonic: Array.from(mnemonicAsBuffer.values()),
       numberOfAccounts: this.wallets.length,
@@ -114,7 +113,6 @@ class HdKeyring extends SimpleKeyring {
     this.hdWallet = hdkey.fromMasterSeed(seed);
     this.root = this.hdWallet.derivePath(this.hdPath);
 
-    console.log('this.opts.numberOfAccounts', this.opts.numberOfAccounts);
     // 계정 추가
     if (this.opts.numberOfAccounts) {
       const accounts = await this.addAccounts(this.opts.numberOfAccounts);
