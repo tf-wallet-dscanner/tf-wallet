@@ -124,6 +124,11 @@ class Background {
     );
 
     this.requests.set(
+      BackgroundMessages.GET_BALANCE,
+      this.controller.getBalance,
+    );
+
+    this.requests.set(
       BackgroundMessages.SEND_RAW_TRANSACTION,
       this.controller.sendRawTransaction,
     );

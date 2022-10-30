@@ -259,6 +259,16 @@ class Controller extends EventEmitter {
     );
   };
 
+  /**
+   * EOA의 balance 조회
+   * @param {string?} address
+   * @returns balance
+   */
+  getBalance = async (_, { address }) => {
+    const balance = await this.keyringController.updateGetBalance(address);
+    return balance;
+  };
+
   // transaction send test
   sendRawTransaction = async (_, txMeta) => {
     const txHash = await this.txController.sendRawTransaction(txMeta);

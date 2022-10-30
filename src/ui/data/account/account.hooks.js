@@ -1,7 +1,9 @@
+import { SECOND } from 'app/constants/time';
 import { useMutation, useQuery } from 'react-query';
 
 import {
   addAccounts,
+  getBalance,
   getExportKeystoreV3,
   getExportPrivateKey,
   getExportPublicKey,
@@ -158,6 +160,18 @@ export function useGetKeystoreToPrivKey({ fileContents, password }, options) {
     () => getKeystoreToPrivKey({ fileContents, password }),
     {
       enabled: false,
+      ...options,
+    },
+  );
+}
+
+export function useGetBalance({ address, currentChainId }, options) {
+  return useQuery(
+    ['/account/getBalance', address, currentChainId],
+    () => getBalance(address),
+    {
+      retry: false,
+      refetchInterval: SECOND * 5,
       ...options,
     },
   );

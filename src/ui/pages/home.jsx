@@ -1,3 +1,4 @@
+import { BAOBAB_CHAIN_ID, CHAINID_TO_ID_MAP } from 'app/constants/network';
 import { useEffect } from 'react';
 import { MdOutlineCallMade } from 'react-icons/md';
 import { Outlet, useLocation, useNavigate } from 'react-router-dom';
@@ -6,6 +7,7 @@ import AccountView from 'ui/components/account-view';
 import Balance from 'ui/components/account-view/balance';
 import Header from 'ui/components/header';
 import {
+  useGetBalance,
   useGetStoreAccounts,
   useSetStoreSelectedAddress,
 } from 'ui/data/account/account.hooks';
@@ -23,6 +25,10 @@ function Home() {
   const selectedEOA = accounts?.identities?.find(
     ({ address }) => accounts?.selectedAddress === address,
   );
+  const { data: balance } = useGetBalance({
+    address: accounts?.selectedAddress,
+    currentChainId,
+  });
 
   const { mutate: changeProviderType } = useSetProviderType({
     onSuccess() {
@@ -49,6 +55,7 @@ function Home() {
 
   const isShowSendTransactionButton =
     pathname.includes('assets') || pathname.includes('history');
+  const { ticker } = CHAINID_TO_ID_MAP[currentChainId || BAOBAB_CHAIN_ID];
 
   return (
     <main className="home">
@@ -62,7 +69,7 @@ function Home() {
         handleAccountChange={handleAccountChange}
       />
       <hr className="mb-4" />
-      <Balance balance={selectedEOA?.balance ?? '0x0'} />
+      <Balance balance={balance ?? '0x0'} symbol={ticker} />
       {isShowSendTransactionButton && (
         <section className="flex flex-col justify-center items-center mt-2 mb-4 text-[#F4F3EB]">
           <i

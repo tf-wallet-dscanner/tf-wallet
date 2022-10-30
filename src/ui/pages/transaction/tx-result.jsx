@@ -28,9 +28,7 @@ function TxResult() {
         <Typography className="text-xl">
           Transaction Hash:
           <br />
-          <Typography className="text-[#7d7dce] cursor-pointer">
-            {txHash}
-          </Typography>
+          <Typography className="text-[#7d7dce] break-all">{txHash}</Typography>
         </Typography>
       </Box>
       <Box className="absolute bottom-0 w-full">
