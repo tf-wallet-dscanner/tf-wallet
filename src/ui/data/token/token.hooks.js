@@ -1,3 +1,4 @@
+import { SECOND } from 'app/constants/time';
 import { useMutation, useQuery } from 'react-query';
 
 import {
@@ -7,9 +8,10 @@ import {
   transferERC20,
 } from './token.api';
 
-export function useGetTokens(options) {
-  return useQuery(['/token/getTokens'], getTokens, {
+export function useGetTokens(params, options) {
+  return useQuery(['/token/getTokens', params], getTokens, {
     retry: false,
+    refetchInterval: SECOND * 10,
     ...options,
   });
 }

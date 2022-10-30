@@ -1,4 +1,5 @@
 import { GAS_ESTIMATE_TYPES, PRIORITY_LEVELS } from 'app/constants/gas';
+import { BAOBAB_CHAIN_ID, CHAINID_TO_ID_MAP } from 'app/constants/network';
 import { SECOND } from 'app/constants/time';
 import { gweiDecToETHDec, makeCorrectNumber } from 'app/lib/util';
 import classNames from 'classnames';
@@ -12,6 +13,7 @@ import Button from 'ui/components/atoms/button';
 import Card from 'ui/components/atoms/card';
 import Toast from 'ui/components/atoms/toast';
 import Typography from 'ui/components/atoms/typography';
+import { useGetCurrentChainId } from 'ui/data/provider';
 import {
   useResetUnapprovedTx,
   useSendRawTransaction,
@@ -22,6 +24,8 @@ import shallow from 'zustand/shallow';
 function EstimateGas() {
   const _MIN_GAS_LIMIT_DEC = 21000;
   const navigation = useNavigate();
+  const { data: currentChainId } = useGetCurrentChainId();
+  const { ticker } = CHAINID_TO_ID_MAP[currentChainId || BAOBAB_CHAIN_ID];
   const {
     to,
     decimalValue,
@@ -233,6 +237,8 @@ function EstimateGas() {
                     {getMaxGasEstimate(
                       tranformGasEstimate[PRIORITY_LEVELS.LOW],
                     )}
+                    <br />
+                    {ticker}
                   </td>
                 </tr>
                 <tr
@@ -246,6 +252,8 @@ function EstimateGas() {
                     {getMaxGasEstimate(
                       tranformGasEstimate[PRIORITY_LEVELS.MEDIUM],
                     )}
+                    <br />
+                    {ticker}
                   </td>
                 </tr>
                 <tr
@@ -259,6 +267,8 @@ function EstimateGas() {
                     {getMaxGasEstimate(
                       tranformGasEstimate[PRIORITY_LEVELS.HIGH],
                     )}
+                    <br />
+                    {ticker}
                   </td>
                 </tr>
               </tbody>
@@ -266,41 +276,46 @@ function EstimateGas() {
           </div>
         </div>
       </div>
-      <Box className="grid items-center grid-cols-2 py-2">
+      <Box className="grid items-center py-2 grid-cols-1_2">
         <Box>
-          <Typography className="text-sm font-bold">가스</Typography>
+          <Typography as="strong" className="text-sm">
+            가스
+          </Typography>
           <Typography className="!text-gray-500 italic text-xs">
             &nbsp;(예상치)
           </Typography>
         </Box>
         <Box className="text-right">
-          <Typography className="text-sm font-bold">
-            {getBaseGasEstimate()} KLAY
+          <Typography as="strong" className="text-sm">
+            {getBaseGasEstimate()} {ticker}
           </Typography>
           <br />
           <Typography className="text-xs">
-            최대 요금: {calculateEthGasPrice(gasLevel)} KLAY
+            최대 요금: {calculateEthGasPrice(gasLevel)} {ticker}
           </Typography>
         </Box>
       </Box>
       <hr className="my-4" />
-      <Box className="grid items-center grid-cols-2 py-2">
+      <Box className="grid items-center py-2 grid-cols-1_2">
         <Box>
-          <Typography className="text-sm font-bold">합계</Typography>
+          <Typography as="strong" className="text-sm">
+            합계
+          </Typography>
+          <br />
           <Typography className="!text-gray-500 italic text-xs">
-            &nbsp;(금액 + 가스 요금)
+            (금액 + 가스 요금)
           </Typography>
         </Box>
         <Box className="text-right">
-          <Typography className="text-sm font-bold">
+          <Typography as="strong" className="text-sm">
             {makeCorrectNumber(decimalValue + getBaseGasEstimate())}
-            &nbsp; KLAY
+            &nbsp; {ticker}
           </Typography>
           <br />
           <Typography className="text-xs">
             최대 요금:&nbsp;
             {makeCorrectNumber(decimalValue + calculateEthGasPrice(gasLevel))}
-            &nbsp; KLAY
+            &nbsp; {ticker}
           </Typography>
         </Box>
       </Box>

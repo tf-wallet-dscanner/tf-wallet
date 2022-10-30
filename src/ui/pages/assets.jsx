@@ -1,4 +1,4 @@
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useOutletContext } from 'react-router-dom';
 import AssetList from 'ui/components/asset-list';
 import Box from 'ui/components/atoms/box';
 import Typography from 'ui/components/atoms/typography';
@@ -6,8 +6,13 @@ import { useGetTokens } from 'ui/data/token';
 
 function Assets() {
   const navigation = useNavigate();
+  const { currentChainId, selectedEOA } = useOutletContext();
+  // provider나 account가 바뀔 때 getToken 실행
+  const { data: accountTokenList } = useGetTokens({
+    currentChainId,
+    selectedEOA,
+  });
 
-  const { data: accountTokenList } = useGetTokens();
   return (
     <Box className="mt-4">
       <Box className="grid grid-cols-2">

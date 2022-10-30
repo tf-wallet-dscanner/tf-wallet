@@ -1,3 +1,5 @@
+import { capitalize } from 'lodash';
+
 export const HARDFORKS = {
   BERLIN: 'berlin',
   LONDON: 'london',
@@ -46,17 +48,37 @@ export const CYPRESS_RPC_URL = getKlaytnRpcUrl({ network: CYPRESS });
 export const BAOBAB_RPC_URL = getKlaytnRpcUrl({ network: BAOBAB });
 export const LOCALHOST_RPC_URL = 'http://localhost:8545';
 
+export const ETH_SYMBOL = 'ETH';
+export const WETH_SYMBOL = 'WETH';
+export const TEST_ETH_SYMBOL = 'TESTETH';
+export const BNB_SYMBOL = 'BNB';
+export const MATIC_SYMBOL = 'MATIC';
+export const AVALANCHE_SYMBOL = 'AVAX';
+export const FANTOM_SYMBOL = 'FTM';
+export const CELO_SYMBOL = 'CELO';
+export const ARBITRUM_SYMBOL = 'AETH';
+export const HARMONY_SYMBOL = 'ONE';
+export const PALM_SYMBOL = 'PALM';
+export const CYPRESS_SYMBOL = 'KLAY';
+export const BAOBAB_SYMBOL = 'KLAY';
+
 export const INFURA_PROVIDER_TYPES = [MAINNET, GOERLI];
 export const KLAYTN_PROVIDER_TYPES = [CYPRESS, BAOBAB];
+
+export const TEST_NETWORK_TICKER_MAP = {
+  [GOERLI]: `${capitalize(GOERLI)}${ETH_SYMBOL}`,
+};
 
 export const NETWORK_TYPE_TO_ID_MAP = {
   [GOERLI]: {
     networkId: GOERLI_NETWORK_ID,
     chainId: GOERLI_CHAIN_ID,
+    ticker: TEST_NETWORK_TICKER_MAP[GOERLI],
   },
   [MAINNET]: {
     networkId: MAINNET_NETWORK_ID,
     chainId: MAINNET_CHAIN_ID,
+    ticker: ETH_SYMBOL,
   },
   // [CYPRESS]: {
   //   networkId: CYPRESS_NETWORK_ID,
@@ -65,11 +87,39 @@ export const NETWORK_TYPE_TO_ID_MAP = {
   [BAOBAB]: {
     networkId: BAOBAB_NETWORK_ID,
     chainId: BAOBAB_CHAIN_ID,
+    ticker: BAOBAB_SYMBOL,
   },
   // [LOCALHOST]: {
   //   networkId: LOCALHOST_NETWORK_ID,
   //   chainId: LOCALHOST_CHAIN_ID,
   // },
+};
+
+export const CHAINID_TO_ID_MAP = {
+  [GOERLI_CHAIN_ID]: {
+    networkId: GOERLI_NETWORK_ID,
+    chainId: GOERLI_CHAIN_ID,
+    ticker: TEST_NETWORK_TICKER_MAP[GOERLI],
+  },
+  [MAINNET_CHAIN_ID]: {
+    networkId: MAINNET_NETWORK_ID,
+    chainId: MAINNET_CHAIN_ID,
+    ticker: ETH_SYMBOL,
+  },
+  [CYPRESS_CHAIN_ID]: {
+    networkId: CYPRESS_NETWORK_ID,
+    chainId: CYPRESS_CHAIN_ID,
+    ticker: CYPRESS_SYMBOL,
+  },
+  [BAOBAB_CHAIN_ID]: {
+    networkId: BAOBAB_NETWORK_ID,
+    chainId: BAOBAB_CHAIN_ID,
+    ticker: BAOBAB_SYMBOL,
+  },
+  [LOCALHOST_CHAIN_ID]: {
+    networkId: LOCALHOST_NETWORK_ID,
+    chainId: LOCALHOST_CHAIN_ID,
+  },
 };
 
 export const NETWORK_TO_NAME_MAP = {

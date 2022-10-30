@@ -54,6 +54,9 @@ module.exports = {
         42: '2.625rem', // 42px
         45: '2.8125rem', // 45px
       },
+      gridTemplateColumns: {
+        '1_2': '1fr 2fr',
+      },
       keyframes: {
         toast: {
           '0%': { opacity: 0 },

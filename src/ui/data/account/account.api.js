@@ -119,3 +119,11 @@ export async function getKeystoreToPrivKey({ fileContents, password }) {
   );
   return privKey;
 }
+
+export async function getBalance(address) {
+  const accounts = await Messenger.sendMessageToBackground(
+    BackgroundMessages.GET_BALANCE,
+    { address },
+  );
+  return accounts;
+}
