@@ -1,3 +1,4 @@
+import { BAOBAB_SYMBOL } from 'app/constants/network';
 import { SECOND } from 'app/constants/time';
 import { memo } from 'react';
 import { FiArrowRightCircle } from 'react-icons/fi';
@@ -10,6 +11,7 @@ import Box from 'ui/components/atoms/box';
 import Toast from 'ui/components/atoms/toast';
 import Tooltip from 'ui/components/atoms/tooltip';
 import Typography from 'ui/components/atoms/typography';
+import { useGetTokens } from 'ui/data/token';
 import numberWithCommas from 'ui/utils/number-with-commas';
 
 import './klay-transaction-item.scss';
@@ -39,16 +41,25 @@ function KlayTransactionItem({
   amount: klay,
   timestamp,
   tokenValueToFormat,
+  contract,
 }) {
   const [{ value: copyText, error }, copyToClipboard] = useCopyToClipboard();
-  const { selectedEOA } = useOutletContext();
+  const { currentChainId, selectedEOA } = useOutletContext();
+  const { data: accountTokenList } = useGetTokens({
+    currentChainId,
+    selectedEOA,
+  });
+  const matchedToken = accountTokenList?.find(
+    (token) => token.address === contract,
+  );
+  const tokenSymbol = matchedToken ? matchedToken.symbol : undefined;
   const [isShow, toggle] = useToggle(false);
 
   const isSend = selectedEOA?.address === from;
-  // TODO: tokenSymbol 필요
   const txItemName = isSend ? '보내기' : '받기';
   const localeDate = new Date(timestamp * 1000).toLocaleDateString();
-  const balanceUnit = 'KLAY';
+  const balanceUnit = tokenSymbol ?? BAOBAB_SYMBOL;
+
   // token transfer일 경우 amount(klay)가 0
   const amount = parseFloat(klay) || parseFloat(tokenValueToFormat);
   const amountText = `${isSend ? '-' : ''}${amount} ${balanceUnit}`;
@@ -227,13 +238,13 @@ function KlayTransactionItem({
             <Box className="klay-transaction-item__modal-contents__box">
               <Typography>총 가스 요금</Typography>
               <Typography>
-                {totalGasCharges} {balanceUnit}
+                {totalGasCharges} {BAOBAB_SYMBOL}
               </Typography>
             </Box>
             <Box className="klay-transaction-item__modal-contents__box">
               <Typography>합계</Typography>
               <Typography as="strong">
-                {totalAmount} {balanceUnit}
+                {totalAmount} {BAOBAB_SYMBOL}
               </Typography>
             </Box>
           </Box>

@@ -20,7 +20,7 @@ function AssetItem({ address, symbol, balance, image }) {
     <Box as="li" className="asset-item">
       <Box className="asset-item__balance">
         {image && <Avatar imgUrl={image} />}
-        <Typography className="pl-2">{balance}</Typography>
+        <Typography className="pl-2 text-shorten">{balance}</Typography>
         <Typography>&nbsp;{symbol}</Typography>
       </Box>
       <Box

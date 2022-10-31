@@ -20,24 +20,30 @@ import { useGetTokens } from 'ui/data/token';
 
 function TxHistory() {
   const navigation = useNavigate();
-  const { currentChainId } = useOutletContext();
+  const { currentChainId, selectedEOA } = useOutletContext();
   const isEthereumNetwork =
     currentChainId === MAINNET_CHAIN_ID || currentChainId === GOERLI_CHAIN_ID;
   const isKlaytnNetwork =
     currentChainId === CYPRESS_CHAIN_ID || currentChainId === BAOBAB_CHAIN_ID;
 
   const { data: tokens } = useGetTokens();
-  const { data: ethTxList } = useGetEthTxHistory({
-    enabled: isEthereumNetwork,
-  });
-  const erc20Queries = useGetErc20TransferHistories({
-    tokens,
-    enabled: isEthereumNetwork,
-  });
+  const { data: ethTxList } = useGetEthTxHistory(
+    { currentChainId, selectedEOA },
+    {
+      enabled: isEthereumNetwork,
+    },
+  );
+  const erc20Queries = useGetErc20TransferHistories(
+    { currentChainId, selectedEOA, tokens },
+    { enabled: isEthereumNetwork },
+  );
 
-  const { data: klaytnTxHistory } = useGetKlaytnTxHistory({
-    enabled: isKlaytnNetwork,
-  });
+  const { data: klaytnTxHistory } = useGetKlaytnTxHistory(
+    { currentChainId, selectedEOA },
+    {
+      enabled: isKlaytnNetwork,
+    },
+  );
 
   const ethereumTransactionList = useMemo(() => {
     const txList = [];
@@ -75,14 +81,13 @@ function TxHistory() {
     if (klaytnTxHistory) {
       const { getTransferHistoryListByAddress } = klaytnTxHistory;
 
+      // 일반 트랜잭션 내역도 포함
       if (!isEmpty(getTransferHistoryListByAddress?.list)) {
-        for (const erc20History of getTransferHistoryListByAddress.list) {
-          txList.push(erc20History);
-        }
+        txList.push(...getTransferHistoryListByAddress.list);
       }
 
       if (!isEmpty(txList)) {
-        return txList.sort((a, b) => b.timeStamp - a.timeStamp);
+        return txList.sort((a, b) => b.timestamp - a.timestamp);
       }
     }
 
