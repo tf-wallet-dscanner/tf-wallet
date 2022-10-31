@@ -21,7 +21,7 @@ export async function getMnemonicValidate(mnemonic) {
 // 신규 계정 생성
 export async function newAccount({ mnemonic, password }) {
   const accounts = await Messenger.sendMessageToBackground(
-    BackgroundMessages.NEW_ACCOUNT_BG,
+    BackgroundMessages.IMPORT_ACCOUNT_BG,
     { mnemonic, password },
   );
   return accounts;
