@@ -120,6 +120,15 @@ export async function getKeystoreToPrivKey({ fileContents, password }) {
   return privKey;
 }
 
+// local storage vault 안에서 mnemonic code 추출
+export async function getMnemonicFromVault({ password }) {
+  const mnemonic = await Messenger.sendMessageToBackground(
+    BackgroundMessages.GET_MNEMONIC_FROM_VAULT,
+    { password },
+  );
+  return mnemonic;
+}
+
 export async function getBalance(address) {
   const accounts = await Messenger.sendMessageToBackground(
     BackgroundMessages.GET_BALANCE,

@@ -132,11 +132,12 @@ class TokenController {
         throw new Error('accounts store data not exist.');
       }
       const { tokens } = await this.getTokenStore();
+      const sampleImageURL = `https://placeimg.com/192/192/people`; // 시연용 임시 사진
       const newEntry = {
         address: tokenAddress,
         symbol,
         decimals,
-        image: `https://placeimg.com/192/192/people`,
+        image: sampleImageURL || image,
       };
       const previousEntry = this.tokens?.find(
         (token) => token.address.toLowerCase() === tokenAddress.toLowerCase(),

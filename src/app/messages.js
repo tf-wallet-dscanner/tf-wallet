@@ -16,6 +16,7 @@ export const BackgroundMessages = {
   GET_EXPORT_KEYSTORE_V3_BG: 'getExportKeystoreV3', // 키스토어 V3 추출
   GET_IMPORT_ACCOUNT_STRATEGY_BG: 'getImportAccountStrategy', // 계정 가져오기(비공개키 or json 파일)
   GET_KEYSTORE_TO_PRIVKEY: 'getKeystoreToPrivKey', // keystoreV3로부터 privateKey 추출
+  GET_MNEMONIC_FROM_VAULT: 'getMnemonicFromVault', // 니모닉 코드 추출
   GET_STORE_ACCOUNTS: 'getStoreAccounts', // Store에서 Accounts 데이터 get
   SET_STORE_SELECTED_ADDRESS: 'setStoreSelectedAddress', // Store에서 Accounts SelectedAddress 값 set
   GET_BALANCE: 'getBalance', // 현재 EOA 기준 getBalance

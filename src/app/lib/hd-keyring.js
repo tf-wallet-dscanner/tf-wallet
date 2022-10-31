@@ -53,6 +53,23 @@ class HdKeyring extends SimpleKeyring {
     return Promise.resolve([]);
   }
 
+  /**
+   * 현재 로그인 되어있는 Account의 Vault안의 니모닉 코드를 반환.
+   *
+   * @returns {string} mnemonic - A seed phrase represented
+   */
+  getMnemonicCode() {
+    if (this.mnemonic) {
+      return this.mnemonic;
+    } else {
+      const mnemonicAsString =
+        typeof this.opts.mnemonic === 'string'
+          ? this.opts.mnemonic
+          : Buffer.from(this.opts.mnemonic, 'utf8').toString();
+      return mnemonicAsString;
+    }
+  }
+
   // 랜덤 니모닉 생성
   generateRandomMnemonic() {
     return this.initFromMnemonic(bip39.generateMnemonic());
