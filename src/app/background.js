@@ -111,6 +111,12 @@ class Background {
       this.controller.getKeystoreToPrivKey,
     );
 
+    // local storage vault 안에서 mnemonic code 추출
+    this.requests.set(
+      BackgroundMessages.GET_MNEMONIC_FROM_VAULT,
+      this.controller.getMnemonicFromVault,
+    );
+
     // store get accounts
     this.requests.set(
       BackgroundMessages.GET_STORE_ACCOUNTS,

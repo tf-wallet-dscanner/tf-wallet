@@ -12,6 +12,7 @@ import {
   useSetStoreSelectedAddress,
 } from 'ui/data/account/account.hooks';
 import { useGetCurrentChainId, useSetProviderType } from 'ui/data/provider';
+import { useSwitchAccounts } from 'ui/data/token/token.hooks';
 
 function Home() {
   const navigation = useNavigate();
@@ -20,6 +21,7 @@ function Home() {
   const { data: currentChainId, refetch: getCurrentChainId } =
     useGetCurrentChainId();
   const { data: accounts, refetch: updateAccounts } = useGetStoreAccounts();
+  const { refetch: switchAccounts } = useSwitchAccounts();
   const { mutateAsync: updateSelectedAddress } = useSetStoreSelectedAddress();
 
   const selectedEOA = accounts?.identities?.find(
@@ -39,6 +41,7 @@ function Home() {
   const handleAccountChange = async (selectedAddress) => {
     await updateSelectedAddress(selectedAddress);
     await updateAccounts();
+    switchAccounts();
   };
 
   useMount(() => {

@@ -88,7 +88,7 @@ class KeyringController {
       await this.unlockKeyrings();
       const primaryKeyring = this.getKeyringsByType('HD Key Tree')[0];
       if (!primaryKeyring) {
-        throw new Error('MetamaskController - No HD Key Tree found');
+        throw new Error('KeyringController - No HD Key Tree found');
       }
       const keyState = await this.addNewAccount(primaryKeyring);
       await this.addStoreAccounts(keyState[0]);
@@ -251,6 +251,18 @@ class KeyringController {
       password,
     });
     return privateKey;
+  }
+
+  // local storage vault 안에서 mnemonic code 추출
+  async getMnemonicFromVault({ password }) {
+    this.#password = password;
+    await this.unlockKeyrings();
+    const primaryKeyring = this.getKeyringsByType('HD Key Tree')[0];
+    if (!primaryKeyring) {
+      throw new Error('KeyringController - No HD Key Tree found');
+    }
+    const mnemonic = await primaryKeyring.getMnemonicCode();
+    return mnemonic;
   }
 
   /**

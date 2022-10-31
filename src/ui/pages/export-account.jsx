@@ -10,6 +10,7 @@ import Typography from 'ui/components/atoms/typography';
 import {
   useGetExportKeystoreV3,
   useGetExportPrivateKey,
+  useGetMnemonicFromVault,
   useGetStoreAccounts,
 } from 'ui/data/account/account.hooks';
 import { downloadFile } from 'ui/utils/util';
@@ -20,6 +21,9 @@ function ExportAccount() {
   const [passwordForJsonFile, setPasswordForJsonFile] = useState('');
 
   const { data: accounts } = useGetStoreAccounts();
+  const { data: mnemonic, refetch: makeMnemonic } = useGetMnemonicFromVault({
+    password: passwordForMnemonic,
+  });
   const selectedEOA = accounts?.identities?.find(
     ({ address }) => accounts?.selectedAddress === address,
   );
@@ -43,12 +47,15 @@ function ExportAccount() {
       },
     },
   );
-
+  const handleExportMnemonicCode = async () => {
+    makeMnemonic();
+  };
   const handleKeystoreV3FileDownload = async () => {
     await refetchExportPrivKey();
     await makeKeystoreV3();
   };
 
+  console.warn('mnemonic: ', mnemonic);
   return (
     <Container>
       <Box className="fixed top-0 right-0 p-2" onClick={() => navigation(-1)}>
@@ -65,7 +72,11 @@ function ExportAccount() {
           value={passwordForMnemonic}
           onChange={(event) => setPasswordForMnemonic(event.target.value)}
         />
-        <Button type="button" className="font-bold text-base !bg-dark-blue">
+        <Button
+          type="button"
+          className="font-bold text-base !bg-dark-blue"
+          onClick={handleExportMnemonicCode}
+        >
           불러오기
         </Button>
       </Box>

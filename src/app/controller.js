@@ -246,6 +246,14 @@ class Controller extends EventEmitter {
     return { privKey };
   };
 
+  // local storage vault 안에서 mnemonic code 추출
+  getMnemonicFromVault = async (_, { password }) => {
+    const mnemonic = await this.keyringController.getMnemonicFromVault({
+      password,
+    });
+    return { mnemonic };
+  };
+
   // store get accounts
   getStoreAccounts = async (_) => {
     const accounts = await this.keyringController.getStoreAccounts();

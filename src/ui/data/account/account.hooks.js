@@ -9,6 +9,7 @@ import {
   getExportPublicKey,
   getImportAccountStrategy,
   getKeystoreToPrivKey,
+  getMnemonicFromVault,
   getMnemonicValidate,
   getNewMnemonic,
   getStoreAccounts,
@@ -158,6 +159,18 @@ export function useGetKeystoreToPrivKey({ fileContents, password }, options) {
   return useQuery(
     ['/account/getKeystoreToPrivKey', { fileContents, password }],
     () => getKeystoreToPrivKey({ fileContents, password }),
+    {
+      enabled: false,
+      ...options,
+    },
+  );
+}
+
+// local storage vault 안에서 mnemonic code 추출
+export function useGetMnemonicFromVault({ password }, options) {
+  return useQuery(
+    ['/account/getMnemonicFromVault', { password }],
+    () => getMnemonicFromVault({ password }),
     {
       enabled: false,
       ...options,
