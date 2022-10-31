@@ -181,7 +181,7 @@ class HistoryController extends EventEmitter {
    * klaytn transaction 내역 조회
    * @returns {Promise<void>} klaytn transaction history
    */
-  async getKlaytnTxHistoryByAddress(page = 1, size = 10) {
+  async getKlaytnTxHistoryByAddress(page = 1, size = 100) {
     try {
       const {
         accounts: { selectedAddress },
@@ -194,7 +194,7 @@ class HistoryController extends EventEmitter {
         body: JSON.stringify({
           query: `
             query transactionHistoryByEOA($accountAddress: String!, $page: Int!, $size: Int!) {
-              getTransactionListByAccountAddress(accountAddress: $accountAddress, page: $page, size: $size){
+              getTransactionListByAccountAddress(accountAddress: $accountAddress, page: $page, size: $size) {
                 list {
                   id
                   result {
@@ -210,10 +210,32 @@ class HistoryController extends EventEmitter {
                     gasUsed
                     txFee
                     nonce
-                    status
                     amount
+                    status
                     timestamp
                   }
+                }
+              }
+              getTransferHistoryListByAddress(address: $accountAddress, page: $page, size: $size) {
+                list {
+                  blockNumber
+                  hash: transactionHash
+                  from
+                  to
+                  gas
+                  gasPrice
+                  priceToFormat
+                  effectiveGasPrice
+                  effectiveGasPriceToFormat
+                  gasUsed
+                  txFee
+                  nonce
+                  amount
+                  value
+                  timestamp
+                  tokenValue
+                  tokenValueToFormat
+                  createAt
                 }
               }
             }
@@ -226,9 +248,8 @@ class HistoryController extends EventEmitter {
         }),
       });
       const { data } = await response.json();
-      console.log('data: ', data);
       this.#historyStore.updateState({
-        klaytnTransactions: [data],
+        klaytnTransactions: data,
       });
       this.emit(HISTORY_EVENTS.KLAYTN_TX_LIST_DID_CHANGE, [data]);
     } catch (e) {

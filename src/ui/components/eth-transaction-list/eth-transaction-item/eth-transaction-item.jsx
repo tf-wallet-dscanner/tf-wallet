@@ -12,21 +12,21 @@ import Box from 'ui/components/atoms/box';
 import Toast from 'ui/components/atoms/toast';
 import Tooltip from 'ui/components/atoms/tooltip';
 import Typography from 'ui/components/atoms/typography';
+import numberWithCommas from 'ui/utils/number-with-commas';
 
 import './eth-transaction-item.scss';
 
 /**
- *
- * @param {string} transaction.hash
- * @param {string} transaction.from
- * @param {string} transaction.to
- * @param {string} transaction.nonce
- * @param {string} transaction.value
- * @param {string} transaction.gas
- * @param {string} transaction.gasUsed
- * @param {string} transaction.gasPrice
- * @param {string} transaction.timeStamp
- * @param {string} transaction.tokenSymbol
+ * ethereum network 거래내역 조회 item
+ * @param {hex string} transaction.hash
+ * @param {hexstring} transaction.from
+ * @param {hex string} transaction.to
+ * @param {dec string} transaction.nonce
+ * @param {dec string} transaction.value
+ * @param {dec string} transaction.gas
+ * @param {dec string} transaction.gasUsed
+ * @param {dec string} transaction.gasPrice
+ * @param {dec string} transaction.timeStamp
  * @param {string} transaction.tokenSymbol
  * @returns {ReactElement}
  */
@@ -231,7 +231,7 @@ function EthTransactionItem({
             </Box>
             <Box className="eth-transaction-item__modal-contents__box">
               <Typography>임시값</Typography>
-              <Typography>{nonce}</Typography>
+              <Typography>{numberWithCommas(nonce)}</Typography>
             </Box>
             <Box className="eth-transaction-item__modal-contents__box">
               <Typography>금액</Typography>
@@ -239,11 +239,11 @@ function EthTransactionItem({
             </Box>
             <Box className="eth-transaction-item__modal-contents__box">
               <Typography>가스 한도</Typography>
-              <Typography>{gas}</Typography>
+              <Typography>{numberWithCommas(gas)}</Typography>
             </Box>
             <Box className="eth-transaction-item__modal-contents__box">
               <Typography>사용한 가스</Typography>
-              <Typography>{gasUsed}</Typography>
+              <Typography>{numberWithCommas(gasUsed)}</Typography>
             </Box>
             <Box className="eth-transaction-item__modal-contents__box">
               <Typography>총 가스 요금</Typography>

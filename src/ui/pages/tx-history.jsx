@@ -69,6 +69,26 @@ function TxHistory() {
     return txList;
   }, [ethTxList, erc20Queries]);
 
+  const klaytnTransactionList = useMemo(() => {
+    const txList = [];
+
+    if (klaytnTxHistory) {
+      const { getTransferHistoryListByAddress } = klaytnTxHistory;
+
+      if (!isEmpty(getTransferHistoryListByAddress?.list)) {
+        for (const erc20History of getTransferHistoryListByAddress.list) {
+          txList.push(erc20History);
+        }
+      }
+
+      if (!isEmpty(txList)) {
+        return txList.sort((a, b) => b.timeStamp - a.timeStamp);
+      }
+    }
+
+    return txList;
+  }, [klaytnTxHistory]);
+
   return (
     <Box className="mt-4">
       <Box className="grid grid-cols-2">
@@ -90,7 +110,7 @@ function TxHistory() {
           <EthTransactionList transactionList={ethereumTransactionList} />
         )}
         {isKlaytnNetwork && (
-          <KlayTransactionList transactionList={klaytnTxHistory} />
+          <KlayTransactionList transactionList={klaytnTransactionList} />
         )}
       </Box>
     </Box>
