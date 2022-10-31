@@ -97,6 +97,13 @@ class HistoryController extends EventEmitter {
         type: network,
         accounts: { selectedAddress },
       } = await this.#config;
+
+      const isInfura = INFURA_PROVIDER_TYPES.includes(network);
+      if (!isInfura) {
+        console.warn('This is not the Ethereum network!');
+        return;
+      }
+
       const apiUrl = this.#getEtherscanApiUrl({
         network,
         address: selectedAddress,
@@ -235,6 +242,7 @@ class HistoryController extends EventEmitter {
                   timestamp
                   tokenValue
                   tokenValueToFormat
+                  contract
                   createAt
                 }
               }

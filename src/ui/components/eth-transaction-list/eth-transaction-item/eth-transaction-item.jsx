@@ -1,7 +1,13 @@
-import { GOERLI_CHAIN_ID, MAINNET_CHAIN_ID } from 'app/constants/network';
+import {
+  ETH_SYMBOL,
+  GOERLI,
+  GOERLI_CHAIN_ID,
+  MAINNET_CHAIN_ID,
+  TEST_NETWORK_TICKER_MAP,
+} from 'app/constants/network';
 import { SECOND } from 'app/constants/time';
 import { weiHexToEthDec } from 'app/lib/util';
-import { memo, useMemo } from 'react';
+import { memo } from 'react';
 import { FiArrowRightCircle } from 'react-icons/fi';
 import { GrFormClose } from 'react-icons/gr';
 import { MdOutlineCallMade, MdOutlineCallReceived } from 'react-icons/md';
@@ -15,6 +21,11 @@ import Typography from 'ui/components/atoms/typography';
 import numberWithCommas from 'ui/utils/number-with-commas';
 
 import './eth-transaction-item.scss';
+
+const balanceUnitMap = {
+  [MAINNET_CHAIN_ID]: ETH_SYMBOL,
+  [GOERLI_CHAIN_ID]: TEST_NETWORK_TICKER_MAP[GOERLI],
+};
 
 /**
  * ethereum network 거래내역 조회 item
@@ -51,21 +62,7 @@ function EthTransactionItem({
     isSend ? '보내기' : '받기'
   }`;
   const localeDate = new Date(timeStamp * 1000).toLocaleDateString();
-  const balanceUnit = useMemo(() => {
-    if (tokenSymbol) {
-      return tokenSymbol;
-    }
-
-    if (currentChainId === MAINNET_CHAIN_ID) {
-      return 'ETH';
-    }
-
-    if (currentChainId === GOERLI_CHAIN_ID) {
-      return 'GoerliETH';
-    }
-
-    return '';
-  }, [tokenSymbol, currentChainId]);
+  const balanceUnit = tokenSymbol ?? balanceUnitMap[currentChainId] ?? '';
   const amount = `${isSend ? '-' : ''}${weiHexToEthDec(
     value.toString(16),
   )} ${balanceUnit}`;
@@ -248,13 +245,14 @@ function EthTransactionItem({
             <Box className="eth-transaction-item__modal-contents__box">
               <Typography>총 가스 요금</Typography>
               <Typography>
-                {parseFloat(totalGasCharges.toFixed(6))} {balanceUnit}
+                {parseFloat(totalGasCharges.toFixed(6))}{' '}
+                {balanceUnitMap[currentChainId]}
               </Typography>
             </Box>
             <Box className="eth-transaction-item__modal-contents__box">
               <Typography>합계</Typography>
               <Typography as="strong">
-                {totalAmount} {balanceUnit}
+                {totalAmount} {balanceUnitMap[currentChainId]}
               </Typography>
             </Box>
           </Box>

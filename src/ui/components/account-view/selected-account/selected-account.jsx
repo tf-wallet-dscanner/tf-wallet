@@ -17,7 +17,6 @@ function SelectedAccount({ selectedEOA }) {
   const [{ value, error }, copyToClipboard] = useCopyToClipboard();
   const [isShow, toggle] = useToggle(false);
 
-  console.log('accountTokenList: ', accountTokenList);
   const selectedToken = accountTokenList?.find(
     (token) => token?.address === params?.ca,
   );
