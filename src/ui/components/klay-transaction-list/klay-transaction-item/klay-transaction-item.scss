@@ -1,3 +1,52 @@
 .klay-transaction-item {
-  @apply grid grid-cols-2 py-4 items-center border-b-[1px] border-solid border-[#cecece];
+  @apply grid grid-cols-2 p-4 items-center border-b-[1px] border-solid border-dark-blue cursor-pointer hover:bg-[#262626];
+
+  &__wrapper {
+    @apply flex items-center;
+
+    &-icon {
+      @apply border-[1px] border-solid border-[#f0df4f] rounded-full p-1;
+    }
+
+    &-info {
+      @apply flex flex-col items-start ml-4;
+
+      &__type {
+        @apply pb-0.5 text-base font-bold;
+      }
+
+      &__receipt {
+        @apply text-2xs text-left;
+
+        &-timestamp {
+          @apply text-[#28a745];
+        }
+      }
+    }
+  }
+
+  &__amount {
+    @apply text-base text-right font-bold;
+  }
+
+  &__modal {
+    &-contents {
+      & .typography {
+        color: black;
+      }
+
+      &__box {
+        @apply flex justify-between p-1;
+
+        &__clipboard-text {
+          @apply pl-2 cursor-pointer;
+
+          & + .atoms__tooltip__message {
+            width: 110px;
+            font-size: 10px;
+          }
+        }
+      }
+    }
+  }
 }

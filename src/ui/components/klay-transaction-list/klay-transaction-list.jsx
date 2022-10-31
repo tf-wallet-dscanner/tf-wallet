@@ -9,11 +9,14 @@ import KlayTransactionItem from './klay-transaction-item';
  * @returns {ReactElement}
  */
 function KlayTransactionList({ transactionList }) {
-  console.warn('transactionList: ', transactionList);
   const renderKlayTransactionList = transactionList?.map((tx) => (
     <KlayTransactionItem key={tx.hash} {...tx} />
   ));
-  return <Box as="ul">{renderKlayTransactionList}</Box>;
+  return (
+    <Box as="ul" className="klay-transaction-list h-[246px] overflow-y-auto">
+      {renderKlayTransactionList}
+    </Box>
+  );
 }
 
 export default memo(KlayTransactionList);
