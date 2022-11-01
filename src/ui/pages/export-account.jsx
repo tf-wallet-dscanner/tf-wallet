@@ -1,10 +1,14 @@
+import { SECOND } from 'app/constants/time';
 import { useState } from 'react';
 import { GrFormClose } from 'react-icons/gr';
 import { useNavigate } from 'react-router-dom';
+import { useCopyToClipboard, useToggle } from 'react-use';
 import Box from 'ui/components/atoms/box';
 import Button from 'ui/components/atoms/button';
 import Container from 'ui/components/atoms/container';
+import Loading from 'ui/components/atoms/loading';
 import TextField from 'ui/components/atoms/text-field';
+import Toast from 'ui/components/atoms/toast';
 import Tooltip from 'ui/components/atoms/tooltip';
 import Typography from 'ui/components/atoms/typography';
 import {
@@ -19,9 +23,15 @@ function ExportAccount() {
   const navigation = useNavigate();
   const [passwordForMnemonic, setPasswordForMnemonic] = useState('');
   const [passwordForJsonFile, setPasswordForJsonFile] = useState('');
+  const [isShow, toggle] = useToggle(false);
+  const [{ value: copiedText, error }, copyToClipboard] = useCopyToClipboard();
 
   const { data: accounts } = useGetStoreAccounts();
-  const { data: mnemonic, refetch: makeMnemonic } = useGetMnemonicFromVault({
+  const {
+    data,
+    isLoading,
+    refetch: makeMnemonic,
+  } = useGetMnemonicFromVault({
     password: passwordForMnemonic,
   });
   const selectedEOA = accounts?.identities?.find(
@@ -47,17 +57,35 @@ function ExportAccount() {
       },
     },
   );
+
+  const copyMnemonic = () => {
+    copyToClipboard(data?.mnemonic);
+    toggle();
+    setTimeout(toggle, SECOND);
+  };
+
   const handleExportMnemonicCode = async () => {
     makeMnemonic();
   };
+
   const handleKeystoreV3FileDownload = async () => {
     await refetchExportPrivKey();
     await makeKeystoreV3();
   };
 
-  console.warn('mnemonic: ', mnemonic);
   return (
     <Container>
+      {isLoading && <Loading />}
+      {copiedText && (
+        <Toast isShow={isShow} severity="success" contents="copied!!" />
+      )}
+      {error && (
+        <Toast
+          isShow={isShow}
+          severity="error"
+          contents="Unable to copy value!"
+        />
+      )}
       <Box className="fixed top-0 right-0 p-2" onClick={() => navigation(-1)}>
         <GrFormClose className="cursor-pointer svg-white text-32" />
       </Box>
@@ -72,6 +100,14 @@ function ExportAccount() {
           value={passwordForMnemonic}
           onChange={(event) => setPasswordForMnemonic(event.target.value)}
         />
+        {data?.mnemonic && (
+          <textarea
+            className="w-full h-[100px] rounded-md mb-2 cursor-copy"
+            value={data?.mnemonic}
+            onClick={copyMnemonic}
+            readOnly
+          />
+        )}
         <Button
           type="button"
           className="font-bold text-base !bg-dark-blue"
