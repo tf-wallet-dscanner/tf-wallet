@@ -2,6 +2,23 @@ import { BackgroundMessages } from 'app/messages';
 import Messenger from 'app/messenger';
 
 /**
+ * token transfer 가스 추정 메소드
+ * @param {object} gasEstimateParams
+ * @param {string} gasEstimateParams.from
+ * @param {string} gasEstimateParams.to
+ * @param {string} gasEstimateParams.gas - GAS_LIMITS.BASE_TOKEN_ESTIMATE
+ * @param {string} gasEstimateParams.data
+ * @returns {hex string} estimateGasLimit
+ */
+export async function getTransferEstimateGas(gasEstimateParams) {
+  const estimateGasLimit = await Messenger.sendMessageToBackground(
+    BackgroundMessages.GET_TRANSFER_ESTIMATE_GAS,
+    gasEstimateParams,
+  );
+  return estimateGasLimit;
+}
+
+/**
  * 코인/토큰 보내기
  * @param {object} txMeta
  * @param {string} txMeta.to - 받는 사람

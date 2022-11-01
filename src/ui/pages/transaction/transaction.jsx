@@ -21,7 +21,7 @@ function Transaction() {
   }, [estimateData]);
 
   return (
-    <Container className="mt-8 border-t-[1px] border-solid border-[#F4F3EB]">
+    <Container className="mt-4 pb-0 border-t-[1px] border-solid border-[#F4F3EB]">
       <Outlet />
     </Container>
   );

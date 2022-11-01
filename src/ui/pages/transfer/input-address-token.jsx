@@ -12,11 +12,12 @@ import shallow from 'zustand/shallow';
 function InputAddressToken() {
   const navigation = useNavigate();
   const { ca } = useParams();
-  const { to, setTo, setIsTransfer, setData, clearTxState } =
+  const { to, setTo, setTokenAmount, setIsTransfer, setData, clearTxState } =
     useTransactionStore(
       (state) => ({
         to: state.to,
         setTo: state.setTo,
+        setTokenAmount: state.setTokenAmount,
         clearTxState: state.clearTxState,
         setIsTransfer: state.setIsTransfer,
         setData: state.setData,
@@ -36,6 +37,7 @@ function InputAddressToken() {
         receiver: to,
         amount,
       });
+      setTokenAmount(Number(amount));
       setTo(ca);
       setIsTransfer(true);
       setData(rawData);
@@ -75,6 +77,7 @@ function InputAddressToken() {
         className="mb-4 bg-white"
         type="text"
         name="to"
+        defaultValue=""
         value={to}
         placeholder="받는 사람 주소 입력"
         onChange={(event) => setTo(event.target.value)}
@@ -82,7 +85,7 @@ function InputAddressToken() {
       <TextField
         className="mb-4 bg-white"
         type="text"
-        name="decimalValue"
+        name="tokenAmount"
         defaultValue=""
         value={amount}
         placeholder="전송할 토큰 수량 입력"

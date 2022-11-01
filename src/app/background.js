@@ -129,6 +129,11 @@ class Background {
     );
 
     this.requests.set(
+      BackgroundMessages.GET_TRANSFER_ESTIMATE_GAS,
+      this.controller.getTransferEstimateGas,
+    );
+
+    this.requests.set(
       BackgroundMessages.SEND_RAW_TRANSACTION,
       this.controller.sendRawTransaction,
     );

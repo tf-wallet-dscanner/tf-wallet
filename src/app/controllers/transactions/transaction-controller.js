@@ -211,18 +211,13 @@ class TransactionController extends EventEmitter {
         gasLimit = GAS_LIMITS.BASE_TOKEN_ESTIMATE;
         const paramsForGasEstimate = {
           from: accounts.selectedAddress,
-          gas: gasLimit,
           to,
+          gas: gasLimit,
           data,
-          decimalValue,
         };
-        const txGasUtil = new TxGasUtil({
-          ethQuery: this.ethQuery.bind(this.ethQuery),
-        });
-        const estimateGasLimit = await txGasUtil.estimateTxGas(
+        const estimateGasLimit = await this.getTransferEstimateGas(
           paramsForGasEstimate,
         );
-
         if (parseInt(gasLimit, 16) < parseInt(estimateGasLimit, 16)) {
           gasLimit = estimateGasLimit;
         }
@@ -738,6 +733,31 @@ class TransactionController extends EventEmitter {
           ? transactions[lastTxId]
           : {},
     });
+  }
+
+  /**
+   * token transfer 가스 추정 메소드
+   * @param {object} gasEstimateParams
+   * @param {string} gasEstimateParams.from
+   * @param {string} gasEstimateParams.to
+   * @param {string} gasEstimateParams.gas
+   * @param {string} gasEstimateParams.data
+   * @returns {hex string} gasLimit
+   */
+  async getTransferEstimateGas(gasEstimateParams) {
+    const paramsForGasEstimate = {
+      ...gasEstimateParams,
+      decimalValue: 0,
+    };
+    const txGasUtil = new TxGasUtil({
+      ethQuery: this.ethQuery.bind(this.ethQuery),
+    });
+    const estimateGasLimit = await txGasUtil.estimateTxGas(
+      paramsForGasEstimate,
+    );
+    console.log('txcontroller - estimateGasLimit: ', estimateGasLimit);
+
+    return estimateGasLimit;
   }
 }
 

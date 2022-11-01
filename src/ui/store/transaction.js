@@ -14,6 +14,7 @@ const initialState = {
   gas: MIN_GAS_LIMIT_DEC,
   gasPrice: MIN_GAS_PRICE_DEC,
   value: 0, // 0.1ETH === 100000000000000000 wei
+  amount: 0, // 보내는 token 수량
   data: '0x00',
   estimateData: {
     gasFeeEstimates: {},
@@ -33,6 +34,7 @@ const createState = (set) => ({
   ...initialState,
   setTo: (to) => set(() => ({ to })),
   setValue: (decimalValue) => set(() => ({ value: decimalValue })),
+  setTokenAmount: (amount) => set(() => ({ amount })),
   setEstimateData: (estimateData) => set(() => ({ estimateData })),
   setGasPrice: (gasPrice) => set(() => ({ gasPrice })),
   setIsTransfer: (isTransfer) => set(() => ({ isTransfer })),
