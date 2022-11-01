@@ -1,18 +1,25 @@
-import { GAS_ESTIMATE_TYPES, PRIORITY_LEVELS } from 'app/constants/gas';
+import {
+  GAS_ESTIMATE_TYPES,
+  GAS_LIMITS,
+  PRIORITY_LEVELS,
+} from 'app/constants/gas';
+import { BAOBAB_CHAIN_ID, CHAINID_TO_ID_MAP } from 'app/constants/network';
 import { SECOND } from 'app/constants/time';
 import { gweiDecToETHDec, makeCorrectNumber } from 'app/lib/util';
 import classNames from 'classnames';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { FaGasPump } from 'react-icons/fa';
 import { GrFormClose } from 'react-icons/gr';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useOutletContext, useParams } from 'react-router-dom';
 import { useToggle } from 'react-use';
 import Box from 'ui/components/atoms/box';
 import Button from 'ui/components/atoms/button';
 import Card from 'ui/components/atoms/card';
 import Toast from 'ui/components/atoms/toast';
 import Typography from 'ui/components/atoms/typography';
+import { useGetTokens } from 'ui/data/token';
 import {
+  useGetTransferEstimateGas,
   useResetUnapprovedTx,
   useSendRawTransaction,
 } from 'ui/data/transaction';
@@ -20,11 +27,18 @@ import { useTransactionStore } from 'ui/store';
 import shallow from 'zustand/shallow';
 
 function EstimateTokenGas() {
-  const _MIN_GAS_LIMIT_DEC = 21000;
   const navigation = useNavigate();
+  const { ca } = useParams();
+  const { currentChainId, selectedEOA } = useOutletContext();
+  const { data: accountTokenList } = useGetTokens({
+    currentChainId,
+  });
+  const matchedToken = accountTokenList?.find((token) => token.address === ca);
+  const { ticker } = CHAINID_TO_ID_MAP[currentChainId || BAOBAB_CHAIN_ID];
   const {
     to,
     decimalValue,
+    amount,
     gas,
     gasPrice,
     estimateData,
@@ -36,6 +50,7 @@ function EstimateTokenGas() {
     (state) => ({
       to: state.to,
       decimalValue: state.value,
+      amount: state.amount,
       gas: state.gas,
       gasPrice: state.gasPrice,
       estimateData: state.estimateData,
@@ -48,6 +63,16 @@ function EstimateTokenGas() {
   );
   const [isShow, toggle] = useToggle(false);
   const modelRef = useRef(null);
+  const { data: estimateGasLimit } = useGetTransferEstimateGas({
+    from: selectedEOA?.address,
+    to,
+    gas: GAS_LIMITS.BASE_TOKEN_ESTIMATE,
+    data,
+  });
+  const estimateGasLimitDec = parseInt(
+    estimateGasLimit ?? GAS_LIMITS.BASE_TOKEN_ESTIMATE,
+    16,
+  );
   const { mutate: sendTransaction } = useSendRawTransaction({
     onSuccess(txHash) {
       if (txHash.startsWith('0x') && txHash.length === 66) {
@@ -104,11 +129,11 @@ function EstimateTokenGas() {
       ) {
         const { suggestedMaxFeePerGas } = gasFeeEstimates[_gasLevel];
         calculateGasPrice =
-          _MIN_GAS_LIMIT_DEC * parseFloat(suggestedMaxFeePerGas);
+          estimateGasLimitDec * parseFloat(suggestedMaxFeePerGas);
         setGasPrice(suggestedMaxFeePerGas);
       } else if (gasEstimateType === GAS_ESTIMATE_TYPES.ETH_GASPRICE) {
         const { gasPrice: _gasPrice } = gasFeeEstimates;
-        calculateGasPrice = _MIN_GAS_LIMIT_DEC * parseFloat(_gasPrice);
+        calculateGasPrice = estimateGasLimitDec * parseFloat(_gasPrice);
         setGasPrice(_gasPrice);
       } else {
         return null;
@@ -117,7 +142,7 @@ function EstimateTokenGas() {
 
       return ethDec;
     },
-    [estimateData],
+    [estimateData, estimateGasLimit],
   );
 
   const tranformGasEstimate = useMemo(() => {
@@ -155,11 +180,12 @@ function EstimateTokenGas() {
       const { estimatedBaseFee } = gasFeeEstimates;
       const { suggestedMaxPriorityFeePerGas } = gasFeeEstimates[gasLevel];
       calculateGasPrice =
-        _MIN_GAS_LIMIT_DEC *
-        parseFloat(estimatedBaseFee + suggestedMaxPriorityFeePerGas);
+        estimateGasLimitDec *
+        (parseFloat(estimatedBaseFee) +
+          parseFloat(suggestedMaxPriorityFeePerGas));
     } else if (gasEstimateType === GAS_ESTIMATE_TYPES.ETH_GASPRICE) {
       const { gasPrice: _gasPrice } = gasFeeEstimates;
-      calculateGasPrice = _MIN_GAS_LIMIT_DEC * parseFloat(_gasPrice);
+      calculateGasPrice = estimateGasLimitDec * parseFloat(_gasPrice);
     } else {
       return 0;
     }
@@ -169,7 +195,7 @@ function EstimateTokenGas() {
   };
 
   const getMaxGasEstimate = (_gasPrice) => {
-    return gweiDecToETHDec(_MIN_GAS_LIMIT_DEC * parseFloat(_gasPrice));
+    return gweiDecToETHDec(estimateGasLimitDec * parseFloat(_gasPrice));
   };
 
   if (Number.isNaN(calculateEthGasPrice)) {
@@ -265,45 +291,52 @@ function EstimateTokenGas() {
           </div>
         </div>
       </div>
-      <Box className="grid items-center grid-cols-2 py-2">
+      <Box className="grid items-center py-2 grid-cols-1_2">
         <Box>
-          <Typography className="text-sm font-bold">가스</Typography>
+          <Typography as="strong" className="text-sm">
+            가스
+          </Typography>
           <Typography className="!text-gray-500 italic text-xs">
             &nbsp;(예상치)
           </Typography>
         </Box>
         <Box className="text-right">
-          <Typography className="text-sm font-bold">
-            {getBaseGasEstimate()} KLAY
+          <Typography as="strong" className="text-sm">
+            {getBaseGasEstimate()} {ticker}
           </Typography>
           <br />
           <Typography className="text-xs">
-            최대 요금: {calculateEthGasPrice(gasLevel)} KLAY
+            최대 요금: {calculateEthGasPrice(gasLevel)} {ticker}
           </Typography>
         </Box>
       </Box>
       <hr className="my-4" />
-      <Box className="grid items-center grid-cols-2 py-2">
+      <Box className="grid items-center py-2 grid-cols-1_2">
         <Box>
-          <Typography className="text-sm font-bold">합계</Typography>
+          <Typography as="strong" className="text-sm">
+            합계
+          </Typography>
+          <br />
           <Typography className="!text-gray-500 italic text-xs">
-            &nbsp;(금액 + 가스 요금)
+            (금액 + 가스 요금)
           </Typography>
         </Box>
         <Box className="text-right">
-          <Typography className="text-sm font-bold">
-            {makeCorrectNumber(decimalValue + getBaseGasEstimate())}
-            &nbsp; KLAY
+          <Typography as="strong" className="text-sm">
+            {`${amount} ${matchedToken?.symbol ?? ''} + ${makeCorrectNumber(
+              calculateEthGasPrice(gasLevel),
+            )} ${ticker}`}
           </Typography>
           <br />
           <Typography className="text-xs">
-            최대 요금:&nbsp;
-            {makeCorrectNumber(decimalValue + calculateEthGasPrice(gasLevel))}
-            &nbsp; KLAY
+            최대 금액:&nbsp;
+            {`${amount} ${matchedToken?.symbol ?? ''} + ${makeCorrectNumber(
+              calculateEthGasPrice(gasLevel),
+            )} ${ticker}`}
           </Typography>
         </Box>
       </Box>
-      <Box className="grid grid-cols-2 gap-3 mt-8">
+      <Box className="grid grid-cols-2 gap-3 mt-2">
         <Button
           className="font-bold text-base !bg-black"
           onClick={() => navigation(-1)}

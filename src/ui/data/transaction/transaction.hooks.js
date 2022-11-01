@@ -4,10 +4,23 @@ import { useMutation, useQuery } from 'react-query';
 import {
   getGasFeeEstimates,
   getNextNonce,
+  getTransferEstimateGas,
   resetUnapprovedTx,
   sendRawTransaction,
   setUnapprovedTx,
 } from './transaction.api';
+
+export function useGetTransferEstimateGas(gasEstimateParams, options) {
+  return useQuery(
+    ['/transaction/getTransferEstimateGas', gasEstimateParams],
+    () => getTransferEstimateGas(gasEstimateParams),
+    {
+      retry: 2,
+      refetchInterval: SECOND * 10,
+      ...options,
+    },
+  );
+}
 
 export function useSendRawTransaction(options) {
   return useMutation(['/transaction/sendRawTransaction'], sendRawTransaction, {

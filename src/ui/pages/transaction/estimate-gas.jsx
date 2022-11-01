@@ -161,7 +161,8 @@ function EstimateGas() {
       const { suggestedMaxPriorityFeePerGas } = gasFeeEstimates[gasLevel];
       calculateGasPrice =
         _MIN_GAS_LIMIT_DEC *
-        parseFloat(estimatedBaseFee + suggestedMaxPriorityFeePerGas);
+        (parseFloat(estimatedBaseFee) +
+          parseFloat(suggestedMaxPriorityFeePerGas));
     } else if (gasEstimateType === GAS_ESTIMATE_TYPES.ETH_GASPRICE) {
       const { gasPrice: _gasPrice } = gasFeeEstimates;
       calculateGasPrice = _MIN_GAS_LIMIT_DEC * parseFloat(_gasPrice);
@@ -313,7 +314,7 @@ function EstimateGas() {
           </Typography>
           <br />
           <Typography className="text-xs">
-            최대 요금:&nbsp;
+            최대 금액:&nbsp;
             {makeCorrectNumber(decimalValue + calculateEthGasPrice(gasLevel))}
             &nbsp; {ticker}
           </Typography>

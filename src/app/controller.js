@@ -277,6 +277,14 @@ class Controller extends EventEmitter {
     return balance;
   };
 
+  // token transfer estimate gas
+  getTransferEstimateGas = async (_, gasEstimateParams) => {
+    const estimateGasLimit = await this.txController.getTransferEstimateGas(
+      gasEstimateParams,
+    );
+    return estimateGasLimit;
+  };
+
   // transaction send test
   sendRawTransaction = async (_, txMeta) => {
     const txHash = await this.txController.sendRawTransaction(txMeta);
