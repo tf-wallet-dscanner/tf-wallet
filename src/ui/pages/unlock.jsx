@@ -1,45 +1,33 @@
 import { SECOND } from 'app/constants/time';
-import { isEmpty } from 'lodash';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useNavigate, useOutletContext } from 'react-router-dom';
-import { useMount } from 'react-use';
 import Box from 'ui/components/atoms/box';
 import Button from 'ui/components/atoms/button';
 import TextField from 'ui/components/atoms/text-field';
 import Toast from 'ui/components/atoms/toast';
-import { useGetVerifyPassword } from 'ui/data/account/account.hooks';
+import { useSubmitPassword } from 'ui/data/account/account.hooks';
 
 function Unlock() {
   const navigation = useNavigate();
   const { password, setPassword } = useOutletContext();
-  const { data, refetch } = useGetVerifyPassword({
-    password,
-  });
-  const [isMount, setIsMount] = useState(false);
   const [isError, setIsError] = useState(false);
-
-  useMount(() => {
-    setIsMount(true);
-  });
-
-  useEffect(() => {
-    if (!isEmpty(data)) {
+  const { mutate } = useSubmitPassword({
+    onSuccess() {
       navigation('/home');
-    } else {
-      if (!isMount) return;
-
+    },
+    onError() {
       setIsError(true);
       setTimeout(() => {
         setIsError(false);
       }, SECOND);
-    }
-  }, [data]);
+    },
+  });
 
   const handleEnter = (event) => {
     const { key } = event;
 
     if (key === 'Enter') {
-      refetch();
+      mutate({ password });
     }
   };
 
@@ -57,7 +45,7 @@ function Unlock() {
       <Button
         type="button"
         className="font-bold text-base !bg-dark-blue"
-        onClick={refetch}
+        onClick={() => mutate({ password })}
       >
         잠금 해제
       </Button>

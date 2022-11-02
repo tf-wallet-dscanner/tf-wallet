@@ -75,6 +75,12 @@ class Background {
       this.controller.importAccount,
     );
 
+    // 계정 unlock
+    this.requests.set(
+      BackgroundMessages.SUBMIT_PASSWORD,
+      this.controller.submitPassword,
+    );
+
     // 패스워드 확인
     this.requests.set(
       BackgroundMessages.VERIFY_PASSWORD,

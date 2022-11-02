@@ -44,6 +44,13 @@ export async function importAccount({ mnemonic, password }) {
   return accounts;
 }
 
+// 계정 unlock
+export async function submitPassword({ password }) {
+  await Messenger.sendMessageToBackground(BackgroundMessages.SUBMIT_PASSWORD, {
+    password,
+  });
+}
+
 // 계정 복구
 export async function verifyPassword({ password }) {
   const accounts = await Messenger.sendMessageToBackground(

@@ -13,8 +13,7 @@ const Messenger = {
       const response = await browser.runtime.sendMessage({ type, data });
       return response;
     } catch (error) {
-      console.log('sendMessageToBackground error: ', error);
-      return null;
+      throw new Error(`sendMessageToBackground error: ${error.message}`);
     }
   },
 
@@ -31,8 +30,7 @@ const Messenger = {
       const response = await browser.tabs.sendMessage(tabID, { type, data });
       return response;
     } catch (error) {
-      console.log('sendMessageToContentScript error: ', error);
-      return null;
+      throw new Error(`sendMessageToContentScript error: ${error.message}`);
     }
   },
 };

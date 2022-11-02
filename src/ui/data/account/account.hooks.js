@@ -16,6 +16,7 @@ import {
   importAccount,
   newAccount,
   setStoreSelectedAddress,
+  submitPassword,
   verifyPassword,
 } from './account.api';
 
@@ -60,6 +61,14 @@ export function useAddAccounts(options) {
 // 계정 복구
 export function useImportAccount(options) {
   return useMutation(['/account/importAccount'], importAccount, {
+    retry: false,
+    ...options,
+  });
+}
+
+// 패스워드를 통해 keyring 복원
+export function useSubmitPassword(options) {
+  return useMutation(['/account/submitPassword'], submitPassword, {
     retry: false,
     ...options,
   });

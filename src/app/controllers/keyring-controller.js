@@ -170,7 +170,7 @@ class KeyringController {
       );
       return encryptedString;
     } catch (e) {
-      console.log('Error persistAllKeyrings ::', e);
+      console.error('Error persistAllKeyrings ::', e);
     }
   }
 
@@ -217,6 +217,22 @@ class KeyringController {
         return Promise.resolve(newAccountArray);
       }
     }
+  }
+
+  /**
+   * Submit Password
+   *
+   * Attempts to decrypt the current vault and load its keyrings
+   * into memory.
+   *
+   * @emits KeyringController#unlock
+   * @param {string} password - The keyring controller password.
+   * @returns {Promise<void>}
+   */
+  async submitPassword(password) {
+    const keyrings = await this.unlockKeyrings(password);
+    this.#password = password;
+    this.keyrings = keyrings;
   }
 
   // 비밀번호 검증 (vault)
@@ -472,14 +488,14 @@ class KeyringController {
   }
 
   // unlock keyrings
-  async unlockKeyrings() {
+  async unlockKeyrings(password = this.#password) {
     const { vault: encryptedVault } = await this.#keyringStore.get('vault');
     if (!encryptedVault) {
       throw new Error('Cannot unlock without a previous vault.');
     }
 
     await this.clearKeyrings();
-    const vault = await this.encryptor.decrypt(this.#password, encryptedVault);
+    const vault = await this.encryptor.decrypt(password, encryptedVault);
     await Promise.all(vault.map(this._restoreKeyring.bind(this)));
   }
 

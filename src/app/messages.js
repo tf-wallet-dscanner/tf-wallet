@@ -10,6 +10,7 @@ export const BackgroundMessages = {
   NEW_ACCOUNT_BG: 'newAccount', // 새 계정 생성
   ADD_ACCOUNTS: 'addAccounts', // 계정 추가
   IMPORT_ACCOUNT_BG: 'importAccount', // 계정 복구
+  SUBMIT_PASSWORD: 'submitPassword', // 계정 unlock
   VERIFY_PASSWORD: 'verifyPassword', // 패스워드 확인
   GET_EXPORT_PRIVATE_KEY_BG: 'getExportPrivateKey', // 비공개키 추출
   GET_EXPORT_PUBLIC_KEY_BG: 'getExportPublicKey', // 공개키 추출

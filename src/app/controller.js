@@ -189,6 +189,12 @@ class Controller extends EventEmitter {
     return accounts;
   };
 
+  // 계정 unlock
+  submitPassword = async (_, { password }) => {
+    await this.keyringController.submitPassword(password);
+    this.tokenController.initializeTokens();
+  };
+
   // 사용자 입력 패스워드를 통해 잠금 해제
   verifyPassword = async (_, { password }) => {
     // 비밀번호 검증
