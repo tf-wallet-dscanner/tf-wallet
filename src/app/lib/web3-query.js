@@ -23,7 +23,7 @@ class Web3Query {
       const balance = await this.#web3Provider.eth.getBalance(address);
       return balance;
     } catch (e) {
-      console.error('Web3Query - getBalance Error - ', e);
+      throw new Error(`Web3Query - getBalance Error - ${e.message}`);
     }
   }
 
@@ -37,7 +37,7 @@ class Web3Query {
       const block = await this.#web3Provider.eth.getBlock(blockNumber, false);
       return block;
     } catch (e) {
-      console.error('Web3Query - getBlockByNumber Error - ', e);
+      throw new Error(`Web3Query - getBlockByNumber Error - ${e.message}`);
     }
   }
 
@@ -53,7 +53,7 @@ class Web3Query {
       );
       return latestBlock;
     } catch (e) {
-      console.error('Web3Query - getLatestBlock Error - ', e);
+      throw new Error(`Web3Query - getLatestBlock Error - ${e.message}`);
     }
   }
 
@@ -66,7 +66,7 @@ class Web3Query {
       const blockNumber = await this.#web3Provider.eth.getBlockNumber();
       return blockNumber;
     } catch (e) {
-      console.error('Web3Query - getBlockNumber Error - ', e);
+      throw new Error(`Web3Query - getBlockNumber Error - ${e.message}`);
     }
   }
 
@@ -84,7 +84,7 @@ class Web3Query {
       const networkId = await this.#fetchJsonRpc(this.#rpcUrl, 'net_version');
       return networkId;
     } catch (e) {
-      console.error('Web3Query - getNetworkId Error - ', e);
+      throw new Error(`Web3Query - getNetworkId Error - ${e.message}`);
     }
   }
 
@@ -111,7 +111,7 @@ class Web3Query {
 
       return response;
     } catch (e) {
-      console.error('Web3Query - fetchJsonRpc Error - ', e);
+      throw new Error(`Web3Query - fetchJsonRpc Error - ${e.message}`);
     }
   }
 
@@ -128,7 +128,9 @@ class Web3Query {
       const keystoreV3 = acct.encrypt(privateKey, password);
       return keystoreV3;
     } catch (e) {
-      console.error('Web3Query - web3.eth.accounts.encrypt Error - ', e);
+      throw new Error(
+        `Web3Query - web3.eth.accounts.encrypt Error - ${e.message}`,
+      );
     }
   }
 
@@ -140,12 +142,10 @@ class Web3Query {
    */
   async contract(abi, address) {
     try {
-      // const ethContract = new this.#web3Provider.eth.Contract(abi, address);
-      console.log('this.#web3Provider', this.#web3Provider, this.#rpcUrl);
       const ethContract = new this.#web3Provider.eth.Contract(abi, address);
       return ethContract;
     } catch (e) {
-      console.error('Web3Query - contract Error - ', e);
+      throw new Error(`Web3Query - contract Error - ${e.message}`);
     }
   }
 }
