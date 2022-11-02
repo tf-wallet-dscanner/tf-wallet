@@ -2,7 +2,7 @@ import { BackgroundMessages } from 'app/messages';
 import Messenger from 'app/messenger';
 
 export async function getTokens() {
-  const { tokens } = await Messenger.sendMessageToBackground(
+  const tokens = await Messenger.sendMessageToBackground(
     BackgroundMessages.GET_TOKENS,
   );
   return tokens;

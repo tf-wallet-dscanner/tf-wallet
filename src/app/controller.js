@@ -350,7 +350,7 @@ class Controller extends EventEmitter {
   // get tokens for selected address
   getTokens = async () => {
     const tokens = await this.tokenController.getTokens();
-    return { tokens };
+    return tokens;
   };
 
   // store set add tokens
