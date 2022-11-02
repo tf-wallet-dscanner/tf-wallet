@@ -2,6 +2,9 @@ import { useEffect, useState } from 'react';
 import * as THREE from 'three';
 import DkaLogo from 'ui/assets/dka_logo.png';
 
+const NOTIFICATION_WIDTH = 360;
+const NOTIFICATION_HEIGHT = 600;
+
 function Mascot() {
   const [boxSize] = useState(200); // 전체 박스 크기
   const [cubeSize] = useState(1); // 큐브 크기
@@ -12,12 +15,12 @@ function Mascot() {
     const scene = new THREE.Scene();
     const camera = new THREE.PerspectiveCamera(
       50,
-      window.innerWidth / window.innerHeight,
+      NOTIFICATION_WIDTH / NOTIFICATION_HEIGHT,
       0.1,
       2000,
     );
     // 카메라 시점 - 얼마나 멀리서 보나
-    camera.position.z = 2 / (window.innerWidth / window.innerHeight);
+    camera.position.z = 2 / (NOTIFICATION_WIDTH / NOTIFICATION_HEIGHT);
 
     const renderer = new THREE.WebGLRenderer({
       canvas: canvas ?? undefined,
@@ -30,7 +33,7 @@ function Mascot() {
     // 2.사이즈에 맞게
     renderer.setSize(
       boxSize * 0.8,
-      (boxSize / (window.innerWidth / window.innerHeight)) * 0.8,
+      (boxSize / (NOTIFICATION_WIDTH / NOTIFICATION_HEIGHT)) * 0.8,
     );
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 3));
 

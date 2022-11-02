@@ -14,8 +14,8 @@ async function triggerUi() {
 }
 
 class Background {
-  constructor(remotePort) {
-    this.controller = new Controller(remotePort);
+  constructor() {
+    this.controller = new Controller();
     this.requests = new Map();
   }
 
@@ -242,13 +242,10 @@ class Background {
 }
 
 const initApp = async (remotePort) => {
+  console.log('remotePort: ', remotePort);
   // extension close -> re-open 시 event 중복 제거 위해서 추가함
   browser.runtime.onConnect.removeListener(initApp);
-  remotePort.onMessage.addListener((msg) => {
-    if (msg) {
-      new Background(remotePort).init();
-    }
-  });
+  new Background().init();
 };
 
 browser.runtime.onConnect.addListener(initApp);

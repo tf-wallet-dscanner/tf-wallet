@@ -22,7 +22,6 @@ queryClient.setDefaultOptions({
 });
 
 const port = browser.runtime.connect({ name: 'popup' });
-port.postMessage('connect react component!');
 
 const devtool = process.env.DEVTOOL;
 

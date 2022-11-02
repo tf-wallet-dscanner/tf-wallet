@@ -1,5 +1,5 @@
 export const BackgroundMessages = {
-  INPAGE_TO_BG: 'inpage',
+  INPAGE_TO_BG: 'connectWallet',
   GET_LATEST_BLOCK: 'getLatestBlock',
   GET_NETWORK_ID: 'getNetworkId',
   SET_RPC_TARGET: 'setRpcTarget',
