@@ -497,6 +497,7 @@ class KeyringController {
     await this.clearKeyrings();
     const vault = await this.encryptor.decrypt(password, encryptedVault);
     await Promise.all(vault.map(this._restoreKeyring.bind(this)));
+    return this.keyrings;
   }
 
   // restore keyring

@@ -66,7 +66,6 @@ export async function getExportPrivateKey({ address, password }) {
     BackgroundMessages.GET_EXPORT_PRIVATE_KEY_BG,
     { address, password },
   );
-  console.warn('privateKey: ', privateKey);
   return privateKey;
 }
 
