@@ -227,6 +227,8 @@ class Controller extends EventEmitter {
 
   // 키스토어 v3 추출
   getExportKeystoreV3 = async (_, { privateKey, password }) => {
+    // 비밀번호 검증
+    await this.keyringController.verifyPassword(password);
     const keystoreV3 = await this.keyringController.getExportKeystoreV3({
       privateKey,
       password,

@@ -1,5 +1,5 @@
 import { SECOND } from 'app/constants/time';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { GrFormClose } from 'react-icons/gr';
 import { useNavigate } from 'react-router-dom';
 import { useCopyToClipboard, useToggle } from 'react-use';
@@ -39,14 +39,29 @@ function ExportAccount() {
   );
 
   // 비공개 추출
-  const { data: exportPrivKey, refetch: refetchExportPrivKey } =
-    useGetExportPrivateKey({
+  const {
+    data: exportPrivKey,
+    isError: isGetExportPrivateKeyError,
+    refetch: refetchExportPrivKey,
+  } = useGetExportPrivateKey(
+    {
       address: selectedEOA?.address,
       password: passwordForJsonFile,
-    });
+    },
+    {
+      onError() {
+        toggle();
+        setTimeout(toggle, SECOND);
+      },
+    },
+  );
 
   // 키스토어 파일 v3 다운로드
-  const { refetch: makeKeystoreV3 } = useGetExportKeystoreV3(
+  const {
+    isLoading: isDownloading,
+    isError: isGetExportKeystoreV3Error,
+    refetch: makeKeystoreV3,
+  } = useGetExportKeystoreV3(
     {
       privateKey: exportPrivKey,
       password: passwordForJsonFile,
@@ -54,6 +69,10 @@ function ExportAccount() {
     {
       onSuccess(keystoreV3) {
         downloadFile(JSON.stringify(keystoreV3), 'keystoreV3.json');
+      },
+      onError() {
+        toggle();
+        setTimeout(toggle, SECOND);
       },
     },
   );
@@ -69,13 +88,19 @@ function ExportAccount() {
   };
 
   const handleKeystoreV3FileDownload = async () => {
-    await refetchExportPrivKey();
-    await makeKeystoreV3();
+    refetchExportPrivKey();
   };
+
+  useEffect(() => {
+    if (exportPrivKey) {
+      makeKeystoreV3();
+    }
+  }, [exportPrivKey, makeKeystoreV3]);
 
   return (
     <Container>
       {isLoading && <Loading />}
+      {isDownloading && <Loading />}
       {copiedText && (
         <Toast isShow={isShow} severity="success" contents="copied!!" />
       )}
@@ -84,6 +109,20 @@ function ExportAccount() {
           isShow={isShow}
           severity="error"
           contents="Unable to copy value!"
+        />
+      )}
+      {isGetExportPrivateKeyError && (
+        <Toast
+          isShow={isShow}
+          severity="error"
+          contents="패스워드를 확인해주세요!"
+        />
+      )}
+      {isGetExportKeystoreV3Error && (
+        <Toast
+          isShow={isShow}
+          severity="error"
+          contents="keystoreV3.json 다운로드에 실패했습니다!"
         />
       )}
       <Box className="fixed top-0 right-0 p-2" onClick={() => navigation(-1)}>
