@@ -1,6 +1,6 @@
 import browser from 'webextension-polyfill';
 
-import { BackgroundMessages } from './messages';
+import { InpageMessages } from './messages';
 
 /*
  * 현재 문서에 스크립트 태그 주입 (inpage.js)
@@ -21,7 +21,7 @@ function injectScript() {
 
 function initialize() {
   console.warn('content script initialize');
-
+  browser.runtime.connect({ name: 'contentscript' });
   // post message를 받는 이벤트 리스너
   window.addEventListener('message', (event) => {
     // We only accept messages from ourselves
@@ -29,9 +29,8 @@ function initialize() {
 
     if (
       event.data.type &&
-      event.data.type === BackgroundMessages.INPAGE_TO_BG
+      Object.values(InpageMessages).includes(event.data.type)
     ) {
-      console.warn(`Content script received message: ${event.data.text}`);
       browser.runtime.sendMessage(event.data);
     }
   });

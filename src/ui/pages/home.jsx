@@ -1,4 +1,5 @@
 import { BAOBAB_CHAIN_ID, CHAINID_TO_ID_MAP } from 'app/constants/network';
+import { isEmpty } from 'lodash';
 import { useEffect } from 'react';
 import { MdOutlineCallMade } from 'react-icons/md';
 import { Outlet, useLocation, useNavigate } from 'react-router-dom';
@@ -13,6 +14,7 @@ import {
 } from 'ui/data/account/account.hooks';
 import { useGetCurrentChainId, useSetProviderType } from 'ui/data/provider';
 import { useSwitchAccounts } from 'ui/data/token/token.hooks';
+import getQueryParams from 'ui/utils/query-params';
 
 function Home() {
   const navigation = useNavigate();
@@ -45,7 +47,12 @@ function Home() {
   };
 
   useMount(() => {
-    navigation('assets');
+    const queryParams = getQueryParams();
+    if (!isEmpty(queryParams)) {
+      navigation(`/home/transfer/${queryParams.contractAddress}`);
+    } else {
+      navigation('assets');
+    }
   });
 
   useEffect(() => {

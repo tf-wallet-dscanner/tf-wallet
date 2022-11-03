@@ -1,5 +1,10 @@
-export const BackgroundMessages = {
+export const InpageMessages = {
   INPAGE_TO_BG: 'connectWallet',
+  INPAGE_CREATE_ORDER: 'createOrder',
+  INPAGE_UPDATE_ORDER: 'updateOrder',
+};
+
+export const BackgroundMessages = {
   GET_LATEST_BLOCK: 'getLatestBlock',
   GET_NETWORK_ID: 'getNetworkId',
   SET_RPC_TARGET: 'setRpcTarget',

@@ -13,7 +13,7 @@
   },
   "content_scripts": [
     {
-      "matches": ["file://*/*", "http://*/*", "https://*/*", "<all_urls>"],
+      "matches": ["http://localhost:*/*", "https://explorer.dknote.net/*"],
       "js": ["contentscript.js"]
     }
   ],
@@ -23,5 +23,5 @@
       "matches": ["http://*/*", "https://*/*"]
     }
   ],
-  "permissions": ["storage", "activeTab", "scripting"]
+  "permissions": ["storage", "activeTab", "scripting", "tabs"]
 }

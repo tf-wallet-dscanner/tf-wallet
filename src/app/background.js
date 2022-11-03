@@ -2,15 +2,18 @@ import browser from 'webextension-polyfill';
 
 import Controller from './controller';
 import NotificationManager from './lib/notification-manager';
-import { BackgroundMessages } from './messages';
+import { BackgroundMessages, InpageMessages } from './messages';
 
 const notificationManager = new NotificationManager();
 
 /**
  * Opens the browser popup for user confirmation
+ * @param {object} message
+ * @param {string} message.type
+ * @param {string} message.data
  */
-async function triggerUi() {
-  await notificationManager.showPopup();
+async function triggerUi(message) {
+  await notificationManager.showPopup(message);
 }
 
 class Background {
@@ -222,9 +225,9 @@ class Background {
   listenForMessages() {
     browser.runtime.onMessage.addListener(async (message, sender) => {
       const { type, data } = message;
-      if (type === BackgroundMessages.INPAGE_TO_BG) {
+      if (Object.values(InpageMessages).includes(type)) {
         // 팝업 띄우기
-        await triggerUi();
+        await triggerUi(message);
         return null;
       } else {
         return this.requests.get(type)?.(sender, data);

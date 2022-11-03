@@ -1,4 +1,5 @@
 import EventEmitter from 'events';
+import qs from 'qs';
 
 import ExtensionPlatform from '../platforms/extension';
 
@@ -32,9 +33,11 @@ export default class NotificationManager extends EventEmitter {
   /**
    * Either brings an existing MetaMask notification window into focus, or creates a new notification window. New
    * notification windows are given a 'popup' type.
-   *
+   * @param {object} message
+   * @param {string} message.type
+   * @param {string} message.data
    */
-  async showPopup() {
+  async showPopup(message) {
     const popup = await this._getPopup();
 
     // Bring focus to chrome popup
@@ -60,14 +63,22 @@ export default class NotificationManager extends EventEmitter {
         left = Math.max(screenX + (outerWidth - NOTIFICATION_WIDTH), 0);
       }
 
+      let queryString = null;
+      if (message?.data !== undefined) {
+        queryString = qs.stringify({
+          type: message.type,
+          ...message.data,
+        });
+      }
+
       // create new notification popup
-      const popupWindow = await this.platform.openWindow({
+      const popupWindow = await this.platform.openExtensionNewWindow({
         url: 'notification.html',
-        type: 'popup',
         width: NOTIFICATION_WIDTH,
         height: NOTIFICATION_HEIGHT,
         left,
         top,
+        queryString,
       });
 
       // Firefox currently ignores left/top for create, but it works for update
