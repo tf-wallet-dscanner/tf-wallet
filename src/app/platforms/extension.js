@@ -137,6 +137,43 @@ export default class ExtensionPlatform {
     }
   }
 
+  openExtensionNewWindow({
+    url = '',
+    width,
+    height,
+    left = 0,
+    top = 0,
+    route = null,
+    queryString = null,
+    keepWindowOpen = false,
+  }) {
+    let extensionURL = browser.runtime.getURL(url);
+
+    if (route) {
+      extensionURL += `#${route}`;
+    }
+
+    if (queryString) {
+      extensionURL += `?${queryString}`;
+    }
+
+    this.openWindow({
+      url: extensionURL,
+      width,
+      height,
+      left,
+      top,
+      type: 'popup',
+      state: 'normal',
+    });
+    if (
+      getEnvironmentType() !== ENVIRONMENT_TYPE_BACKGROUND &&
+      !keepWindowOpen
+    ) {
+      window.close();
+    }
+  }
+
   getPlatformInfo(cb) {
     try {
       const platformInfo = browser.runtime.getPlatformInfo();
