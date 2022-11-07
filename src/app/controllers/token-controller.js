@@ -1,4 +1,5 @@
 import abi from 'ethereumjs-abi';
+import Web3 from 'web3';
 
 import { isAddress, weiHexToEthDec } from '../lib/util';
 
@@ -172,10 +173,12 @@ class TokenController {
     if (amount === 0) {
       console.log('amount is 0', amount);
     }
+
+    const toWeiAmount = Web3.utils.toWei(amount, 'ether');
     const rawHexData = await this.encodeCall(
       'transfer',
       ['address', 'uint256'],
-      [receiver, String(amount * 10 ** 18)],
+      [receiver, toWeiAmount],
     );
     return rawHexData;
   }
