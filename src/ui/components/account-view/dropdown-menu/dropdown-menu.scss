@@ -16,4 +16,8 @@
       @apply opacity-100 visible;
     }
   }
+
+  &__import-label {
+    @apply border border-solid border-gray-400 bg-slate-100 rounded px-1 py-0 w-[50px] h-[22px] leading-[20px] text-black text-10 text-center;
+  }
 }

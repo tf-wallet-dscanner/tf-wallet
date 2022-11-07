@@ -75,7 +75,7 @@ class KeyringController {
       const accounts = await this.hdKeyring.initFromAccount(mnemonic);
       this.keyrings.push(this.hdKeyring);
       await this.storeUpdateVault(password);
-      await this.addStoreAccounts(accounts[0]);
+      await this.addStoreAccounts(accounts[0], this.hdKeyring.type);
       return accounts;
     }
 
@@ -91,7 +91,7 @@ class KeyringController {
         throw new Error('KeyringController - No HD Key Tree found');
       }
       const keyState = await this.addNewAccount(primaryKeyring);
-      await this.addStoreAccounts(keyState[0]);
+      await this.addStoreAccounts(keyState[0], primaryKeyring.type);
       return keyState;
     } catch (e) {
       console.log('Error addAccounts ::', e);
@@ -138,7 +138,7 @@ class KeyringController {
 
     this.keyrings.push(keyring);
     await this.storeUpdateVault(password);
-    await this.addStoreAccounts(accounts[0]);
+    await this.addStoreAccounts(accounts[0], keyring.type);
     return accounts;
   }
 
@@ -357,7 +357,7 @@ class KeyringController {
         const accounts = await keyring.getAccounts();
 
         // store에 account address 추가
-        await this.addStoreAccounts(accounts[0]);
+        await this.addStoreAccounts(accounts[0], keyring.type);
         return accounts[0];
       });
   }
@@ -370,7 +370,7 @@ class KeyringController {
   }
 
   // store add address
-  async addStoreAccounts(address) {
+  async addStoreAccounts(address, type) {
     const accounts = await this.getStoreAccounts();
     // skip if already exists
     if (
@@ -392,6 +392,7 @@ class KeyringController {
       name: `Account ${identities.length + 1}`,
       balance,
       lastSelected: new Date().getTime(),
+      type,
     });
 
     this.#setKeyringConfig({

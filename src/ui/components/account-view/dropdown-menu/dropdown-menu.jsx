@@ -24,7 +24,7 @@ function DropdownMenu({ accounts, handleAccountChange }) {
   };
 
   const accountsList = useMemo(() => {
-    return accounts?.identities?.map(({ address, name }) => (
+    return accounts?.identities?.map(({ address, name, type }) => (
       <Box
         key={address}
         className="flex items-center p-1 text-lg cursor-pointer"
@@ -38,6 +38,12 @@ function DropdownMenu({ accounts, handleAccountChange }) {
         <Typography as="label" className="w-full !text-black cursor-pointer">
           {name}
         </Typography>
+
+        {type === 'Simple Key Pair' && (
+          <Typography className="dropdown-menu__import-label">
+            가져옴
+          </Typography>
+        )}
       </Box>
     ));
   }, [accounts]);
