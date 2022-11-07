@@ -46,7 +46,7 @@ function EthTransactionItem({
   from,
   to,
   nonce,
-  value,
+  value = Number(0),
   gas,
   gasUsed,
   gasPrice,
