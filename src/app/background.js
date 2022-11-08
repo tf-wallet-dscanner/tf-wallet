@@ -108,6 +108,12 @@ class Background {
       this.controller.getExportKeystoreV3,
     );
 
+    // 키스토어 v4 추출
+    this.requests.set(
+      BackgroundMessages.GET_EXPORT_KEYSTORE_V4_BG,
+      this.controller.getExportKeystoreV4,
+    );
+
     // 계정 가져오기 (비공개 키 or json 파일)
     this.requests.set(
       BackgroundMessages.GET_IMPORT_ACCOUNT_STRATEGY_BG,

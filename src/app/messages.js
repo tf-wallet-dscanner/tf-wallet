@@ -20,6 +20,7 @@ export const BackgroundMessages = {
   GET_EXPORT_PRIVATE_KEY_BG: 'getExportPrivateKey', // 비공개키 추출
   GET_EXPORT_PUBLIC_KEY_BG: 'getExportPublicKey', // 공개키 추출
   GET_EXPORT_KEYSTORE_V3_BG: 'getExportKeystoreV3', // 키스토어 V3 추출
+  GET_EXPORT_KEYSTORE_V4_BG: 'getExportKeystoreV4', // 키스토어 V4 추출
   GET_IMPORT_ACCOUNT_STRATEGY_BG: 'getImportAccountStrategy', // 계정 가져오기(비공개키 or json 파일)
   GET_KEYSTORE_TO_PRIVKEY: 'getKeystoreToPrivKey', // keystoreV3로부터 privateKey 추출
   GET_MNEMONIC_FROM_VAULT: 'getMnemonicFromVault', // 니모닉 코드 추출

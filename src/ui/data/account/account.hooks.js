@@ -5,6 +5,7 @@ import {
   addAccounts,
   getBalance,
   getExportKeystoreV3,
+  getExportKeystoreV4,
   getExportPrivateKey,
   getExportPublicKey,
   getImportAccountStrategy,
@@ -118,6 +119,22 @@ export function useGetExportKeystoreV3({ privateKey, password }, options) {
   return useQuery(
     ['/account/getExportKeystoreV3', { privateKey, password }],
     () => getExportKeystoreV3({ privateKey, password }),
+    {
+      retry: false,
+      enabled: false,
+      ...options,
+    },
+  );
+}
+
+// keystore.json 추출(V4)
+export function useGetExportKeystoreV4(
+  { address, privateKey, password },
+  options,
+) {
+  return useQuery(
+    ['/account/getExportKeystoreV4', { address, privateKey, password }],
+    () => getExportKeystoreV4({ address, privateKey, password }),
     {
       retry: false,
       enabled: false,

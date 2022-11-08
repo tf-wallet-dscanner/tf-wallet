@@ -1,4 +1,5 @@
 import accountImporter from 'app/lib/account-importer';
+import { encryptKeystoreV4 } from 'app/lib/caver';
 import HdKeyring from 'app/lib/hd-keyring';
 import SimpleKeyring from 'app/lib/simple-keyring';
 import { normalize, stripHexPrefix } from 'app/lib/util';
@@ -329,6 +330,21 @@ class KeyringController {
     const { rpcUrl } = await this.keyringConfig;
     const web3Query = new Web3Query(rpcUrl);
     return web3Query.getAccountsEncrypt({ privateKey, password });
+  }
+
+  /**
+   * klaytn keystore v4 export
+   * @param {string} privateKey 사용자가 설정한 비공개키
+   * @param {string} password 사용자 패스워드
+   * @returns {Object} keystore v4 JSON
+   */
+  async getExportKeystoreV4({ address, privateKey, password }) {
+    const keystoreV4 = await encryptKeystoreV4({
+      address,
+      privateKey,
+      password,
+    });
+    return keystoreV4;
   }
 
   /**
