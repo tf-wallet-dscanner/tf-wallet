@@ -236,6 +236,18 @@ class Controller extends EventEmitter {
     return keystoreV3;
   };
 
+  // 키스토어 v4 추출
+  getExportKeystoreV4 = async (_, { address, privateKey, password }) => {
+    // 비밀번호 검증
+    await this.keyringController.verifyPassword(password);
+    const keystoreV4 = await this.keyringController.getExportKeystoreV4({
+      address,
+      privateKey,
+      password,
+    });
+    return keystoreV4;
+  };
+
   // 계정 가져오기 (비공개 키 or json 파일)
   getImportAccountStrategy = (_, { strategy, args }) => {
     const selectedAddress = this.keyringController.getImportAccountStrategy({

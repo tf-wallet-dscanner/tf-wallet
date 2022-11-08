@@ -1,3 +1,9 @@
+import {
+  BAOBAB_CHAIN_ID,
+  CYPRESS_CHAIN_ID,
+  GOERLI_CHAIN_ID,
+  MAINNET_CHAIN_ID,
+} from 'app/constants/network';
 import { SECOND } from 'app/constants/time';
 import { useEffect, useState } from 'react';
 import { GrFormClose } from 'react-icons/gr';
@@ -13,13 +19,21 @@ import Tooltip from 'ui/components/atoms/tooltip';
 import Typography from 'ui/components/atoms/typography';
 import {
   useGetExportKeystoreV3,
+  useGetExportKeystoreV4,
   useGetExportPrivateKey,
   useGetMnemonicFromVault,
   useGetStoreAccounts,
 } from 'ui/data/account/account.hooks';
+import { useGetCurrentChainId } from 'ui/data/provider';
 import { downloadFile } from 'ui/utils/util';
 
 function ExportAccount() {
+  const { data: currentChainId } = useGetCurrentChainId();
+  const isEthereumNetwork =
+    currentChainId === MAINNET_CHAIN_ID || currentChainId === GOERLI_CHAIN_ID;
+  const isKlaytnNetwork =
+    currentChainId === CYPRESS_CHAIN_ID || currentChainId === BAOBAB_CHAIN_ID;
+
   const navigation = useNavigate();
   const [passwordForMnemonic, setPasswordForMnemonic] = useState('');
   const [passwordForJsonFile, setPasswordForJsonFile] = useState('');
@@ -58,7 +72,7 @@ function ExportAccount() {
 
   // 키스토어 파일 v3 다운로드
   const {
-    isLoading: isDownloading,
+    isLoading: isDownloadingV3,
     isError: isGetExportKeystoreV3Error,
     refetch: makeKeystoreV3,
   } = useGetExportKeystoreV3(
@@ -77,6 +91,28 @@ function ExportAccount() {
     },
   );
 
+  // 키스토어 파일 v4 다운로드
+  const {
+    isLoading: isDownloadingV4,
+    isError: isGetExportKeystoreV4Error,
+    refetch: makeKeystoreV4,
+  } = useGetExportKeystoreV4(
+    {
+      address: selectedEOA?.address,
+      privateKey: exportPrivKey,
+      password: passwordForJsonFile,
+    },
+    {
+      onSuccess(keystoreV4) {
+        downloadFile(JSON.stringify(keystoreV4), 'keystoreV4.json');
+      },
+      onError() {
+        toggle();
+        setTimeout(toggle, SECOND);
+      },
+    },
+  );
+
   const copyMnemonic = () => {
     copyToClipboard(data?.mnemonic);
     toggle();
@@ -87,20 +123,21 @@ function ExportAccount() {
     makeMnemonic();
   };
 
-  const handleKeystoreV3FileDownload = async () => {
+  const handleKeystoreFileDownload = async () => {
     refetchExportPrivKey();
   };
 
   useEffect(() => {
     if (exportPrivKey) {
-      makeKeystoreV3();
+      if (isEthereumNetwork) makeKeystoreV3();
+      else if (isKlaytnNetwork) makeKeystoreV4();
     }
-  }, [exportPrivKey, makeKeystoreV3]);
+  }, [exportPrivKey, makeKeystoreV3, makeKeystoreV4]);
 
   return (
     <Container>
       {isLoading && <Loading />}
-      {isDownloading && <Loading />}
+      {isDownloadingV3 || (isDownloadingV4 && <Loading />)}
       {copiedText && (
         <Toast isShow={isShow} severity="success" contents="copied!!" />
       )}
@@ -123,6 +160,13 @@ function ExportAccount() {
           isShow={isShow}
           severity="error"
           contents="keystoreV3.json 다운로드에 실패했습니다!"
+        />
+      )}
+      {isGetExportKeystoreV4Error && (
+        <Toast
+          isShow={isShow}
+          severity="error"
+          contents="keystoreV4.json 다운로드에 실패했습니다!"
         />
       )}
       <Box className="fixed top-0 right-0 p-2" onClick={() => navigation(-1)}>
@@ -178,7 +222,7 @@ function ExportAccount() {
         <Button
           type="button"
           className="font-bold text-base !bg-dark-blue"
-          onClick={handleKeystoreV3FileDownload}
+          onClick={handleKeystoreFileDownload}
         >
           다운로드
         </Button>

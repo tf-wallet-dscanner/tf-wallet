@@ -87,6 +87,15 @@ export async function getExportKeystoreV3({ privateKey, password }) {
   return keystoreV3;
 }
 
+// keystore v4 추출
+export async function getExportKeystoreV4({ address, privateKey, password }) {
+  const keystoreV4 = await Messenger.sendMessageToBackground(
+    BackgroundMessages.GET_EXPORT_KEYSTORE_V4_BG,
+    { address, privateKey, password },
+  );
+  return keystoreV4;
+}
+
 /**
  * 비공개키 / keystore.json으로 주소값 뽑기
  * @param {string} strategy - import 유형 (Private Key, JSON File)

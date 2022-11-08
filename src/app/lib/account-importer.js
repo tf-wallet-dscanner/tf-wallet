@@ -1,3 +1,4 @@
+import { decryptV4 } from 'app/lib/caver';
 import {
   addHexPrefix,
   bufferToHex,
@@ -6,6 +7,7 @@ import {
   toBuffer,
 } from 'ethereumjs-util';
 import Wallet from 'ethereumjs-wallet';
+import _ from 'lodash';
 
 // 비공개키 or JSON 파일로 계정 address 가져오기
 const accountImporter = {
@@ -44,8 +46,27 @@ const accountImporter = {
       return stripped;
     },
     'JSON File': async ({ input, password }) => {
-      const wallet = await Wallet.fromV3(input, password, true);
-      return bufferToHex(wallet.privateKey);
+      // keystore json v3, v4
+      const json = _.isObject(input) ? _.cloneDeep(input) : JSON.parse(input);
+
+      if (!json.version || (json.version !== 3 && json.version !== 4))
+        throw new Error('This is not a V3 or V4 wallet.');
+
+      if (json.version === 3 && !json.crypto) {
+        throw new Error("Invalid keystore V3 format: 'crypto' is not defined.");
+      } else if (json.version === 4 && !json.keyring) {
+        throw new Error(
+          "Invalid keystore V4 format: 'keyring' is not defined.",
+        );
+      }
+
+      if (json.version === 3) {
+        const wallet = await Wallet.fromV3(input, password, true);
+        return bufferToHex(wallet.privateKey);
+      } else {
+        const result = decryptV4(json, password);
+        return bufferToHex(result.privateKey);
+      }
     },
   },
 };
