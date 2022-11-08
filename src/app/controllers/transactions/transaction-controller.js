@@ -18,6 +18,7 @@ import { isEIP1559Transaction } from 'app/modules/transaction.utils';
 import { addHexPrefix, bufferToHex, keccak, toBuffer } from 'ethereumjs-util';
 import EventEmitter from 'events';
 import { debounce } from 'lodash';
+import { SIRLOIN } from 'ui/constants/contracts';
 
 import * as txUtils from './lib/util';
 import PendingTransactionTracker from './pending-tx-tracker';
@@ -209,6 +210,10 @@ class TransactionController extends EventEmitter {
       let gasLimit;
       if (isTransfer) {
         gasLimit = GAS_LIMITS.BASE_TOKEN_ESTIMATE;
+
+        if (to === SIRLOIN.CONTRACT_ADDRESS) {
+          gasLimit = GAS_LIMITS.BASE_CONTRACT_ESTIMATE;
+        }
         const paramsForGasEstimate = {
           from: accounts.selectedAddress,
           to,

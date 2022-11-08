@@ -34,7 +34,7 @@ function Home() {
     currentChainId,
   });
 
-  const { mutate: changeProviderType } = useSetProviderType({
+  const { mutateAsync: changeProviderType } = useSetProviderType({
     onSuccess() {
       getCurrentChainId();
     },
@@ -48,8 +48,17 @@ function Home() {
 
   useMount(() => {
     const queryParams = getQueryParams();
+    console.warn('queryParams: ', queryParams);
     if (!isEmpty(queryParams)) {
-      navigation(`/home/transfer/${queryParams.contractAddress}`);
+      changeProviderType(BAOBAB_CHAIN_ID).then(() => {
+        navigation(`/home/sirloin-contract/${queryParams.contractAddress}`, {
+          state: {
+            type: queryParams.type,
+            method: queryParams.method,
+            inputData: queryParams.inputData,
+          },
+        });
+      });
     } else {
       navigation('assets');
     }
