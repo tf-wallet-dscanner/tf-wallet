@@ -10,6 +10,9 @@ import ExportAccount from './export-account';
 import Home from './home';
 import ImportAccount from './import-account';
 import Intro from './intro';
+import SirloinContract from './sirloin-contract';
+import ContractData from './sirloin-contract/contract-data';
+import EstimateContractGas from './sirloin-contract/estimate-contract-gas';
 import Transaction, {
   EstimateGas,
   InputAddress,
@@ -47,6 +50,13 @@ function Routing() {
         <Route path="transfer/:ca" element={<Transfer />}>
           <Route index element={<InputAddressToken />} />
           <Route path="estimate-token-gas" element={<EstimateTokenGas />} />
+        </Route>
+        <Route path="sirloin-contract/:ca" element={<SirloinContract />}>
+          <Route index element={<ContractData />} />
+          <Route
+            path="estimate-contract-gas"
+            element={<EstimateContractGas />}
+          />
         </Route>
       </Route>
       <Route path="/tx-success/:txHash" element={<TxResult />} />
