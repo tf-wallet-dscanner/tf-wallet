@@ -61,23 +61,27 @@ class TokenController {
 
   /**
    * switch accounts 시 해당 address의 tokens 정보 체크 없으면 빈 값 저장
+   *
+   * @returns selectedAddress
    */
   async switchAccounts() {
-    this.#accountStore = await this.getStoreAccounts();
-    const { accounts } = this.#accountStore;
-    // store에서 본인 eoa에 맞는 token get
-    const { tokens } = await this.#tokenStore;
-    const selectedAddressToken = tokens[`${accounts.selectedAddress}`];
-
-    if (!selectedAddressToken) {
-      const newAddress = {
-        [`${accounts.selectedAddress}`]: [],
-      };
-      Object.assign(tokens, newAddress);
-      await this.#setTokenList({ tokens });
+    try {
+      this.#accountStore = await this.getStoreAccounts();
+      const { accounts } = this.#accountStore;
+      const { tokens } = await this.getTokenStore();
+      const selectedAddressToken = tokens[`${accounts.selectedAddress}`];
+      if (!selectedAddressToken) {
+        const newAddress = {
+          [`${accounts.selectedAddress}`]: [],
+        };
+        Object.assign(tokens, newAddress);
+        await this.#setTokenList({ tokens });
+      }
+      this.tokens = selectedAddressToken || [];
+      return accounts.selectedAddress;
+    } catch (e) {
+      console.log('Error switchAccounts ::', e);
     }
-    this.tokens = selectedAddressToken || [];
-    return accounts.selectedAddress;
   }
 
   /**
@@ -106,6 +110,7 @@ class TokenController {
   }
 
   /**
+   * TF-2.0 ...
    * For each token in the tokenlist provided by the TokenListController, check selectedAddress balance.
    * @TODO 이더 or 클레이튼 explorer DB에 유저 EOA를 조회하여 Token 리스트를 받아오기
    */
@@ -169,11 +174,9 @@ class TokenController {
    * @returns
    */
   async transferERC20(receiver, amount) {
-    // @TODO 화면 단에서 amount 받기 위해 navigation('/transaction-token'); 페이지 추가
     if (amount === 0) {
       console.log('amount is 0', amount);
     }
-
     const toWeiAmount = Web3.utils.toWei(amount, 'ether');
     const rawHexData = await this.encodeCall(
       'transfer',
