@@ -16,7 +16,7 @@ function CreateToken() {
 
   const { mutate } = useAddToken({
     onSuccess(tokenResult) {
-      console.log('token:: ', JSON.stringify(tokenResult));
+      console.log('create-token.js > token:: ', JSON.stringify(tokenResult));
       navigation(-1);
     },
   });

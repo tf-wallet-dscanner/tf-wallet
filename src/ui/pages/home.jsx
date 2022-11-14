@@ -43,7 +43,7 @@ function Home() {
   const handleAccountChange = async (selectedAddress) => {
     await updateSelectedAddress(selectedAddress);
     await updateAccounts();
-    switchAccounts();
+    await switchAccounts();
   };
 
   useMount(() => {
