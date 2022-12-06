@@ -10,18 +10,24 @@ export const GOERLI = 'goerli';
 export const LOCALHOST = 'localhost';
 export const CYPRESS = 'cypress';
 export const BAOBAB = 'baobab';
+export const POLYGON = 'polygon-mainnet';
+export const MUMBAI = 'polygon-mumbai';
 export const NETWORK_TYPE_RPC = 'rpc';
 
 export const MAINNET_NETWORK_ID = '1';
 export const GOERLI_NETWORK_ID = '5';
 export const CYPRESS_NETWORK_ID = '8217';
 export const BAOBAB_NETWORK_ID = '1001';
+export const POLYGON_NETWORK_ID = '137';
+export const MUMBAI_NETWORK_ID = '80001';
 export const LOCALHOST_NETWORK_ID = '155';
 
 export const MAINNET_CHAIN_ID = '0x1';
 export const GOERLI_CHAIN_ID = '0x5';
 export const CYPRESS_CHAIN_ID = '0x2019';
 export const BAOBAB_CHAIN_ID = '0x3e9';
+export const POLYGON_CHAIN_ID = '0x89';
+export const MUMBAI_CHAIN_ID = '0x13881';
 export const LOCALHOST_CHAIN_ID = '0x9B';
 
 /**
@@ -34,6 +40,8 @@ export const MAINNET_DISPLAY_NAME = 'Ethereum Mainnet';
 export const GOERLI_DISPLAY_NAME = 'Goerli';
 export const CYPRESS_DISPLAY_NAME = 'Cypress';
 export const BAOBAB_DISPLAY_NAME = 'Baobab';
+export const POLYGON_DISPLAY_NAME = 'Polygon Mainnet';
+export const MUMBAI_DISPLAY_NAME = 'Mumbai Testnet';
 export const LOCALHOST_DISPLAY_NAME = 'Localhost 8545';
 
 const infuraProjectId = process.env.INFURA_PROJECT_ID;
@@ -44,6 +52,8 @@ export const getKlaytnRpcUrl = ({ network }) =>
 
 export const MAINNET_RPC_URL = getRpcUrl({ network: MAINNET });
 export const GOERLI_RPC_URL = getRpcUrl({ network: GOERLI });
+export const POLYGON_RPC_URL = getRpcUrl({ network: POLYGON });
+export const MUMBAI_RPC_URL = getRpcUrl({ network: MUMBAI });
 export const CYPRESS_RPC_URL = getKlaytnRpcUrl({ network: CYPRESS });
 export const BAOBAB_RPC_URL = getKlaytnRpcUrl({ network: BAOBAB });
 export const LOCALHOST_RPC_URL = 'http://localhost:8545';
@@ -89,6 +99,11 @@ export const NETWORK_TYPE_TO_ID_MAP = {
     chainId: BAOBAB_CHAIN_ID,
     ticker: BAOBAB_SYMBOL,
   },
+  [MUMBAI]: {
+    networkId: MUMBAI_NETWORK_ID,
+    chainId: MUMBAI_CHAIN_ID,
+    ticker: MATIC_SYMBOL,
+  },
   // [LOCALHOST]: {
   //   networkId: LOCALHOST_NETWORK_ID,
   //   chainId: LOCALHOST_CHAIN_ID,
@@ -116,6 +131,14 @@ export const CHAINID_TO_ID_MAP = {
     chainId: BAOBAB_CHAIN_ID,
     ticker: BAOBAB_SYMBOL,
   },
+  [POLYGON_CHAIN_ID]: {
+    networkId: POLYGON_NETWORK_ID,
+    chainId: POLYGON_CHAIN_ID,
+  },
+  [MUMBAI_CHAIN_ID]: {
+    networkId: MUMBAI_NETWORK_ID,
+    chainId: MUMBAI_CHAIN_ID,
+  },
   [LOCALHOST_CHAIN_ID]: {
     networkId: LOCALHOST_NETWORK_ID,
     chainId: LOCALHOST_CHAIN_ID,
@@ -127,18 +150,24 @@ export const NETWORK_TO_NAME_MAP = {
   [GOERLI]: GOERLI_DISPLAY_NAME,
   [CYPRESS]: CYPRESS_DISPLAY_NAME,
   [BAOBAB]: BAOBAB_DISPLAY_NAME,
+  [POLYGON]: POLYGON_DISPLAY_NAME,
+  [MUMBAI]: MUMBAI_DISPLAY_NAME,
   [LOCALHOST]: LOCALHOST_DISPLAY_NAME,
 
   [GOERLI_NETWORK_ID]: GOERLI_DISPLAY_NAME,
   [MAINNET_NETWORK_ID]: MAINNET_DISPLAY_NAME,
   [CYPRESS_NETWORK_ID]: CYPRESS_DISPLAY_NAME,
   [BAOBAB_NETWORK_ID]: BAOBAB_DISPLAY_NAME,
+  [POLYGON_NETWORK_ID]: POLYGON_DISPLAY_NAME,
+  [MUMBAI_NETWORK_ID]: MUMBAI_DISPLAY_NAME,
   [LOCALHOST_NETWORK_ID]: LOCALHOST_DISPLAY_NAME,
 
   [GOERLI_CHAIN_ID]: GOERLI_DISPLAY_NAME,
   [MAINNET_CHAIN_ID]: MAINNET_DISPLAY_NAME,
   [CYPRESS_CHAIN_ID]: CYPRESS_DISPLAY_NAME,
   [BAOBAB_CHAIN_ID]: BAOBAB_DISPLAY_NAME,
+  [POLYGON_CHAIN_ID]: POLYGON_DISPLAY_NAME,
+  [MUMBAI_CHAIN_ID]: MUMBAI_DISPLAY_NAME,
   [LOCALHOST_CHAIN_ID]: LOCALHOST_DISPLAY_NAME,
 };
 
@@ -154,6 +183,8 @@ export const CHAIN_ID_TO_RPC_URL_MAP = {
   [MAINNET_CHAIN_ID]: MAINNET_RPC_URL,
   [CYPRESS_CHAIN_ID]: CYPRESS_RPC_URL,
   [BAOBAB_CHAIN_ID]: BAOBAB_RPC_URL,
+  [POLYGON_CHAIN_ID]: POLYGON_RPC_URL,
+  [MUMBAI_CHAIN_ID]: MUMBAI_RPC_URL,
   [LOCALHOST_CHAIN_ID]: LOCALHOST_RPC_URL,
 };
 
