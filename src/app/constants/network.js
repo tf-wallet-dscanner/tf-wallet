@@ -10,8 +10,8 @@ export const GOERLI = 'goerli';
 export const LOCALHOST = 'localhost';
 export const CYPRESS = 'cypress';
 export const BAOBAB = 'baobab';
-export const POLYGON = 'polygon-mainnet';
-export const MUMBAI = 'polygon-mumbai';
+export const POLYGON = 'matic-mainnet';
+export const MUMBAI = 'matic-mumbai';
 export const NETWORK_TYPE_RPC = 'rpc';
 
 export const MAINNET_NETWORK_ID = '1';
@@ -72,7 +72,7 @@ export const PALM_SYMBOL = 'PALM';
 export const CYPRESS_SYMBOL = 'KLAY';
 export const BAOBAB_SYMBOL = 'KLAY';
 
-export const INFURA_PROVIDER_TYPES = [MAINNET, GOERLI];
+export const INFURA_PROVIDER_TYPES = [MAINNET, GOERLI, POLYGON, MUMBAI];
 export const KLAYTN_PROVIDER_TYPES = [CYPRESS, BAOBAB];
 
 export const TEST_NETWORK_TICKER_MAP = {
@@ -134,10 +134,12 @@ export const CHAINID_TO_ID_MAP = {
   [POLYGON_CHAIN_ID]: {
     networkId: POLYGON_NETWORK_ID,
     chainId: POLYGON_CHAIN_ID,
+    ticker: MATIC_SYMBOL,
   },
   [MUMBAI_CHAIN_ID]: {
     networkId: MUMBAI_NETWORK_ID,
     chainId: MUMBAI_CHAIN_ID,
+    ticker: MATIC_SYMBOL,
   },
   [LOCALHOST_CHAIN_ID]: {
     networkId: LOCALHOST_NETWORK_ID,
