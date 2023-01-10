@@ -7,29 +7,21 @@ const Tx = require('ethereumjs-tx').Transaction;
 const Common = require('@ethereumjs/common').default;
 const erc20 = require('../contracts/ERC20.json');
 
-const NETWORK_CHAIN_ID = {
-  mainnet: 0x1,
-  goerli: 0x5,
-  localhost: 0x9b,
-  cypress: 0x2019,
-  baobab: 0x3e9,
-};
 const deployerPrivKey = process.env.DEPLOY_PRIVKEY;
 
-const localhostRpcUrl = 'http://localhost:8545';
+const localhostRpcUrl = 'http://192.168.10.52:8545';
 
 async function deploy() {
   try {
     const input = {
-      network: process.argv[2], // ropsten
+      chainId: process.argv[2], // chainId
       name: process.argv[3], // DKA
       symbol: process.argv[4], // DKA
       supply: process.argv[5], // ETH 단위
     };
     const supply = `${input.supply}000000000000000000`; // wei
 
-    const chainName = input.network;
-    const chainId = NETWORK_CHAIN_ID[`${chainName}`];
+    const localChainId = input.chainId;
     const web3 = new Web3(localhostRpcUrl);
 
     const deployerAcc = web3.eth.accounts.privateKeyToAccount(deployerPrivKey);
@@ -50,9 +42,9 @@ async function deploy() {
       data: deployData,
       gas: 4500000,
       gasPrice: 20000000000, // 20 gwei
-      chainId,
+      chainId: localChainId,
     };
-
+    console.log('rawTx', rawTx, input);
     const cbHash = async function (txHash) {
       console.log(`Deploy TX:['${txHash}'] Created!`);
     };
@@ -66,7 +58,7 @@ async function deploy() {
       console.log(`Error:['${error}']`);
     };
 
-    const customCommon = Common.custom({ chainId: 0x9b });
+    const customCommon = Common.custom({ chainId: localChainId });
 
     const tx = new Tx(rawTx, { common: customCommon });
     const signKey = Buffer.from(deployerPrivKey, 'hex');

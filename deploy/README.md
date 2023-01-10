@@ -13,6 +13,11 @@ yarn deploy:erc20:ropsten
 # example: node deploy/deploy-erc20.js ropsten TDKA TDKA 10000
 ```
 
+```
+# node deploy/deploy-erc20-local.js [chainId] [name] [symbol] [supply]
+# example: node deploy/deploy-erc20.js 15 TDKA TDKA 10000
+```
+
 ### ERC-20 Token Transfer
 
 ```
